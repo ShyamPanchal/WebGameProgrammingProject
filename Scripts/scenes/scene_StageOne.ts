@@ -23,14 +23,14 @@ module scenes
         {
             console.log("GAME SCENE(S)...");        
         
-            this.background = new objects.Background(this.assetManager, "background");           
+            this.background = new objects.Background(this.assetManager, "level_01");           
             
-            this.txtButton = new objects.Label("SCENE SAMPLE!", "18px", "Arial", "#a3a3a3a");
-            this.txtButton.x = 360;
-            this.txtButton.y = 365;           
+            this.txtButton = new objects.Label("Bypass!", "18px", "Arial", "#a3a3a3a");
+            this.txtButton.x = 910;
+            this.txtButton.y = 565;           
 
-            this.backButton = new objects.Button(this.assetManager, "startButton", 340, 350);
-            this.label = new objects.Label("SCENE SAMPLE!", "48px", "Arial", "#000000", 250, 100);
+            this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
+            this.label = new objects.Label("Tutorial!", "48px", "Arial", "#000000", 550, 50, true);
             this.Main();
         }
         

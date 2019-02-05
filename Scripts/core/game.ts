@@ -21,6 +21,7 @@ console.log('code ran');
     assetManifest = [
         {id: "startButton", src:"../Assets/Sprites/buttonWood.png"},
         { id: "background", src: "../Assets/Background/mainMenu.jpg" },
+        { id: "level_01", src: "../Assets/Background/level_01.png" },
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" }
     ];
     function Init():void {

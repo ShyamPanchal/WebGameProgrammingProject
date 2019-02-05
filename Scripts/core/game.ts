@@ -19,11 +19,9 @@ console.log('code ran');
     let currentState: number;
   
     assetManifest = [
-        {id: "startButton", src:"../Assets/Sprites/startButton.png"},
-        {id: "background",  src:"../Assets/Background/background_Test.png"}
-        
-        //{id: "restartButton", src:"./Assets/Images/startButton.png"},
-    
+        {id: "startButton", src:"../Assets/Sprites/buttonWood.png"},
+        { id: "background", src: "../Assets/Background/mainMenu.jpg" },
+        { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" }
     ];
     function Init():void {
         console.log("Initialization start");
@@ -51,19 +49,14 @@ console.log('code ran');
 
     function Update():void {
         if(currentState != objects.Game.currentScene) {
-            console.log(objects.Game.currentScene);
+            //console.log(objects.Game.currentScene);
             Main();
         }
         currentScene.Update();
-        console.log(objects.Game.currentScene);
+        //console.log(objects.Game.currentScene);
         stage.update();
     }
-/*
-    function fn_NextScene():void
-    {
-        console.log("changing scene...");
-    }
-*/
+
     function Main():void {
         switch(objects.Game.currentScene)
         {

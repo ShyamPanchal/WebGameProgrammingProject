@@ -17,7 +17,8 @@
     var currentState;
     assetManifest = [
         { id: "startButton", src: "../Assets/Sprites/startButton.png" },
-        { id: "background", src: "../Assets/Background/background_Test.png" }
+        { id: "background", src: "../Assets/Background/background_Test.png" },
+        { id: "level_01", src: "../Assets/Background/level_01.png" }
         //{id: "restartButton", src:"./Assets/Images/startButton.png"},
     ];
     function Init() {

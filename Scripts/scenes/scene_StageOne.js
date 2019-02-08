@@ -26,6 +26,7 @@ var scenes;
         StageOne.prototype.Start = function () {
             console.log("GAME SCENE(S)...");
             this.background = new objects.Background(this.assetManager, "level_01");
+            this.ghost = new objects.Enemy(this.assetManager, "ghost", 550, 100);
             this.txtButton = new objects.Label("Bypass!", "18px", "Arial", "#a3a3a3a");
             this.txtButton.x = 910;
             this.txtButton.y = 565;
@@ -34,9 +35,11 @@ var scenes;
             this.Main();
         };
         StageOne.prototype.Update = function () {
+            this.ghost.Update();
         };
         StageOne.prototype.Main = function () {
             this.addChild(this.background);
+            this.addChild(this.ghost);
             this.addChild(this.label);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);

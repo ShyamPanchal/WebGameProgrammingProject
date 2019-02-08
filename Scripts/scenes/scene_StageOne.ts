@@ -6,6 +6,7 @@ module scenes
         private label: objects.Label;
         private backButton: objects.Button;
         private txtButton: objects.Label;
+        private ghost: objects.Enemy;
 
 
         constructor(assetManager: createjs.LoadQueue)
@@ -23,7 +24,8 @@ module scenes
         {
             console.log("GAME SCENE(S)...");        
         
-            this.background = new objects.Background(this.assetManager, "level_01");           
+            this.background = new objects.Background(this.assetManager, "level_01"); 
+            this.ghost = new objects.Enemy(this.assetManager,"ghost",550,100);          
             
             this.txtButton = new objects.Label("Bypass!", "18px", "Arial", "#a3a3a3a");
             this.txtButton.x = 910;
@@ -36,12 +38,13 @@ module scenes
         
         public Update():void
         {
-
+            this.ghost.Update();
         }
 
         public Main():void
         {
             this.addChild(this.background);
+            this.addChild(this.ghost);
             this.addChild(this.label);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);

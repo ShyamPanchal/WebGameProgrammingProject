@@ -3,10 +3,11 @@ module scenes
     export class StageOne extends objects.Scene
     {
         private background: objects.Background;
-        private label: objects.Label;
+        private title: objects.Label;
+        private titleShadow: objects.Label;
+
         private backButton: objects.Button;
         private txtButton: objects.Label;
-
 
         constructor(assetManager: createjs.LoadQueue)
         {
@@ -25,12 +26,18 @@ module scenes
         
             this.background = new objects.Background(this.assetManager, "level_01");           
             
-            this.txtButton = new objects.Label("Bypass!", "18px", "Arial", "#a3a3a3a");
+            this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
             this.txtButton.x = 910;
             this.txtButton.y = 565;           
 
             this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
-            this.label = new objects.Label("Tutorial!", "48px", "Arial", "#000000", 550, 50, true);
+            this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
+            this.title.alpha = 1;
+            
+            this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
+            this.titleShadow.alpha = 0.5;
+            
+
             this.Main();
         }
         
@@ -42,12 +49,21 @@ module scenes
         public Main():void
         {
             this.addChild(this.background);
-            this.addChild(this.label);
+            this.addChild(this.titleShadow);
+            this.addChild(this.title);
+
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
             
             this.backButton.on("click", this.fn_ButtonClick);
         
+            var callback = () : void => {
+                this.removeChild(this.title);
+                this.removeChild(this.titleShadow);
+
+            }
+
+            this.StartCountdown(3, callback);
         }
       
     }

@@ -26,11 +26,10 @@ var scenes;
         EndScene.prototype.Start = function () {
             console.log("END MENU...");
             this.background = new objects.Background(this.assetManager, "background");
-            this.txtButton = new objects.Label("Return to Main Menu!", "18px", "Arial", "#a3a3a3a");
-            this.txtButton.x = 350;
-            this.txtButton.y = 365;
-            this.backButton = new objects.Button(this.assetManager, "startButton", 340, 350);
-            this.label = new objects.Label("Game End!", "48px", "Arial", "#000000", 320, 100);
+            this.backButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, true);
+            this.txtButton = new objects.Label("Exit", "20px", "Cambay", "#ffffff", this.backButton.x, this.backButton.y + 3, true);
+            this.backButton.scaleX = 0.75;
+            this.label = new objects.Label("Game End!", "bold 80px", "Cambay", "#ffffff", 1066 * 0.5, 600 * 0.25, true);
             this.Main();
         };
         EndScene.prototype.Update = function () {

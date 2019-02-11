@@ -23,5 +23,20 @@ module objects
         {
             
         }
+
+        public StartCountdown(seconds, callback: () => any) :void {
+            var counter = seconds;
+          
+            var interval = setInterval(() => {
+              //console.log(counter);
+              counter--;              
+          
+              if(counter < 0 ){                
+                clearInterval(interval);
+                callback();
+                //console.log('Ding!');
+              };
+            }, 1000);
+          };
     }
 }

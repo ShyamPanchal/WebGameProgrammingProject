@@ -25,7 +25,6 @@
         { id: "level_01_house", src: "../Assets/Background/level_01_house.png" },
         { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" }
-
     ];
     function Init() {
         console.log("Initialization start");

@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+//Will need to impiment multiple pause scenes to route back to indivdual levels
 var scenes;
 (function (scenes) {
     var PauseScene = /** @class */ (function (_super) {

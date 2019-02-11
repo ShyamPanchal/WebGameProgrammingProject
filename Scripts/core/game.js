@@ -21,6 +21,7 @@
         { id: "level_01", src: "../Assets/Background/level_01.png" },
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" },
         { id: "ghost", src: "../Assets/Sprites/Ghost.png" }
+        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" }
     ];
     function Init() {
         console.log("Initialization start");
@@ -36,6 +37,7 @@
         stage.enableMouseOver(20);
         createjs.Ticker.framerate = 60; // 60 FPS
         createjs.Ticker.on("tick", Update);
+        objects.Game.stage = stage;
         objects.Game.currentScene = config.Scene.START;
         currentState = config.Scene.START;
         console.log(objects.Game.currentScene);

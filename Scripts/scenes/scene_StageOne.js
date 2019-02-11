@@ -24,7 +24,7 @@ var scenes;
             objects.Game.currentScene = config.Scene.FINISH;
         };
         StageOne.prototype.Start = function () {
-            console.log("GAME SCENE(S)...");
+            this.ghost = new objects.Enemy(this.assetManager, "ghost", 550, 100);
             this.background = new objects.Background(this.assetManager, "level_01");
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
@@ -40,12 +40,15 @@ var scenes;
             this.Main();
         };
         StageOne.prototype.Update = function () {
+            this.ghost.Update();
             this.player.Update();
         };
         StageOne.prototype.Main = function () {
             var _this = this;
+
             //this.addChild(this.background);
             this.addChild(this.background_main);
+            this.addChild(this.ghost);
             this.addChild(this.titleShadow);
             this.addChild(this.title);
             this.addChild(this.backButton);

@@ -20,6 +20,7 @@
         { id: "background", src: "../Assets/Background/mainMenu.jpg" },
         { id: "level_01", src: "../Assets/Background/level_01.png" },
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" },
+        { id: "ghost", src: "../Assets/Sprites/Ghost.png" }
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" }
     ];
     function Init() {

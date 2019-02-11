@@ -8,6 +8,7 @@ module scenes
 
         private backButton: objects.Button;
         private txtButton: objects.Label;
+        private ghost: objects.Enemy;
 
         private player: objects.Player;
 
@@ -24,11 +25,16 @@ module scenes
 
         public Start():void
         {
+
+              
+            this.ghost = new objects.Enemy(this.assetManager,"ghost",550,100);          
+            
             console.log("GAME SCENE(S)...");
 
             this.background = new objects.Background(this.assetManager, "level_01");
 
             this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
+
             this.txtButton.x = 910;
             this.txtButton.y = 565;
 
@@ -47,12 +53,18 @@ module scenes
 
         public Update():void
         {
+            this.ghost.Update();
             this.player.Update();
+
         }
 
         public Main():void
         {
             this.addChild(this.background);
+
+            this.addChild(this.ghost);
+            this.addChild(this.label);
+
             this.addChild(this.titleShadow);
             this.addChild(this.title);
 

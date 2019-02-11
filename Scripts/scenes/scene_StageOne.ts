@@ -27,9 +27,7 @@ module scenes
         {
 
               
-            this.ghost = new objects.Enemy(this.assetManager,"ghost",550,100);          
-            
-            console.log("GAME SCENE(S)...");
+            this.ghost = new objects.Enemy(this.assetManager,"ghost",550,100);       
 
             this.background = new objects.Background(this.assetManager, "level_01");
 
@@ -63,7 +61,7 @@ module scenes
             this.addChild(this.background);
 
             this.addChild(this.ghost);
-            this.addChild(this.label);
+            
 
             this.addChild(this.titleShadow);
             this.addChild(this.title);

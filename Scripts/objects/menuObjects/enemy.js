@@ -28,11 +28,9 @@ var objects;
             return _this;
         }
         Enemy.prototype.Start = function () {
-            console.log('In Enemy start');
         };
         Enemy.prototype.Update = function () {
             this.Move();
-            console.log('In enem update');
         };
         Enemy.prototype.Reset = function () { };
         Enemy.prototype.Move = function () {

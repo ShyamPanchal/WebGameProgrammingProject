@@ -17,11 +17,11 @@ module objects {
 
         public Start():void{
            
-            console.log('In Enemy start');
+            
         }
         public Update():void {
             this.Move();
-            console.log('In enem update')
+            
         }
         
         

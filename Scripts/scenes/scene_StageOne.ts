@@ -12,6 +12,9 @@ module scenes
 
         private player: objects.Player;
 
+        private background_main: objects.Background;
+        private background_shadow: objects.Background;
+
         constructor(assetManager: createjs.LoadQueue)
         {
             super(assetManager);
@@ -25,12 +28,15 @@ module scenes
 
         public Start():void
         {
-
               
-            this.ghost = new objects.Enemy(this.assetManager,"ghost",550,100);       
+            this.ghost = new objects.Enemy(this.assetManager,"ghost",550,100);
 
-            this.background = new objects.Background(this.assetManager, "level_01");
-
+            console.log("GAME SCENE(S)...");        
+        
+            this.background = new objects.Background(this.assetManager, "level_01");           
+            this.background_main = new objects.Background(this.assetManager, "level_01_house");           
+            this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");           
+            
             this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
 
             this.txtButton.x = 910;
@@ -57,11 +63,11 @@ module scenes
         }
 
         public Main():void
-        {
-            this.addChild(this.background);
+        {        
 
-            this.addChild(this.ghost);
-            
+            //this.addChild(this.background);
+            this.addChild(this.background_main);
+            this.addChild(this.ghost);  
 
             this.addChild(this.titleShadow);
             this.addChild(this.title);
@@ -70,6 +76,7 @@ module scenes
             this.addChild(this.txtButton);
 
             this.addChild(this.player);
+            this.addChild(this.background_shadow);
 
             this.backButton.on("click", this.fn_ButtonClick);
 

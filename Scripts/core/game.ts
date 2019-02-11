@@ -24,7 +24,10 @@ console.log('code ran');
         { id: "level_01", src: "../Assets/Background/level_01.png" },
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" },
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
-        { id: "ghost", src: "../Assets/Sprites/Ghost.png"}
+        { id: "ghost", src: "../Assets/Sprites/Ghost.png"},
+        { id: "level_01_house", src: "../Assets/Background/level_01_house.png" },
+        { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
+        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" }
     ];
     function Init():void {
         console.log("Initialization start");

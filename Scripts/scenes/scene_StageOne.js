@@ -34,9 +34,11 @@ var scenes;
             this.title.alpha = 1;
             this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
+            this.player = new objects.Player(this.assetManager);
             this.Main();
         };
         StageOne.prototype.Update = function () {
+            this.player.Update();
         };
         StageOne.prototype.Main = function () {
             var _this = this;
@@ -45,6 +47,7 @@ var scenes;
             this.addChild(this.title);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
+            this.addChild(this.player);
             this.backButton.on("click", this.fn_ButtonClick);
             var callback = function () {
                 _this.removeChild(_this.title);

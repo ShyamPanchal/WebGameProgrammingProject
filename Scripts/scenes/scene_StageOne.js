@@ -23,6 +23,9 @@ var scenes;
         StageOne.prototype.fn_ButtonClick = function () {
             objects.Game.currentScene = config.Scene.FINISH;
         };
+        StageOne.prototype.fn_pauseButtonClick = function () {
+            objects.Game.currentScene = config.Scene.PAUSE;
+        };
         StageOne.prototype.Start = function () {
             this.ghost = new objects.Enemy(this.assetManager, "ghost", 550, 100);
             console.log("GAME SCENE(S)...");
@@ -32,6 +35,10 @@ var scenes;
             this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
             this.txtButton.x = 910;
             this.txtButton.y = 565;
+            //pause button            
+            this.pauseButton = new objects.Button(this.assetManager, "startButton", -10, 550);
+            this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff", this.pauseButton.x + 80, this.pauseButton.y + 10);
+            //pause button end
             this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
             this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
@@ -53,6 +60,7 @@ var scenes;
             this.addChild(this.title);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
+
             this.addChild(this.player);
             this.addChild(this.background_shadow);
             this.backButton.on("click", this.fn_ButtonClick);
@@ -61,6 +69,12 @@ var scenes;
                 _this.removeChild(_this.titleShadow);
             };
             this.StartCountdown(3, callback);
+
+            this.addChild(this.pauseButton);
+            this.addChild(this.pauseTxtButton);
+            this.backButton.on("click", this.fn_ButtonClick);
+            this.pauseButton.on("click", this.fn_pauseButtonClick); //pause
+
         };
         return StageOne;
     }(objects.Scene));

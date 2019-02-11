@@ -82,7 +82,11 @@ console.log('code ran');
             currentScene = new scenes.EndScene(assetManager);
             stage.addChild(currentScene);
             break;
-
+            case config.Scene.PAUSE:
+            stage.removeAllChildren();
+            currentScene = new scenes.PauseScene(assetManager);
+            stage.addChild(currentScene);
+            break;      
         }
         currentState = objects.Game.currentScene;
         stage.addChild(currentScene);

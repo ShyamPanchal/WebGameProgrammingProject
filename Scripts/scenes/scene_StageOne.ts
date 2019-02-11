@@ -1,3 +1,4 @@
+
 module scenes
 {
     export class StageOne extends objects.Scene
@@ -7,10 +8,13 @@ module scenes
         private titleShadow: objects.Label;
 
         private backButton: objects.Button;
+        private pauseButton: objects.Button;
         private txtButton: objects.Label;
-        private ghost: objects.Enemy;
 
+        private ghost: objects.Enemy;
         private player: objects.Player;
+
+        private pauseTxtButton: objects.Label;
 
         private background_main: objects.Background;
         private background_shadow: objects.Background;
@@ -26,6 +30,11 @@ module scenes
             objects.Game.currentScene = config.Scene.FINISH;
         }
 
+        private fn_pauseButtonClick():void
+        {
+            objects.Game.currentScene = config.Scene.PAUSE;
+        }
+
         public Start():void
         {
               
@@ -38,9 +47,13 @@ module scenes
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");           
             
             this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
-
             this.txtButton.x = 910;
-            this.txtButton.y = 565;
+            this.txtButton.y = 565;  
+            
+            //pause button            
+            this.pauseButton = new objects.Button(this.assetManager, "startButton", -10, 550);
+            this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff",this.pauseButton.x+80, this.pauseButton.y+10);
+            //pause button end
 
             this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
             this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
@@ -53,6 +66,8 @@ module scenes
 
 
             this.Main();
+
+            
         }
 
         public Update():void
@@ -85,8 +100,14 @@ module scenes
                 this.removeChild(this.titleShadow);
 
             }
-
             this.StartCountdown(3, callback);
+
+            this.addChild(this.pauseButton);
+            this.addChild(this.pauseTxtButton);
+            
+            this.backButton.on("click", this.fn_ButtonClick);
+            this.pauseButton.on("click", this.fn_pauseButtonClick);//pause
+        
         }
 
     }

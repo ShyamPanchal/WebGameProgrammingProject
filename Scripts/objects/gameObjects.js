@@ -30,6 +30,8 @@ var objects;
             this.halfH = this.height * 0.5;
             this.regX = this.halfW;
             this.regY = this.halfH;
+            this.isColliding = false;
+            this.isGravityAffected = false;
         };
         GameObject.prototype.Start = function () {
         };
@@ -40,6 +42,10 @@ var objects;
         GameObject.prototype.CheckBounds = function () {
         };
         GameObject.prototype.Move = function () {
+        };
+        GameObject.prototype.GravityEffect = function () {
+            if (this.isGravityAffected) {
+            }
         };
         return GameObject;
     }(createjs.Bitmap));

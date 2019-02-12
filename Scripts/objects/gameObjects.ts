@@ -10,6 +10,10 @@ module objects{
     public halfW: number;
     public halfH: number;
 
+    public isColliding:boolean;
+    public isGravityAffected:boolean;
+
+
     // Constructor
     constructor(assetManager: createjs.LoadQueue, imageString: string){
       super(assetManager.getResult(imageString));
@@ -27,6 +31,8 @@ module objects{
 
       this.regX = this.halfW;
       this.regY = this.halfH;
+      this.isColliding = false;
+      this.isGravityAffected = false;
     }
 
     public Start(): void{
@@ -47,6 +53,12 @@ module objects{
 
     public Move(): void{
 
+    }
+
+    public GravityEffect(): void {
+        if (this.isGravityAffected) {
+
+        }
     }
   }
 }

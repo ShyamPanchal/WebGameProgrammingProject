@@ -22,7 +22,7 @@ module scenes
         private background_shadow: objects.Background;
 
         private platforms:objects.EmptyGameObject[];
-        private walls:objects.EmptyGameObject[];
+        private walls:objects.EmptyGameObject[];       
 
 
         constructor(assetManager: createjs.LoadQueue)
@@ -43,6 +43,7 @@ module scenes
 
         public Start():void
         {
+            this.isPaused = false;
             this.platforms = new Array<objects.EmptyGameObject>();
             this.walls = new Array<objects.EmptyGameObject>();
 
@@ -88,6 +89,11 @@ module scenes
 
         public Update():void
         {
+            this.CheckPaused();
+            if (this.isPaused){
+                return;
+            } 
+
             this.player.Update();
             this.player.DebugLine();
 
@@ -171,7 +177,7 @@ module scenes
             this.addChild(this.pauseTxtButton);
             
             this.backButton.on("click", this.fn_ButtonClick);
-            this.pauseButton.on("click", this.fn_pauseButtonClick);//pause
+            this.pauseButton.on("click", ()=>{this.isPaused = !this.isPaused; this.fn_pauseButtonClick;});//pause
         
         }
 

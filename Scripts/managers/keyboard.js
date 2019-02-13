@@ -26,7 +26,7 @@ var managers;
                     this.moveRight = true;
                     break;
                 case config.Keys.ESCAPE:
-                    console.log("Pause!!");
+                    //console.log("Pause!!");
                     break;
             }
         };
@@ -49,6 +49,8 @@ var managers;
                     this.moveRight = false;
                     break;
                 case config.Keys.ESCAPE:
+                    //  this.pause = false;
+                    this.pause = !this.pause;
                     break;
             }
         };

@@ -27,6 +27,7 @@ var scenes;
             objects.Game.currentScene = config.Scene.PAUSE;
         };
         StageOne.prototype.Start = function () {
+            this.isPaused = false;
             this.platforms = new Array();
             this.walls = new Array();
             this.enemies = new Array();
@@ -35,7 +36,6 @@ var scenes;
             ghost.y = ghost.y - ghost.height;
             ghost.isDebug = true;
             this.enemies[0] = ghost;
-
             console.log("GAME SCENE(S)...");
             this.background = new objects.Background(this.assetManager, "level_01");
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
@@ -57,6 +57,10 @@ var scenes;
             this.Main();
         };
         StageOne.prototype.Update = function () {
+            this.CheckPaused();
+            if (this.isPaused) {
+                return;
+            }
             this.player.Update();
             this.player.DebugLine();
             this.enemies.forEach(function (enemy) {
@@ -113,7 +117,6 @@ var scenes;
             this.addChild(this.title);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
-
             this.addChild(this.player);
             this.enemies.forEach(function (ghost) {
                 _this.addChild(ghost);
@@ -127,12 +130,10 @@ var scenes;
                 _this.removeChild(_this.titleShadow);
             };
             this.StartCountdown(3, callback);
-
             this.addChild(this.pauseButton);
             this.addChild(this.pauseTxtButton);
             this.backButton.on("click", this.fn_ButtonClick);
-            this.pauseButton.on("click", this.fn_pauseButtonClick); //pause
-
+            this.pauseButton.on("click", function () { _this.isPaused = !_this.isPaused; _this.fn_pauseButtonClick; }); //pause
         };
         StageOne.prototype.CreateScenery = function () {
             var wall_l = new objects.EmptyGameObject(this.assetManager, "wall_l", 1, 600);

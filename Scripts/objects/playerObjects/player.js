@@ -15,34 +15,60 @@ var objects;
 (function (objects) {
     var Player = /** @class */ (function (_super) {
         __extends(Player, _super);
-        // Variables
         // Constructor
         function Player(assetManager) {
             var _this = _super.call(this, assetManager, "player") || this;
+            // Variables
+            _this.speed = 5;
             _this.Start();
+            _this.isGravityAffected = true;
             return _this;
         }
         // Methods / Functions
         Player.prototype.Start = function () {
-            this.y = 445;
+            this.x = 400;
+            this.y = 45;
+            this.canMoveL = true;
+            this.canMoveR = true;
         };
         Player.prototype.Update = function () {
+            this.boxCollider.Update(this.x, this.y);
+            if (!this.isGrounded) {
+                this.GravityEffect();
+            }
+            this.Jump();
             this.Move();
             this.CheckBounds();
         };
         Player.prototype.Reset = function () {
         };
+        Player.prototype.Jump = function () {
+            if (this.isGrounded) {
+                if (objects.Game.keyboard.moveUp) {
+                    console.log('Jump');
+                    this.y += config.Gravity.gravity * this.height * 2;
+                    this.isGrounded = false;
+                }
+            }
+        };
         Player.prototype.Move = function () {
-            this.x = objects.Game.stage.mouseX;
+            //this.x = objects.Game.stage.mouseX;
+            if (objects.Game.keyboard.moveLeft && this.canMoveL) {
+                this.x -= this.speed;
+            }
+            if (objects.Game.keyboard.moveRight && this.canMoveR) {
+                this.x += this.speed;
+            }
         };
         Player.prototype.CheckBounds = function () {
             // hardcoding the play area for now
-            if (this.x >= 837.5) {
-                this.x = 837.5;
+            /*if (this.x >= 837.5){
+              this.x = 837.5;
             }
-            if (this.x <= 235.5) {
-                this.x = 235.5;
-            }
+      
+            if (this.x <= 235.5){
+              this.x = 235.5;
+            }*/
         };
         return Player;
     }(objects.GameObject));

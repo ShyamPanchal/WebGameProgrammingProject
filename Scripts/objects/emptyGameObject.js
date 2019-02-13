@@ -13,35 +13,28 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var objects;
 (function (objects) {
-    var Enemy = /** @class */ (function (_super) {
-        __extends(Enemy, _super);
+    var EmptyGameObject = /** @class */ (function (_super) {
+        __extends(EmptyGameObject, _super);
+        // Variables
         // Constructor
-        function Enemy(assetManager, imageString, x, y) {
-            if (x === void 0) { x = 0; }
-            if (y === void 0) { y = 0; }
+        function EmptyGameObject(assetManager, imageString, width, height) {
+            if (width === void 0) { width = 1; }
+            if (height === void 0) { height = 1; }
             var _this = _super.call(this, assetManager, imageString) || this;
-            // Variables
-            _this.leftSide = true;
-            _this.x = x;
-            _this.y = y;
-            _this.Start();
+            _this.width = width;
+            _this.height = height;
+            //it must call Init again in order to use another bounds
+            _this.Init();
             return _this;
         }
-        Enemy.prototype.Start = function () {
-            console.log('In Enemy');
+        EmptyGameObject.prototype.GetWidthBounds = function () {
+            return this.width;
         };
-        Enemy.prototype.Update = function () {
-            this.Move();
-            this.DebugLine();
+        EmptyGameObject.prototype.GetHeightBounds = function () {
+            return this.height;
         };
-        Enemy.prototype.Reset = function () { };
-        Enemy.prototype.Move = function () {
-            this.x -= 3;
-            if (this.x < 200)
-                this.x = 800;
-        };
-        return Enemy;
+        return EmptyGameObject;
     }(objects.GameObject));
-    objects.Enemy = Enemy;
+    objects.EmptyGameObject = EmptyGameObject;
 })(objects || (objects = {}));
-//# sourceMappingURL=enemy.js.map
+//# sourceMappingURL=emptyGameObject.js.map

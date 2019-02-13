@@ -4,6 +4,7 @@ module config
     {
         START,
         INGAME,
-        FINISH
+        FINISH,
+        PAUSE
     }
 }

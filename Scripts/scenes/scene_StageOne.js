@@ -23,6 +23,9 @@ var scenes;
         StageOne.prototype.fn_ButtonClick = function () {
             objects.Game.currentScene = config.Scene.FINISH;
         };
+        StageOne.prototype.fn_pauseButtonClick = function () {
+            objects.Game.currentScene = config.Scene.PAUSE;
+        };
         StageOne.prototype.Start = function () {
             this.platforms = new Array();
             this.walls = new Array();
@@ -32,6 +35,7 @@ var scenes;
             ghost.y = ghost.y - ghost.height;
             ghost.isDebug = true;
             this.enemies[0] = ghost;
+
             console.log("GAME SCENE(S)...");
             this.background = new objects.Background(this.assetManager, "level_01");
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
@@ -39,6 +43,10 @@ var scenes;
             this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
             this.txtButton.x = 910;
             this.txtButton.y = 565;
+            //pause button            
+            this.pauseButton = new objects.Button(this.assetManager, "startButton", -10, 550);
+            this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff", this.pauseButton.x + 80, this.pauseButton.y + 10);
+            //pause button end
             this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
             this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
@@ -105,6 +113,7 @@ var scenes;
             this.addChild(this.title);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
+
             this.addChild(this.player);
             this.enemies.forEach(function (ghost) {
                 _this.addChild(ghost);
@@ -118,6 +127,12 @@ var scenes;
                 _this.removeChild(_this.titleShadow);
             };
             this.StartCountdown(3, callback);
+
+            this.addChild(this.pauseButton);
+            this.addChild(this.pauseTxtButton);
+            this.backButton.on("click", this.fn_ButtonClick);
+            this.pauseButton.on("click", this.fn_pauseButtonClick); //pause
+
         };
         StageOne.prototype.CreateScenery = function () {
             var wall_l = new objects.EmptyGameObject(this.assetManager, "wall_l", 1, 600);

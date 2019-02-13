@@ -2,9 +2,11 @@ module objects{
   export class Player extends objects.GameObject {
 
     // Variables
-    private speed:number = 5;
+    private static speed:number = 5;
     public canMoveR: boolean;
     public canMoveL: boolean;
+    public maxJumpHeight: number;
+    public isJumping: boolean;
 
     // Constructor
     constructor(assetManager:createjs.LoadQueue){
@@ -19,13 +21,18 @@ module objects{
       this.y = 45;
       this.canMoveL = true;
       this.canMoveR = true;
-
+      this.isJumping = false;      
     }
 
     public Update():void{
       this.boxCollider.Update(this.x, this.y);
-      if (!this.isGrounded) {
+      if (!this.isGrounded && !this.isJumping) {
         this.GravityEffect();
+        //console.log('gravityEffect');
+      } else if (this.isGrounded){
+        //this.isJumping = false;
+        this.maxJumpHeight = this.y - (this.height * 0.7);
+        //console.log('grounded : ' + this.maxJumpHeight);
       }
       this.Jump();
       this.Move();
@@ -38,10 +45,20 @@ module objects{
 
     public Jump() : void {
       if (this.isGrounded) {
-        if (objects.Game.keyboard.moveUp) {
-          console.log('Jump');
-          this.y+=config.Gravity.gravity*this.height*2;
+        if (objects.Game.keyboard.moveUp && !this.isJumping) {
           this.isGrounded = false;
+          this.isJumping = true;
+          //console.log('Perform Jump');
+          this.y+=config.Gravity.gravity*this.height;
+        }
+      } else if(this.isJumping) {
+        if (this.maxJumpHeight <= this.y){
+          //going higher         
+          //console.log('going higher : '+ this.y + '- max :' + this.maxJumpHeight);   
+          this.y+=config.Gravity.gravity*this.height/2;
+        } else {
+          //console.log('reach high');
+          this.isJumping = false;
         }
       }
     }
@@ -49,11 +66,11 @@ module objects{
     public Move() :void{
       //this.x = objects.Game.stage.mouseX;
       if (objects.Game.keyboard.moveLeft && this.canMoveL) {
-          this.x-=this.speed;
+          this.x-=Player.speed;
         }
 
       if (objects.Game.keyboard.moveRight && this.canMoveR) {
-          this.x+=this.speed;
+          this.x+=Player.speed;
       }
     }
 

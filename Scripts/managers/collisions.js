@@ -54,16 +54,20 @@ var managers;
                 md.max.y >= 0) {
                 if (!obj2.isColliding) {
                     obj2.isColliding = true;
+                    /*
                     console.log(obj1.name + ' y:' + obj1.y);
                     math.Vec2.Print(obj1.boxCollider.center);
                     math.Vec2.Print(obj1.boxCollider.extends);
+
                     console.log(obj2.name + ' y:' + obj2.y);
                     math.Vec2.Print(obj2.boxCollider.center);
                     math.Vec2.Print(obj2.boxCollider.extends);
-                    console.log(' md.min.x : ' + md.min.x
-                        + ' md.min.y : ' + md.min.y
-                        + ' md.max.x : ' + md.max.x
-                        + ' md.max.y : ' + md.max.y);
+
+                    console.log(' md.min.x : ' +md.min.x
+                    +  ' md.min.y : ' +  md.min.y
+                    +  ' md.max.x : ' +  md.max.x
+                    +  ' md.max.y : ' +  md.max.y
+                    );  */
                 }
                 return true;
             }

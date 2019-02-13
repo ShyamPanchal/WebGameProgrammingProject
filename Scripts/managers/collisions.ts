@@ -59,7 +59,8 @@ module managers {
                 md.max.y >= 0)
             {
                 if(!obj2.isColliding) {                    
-                    obj2.isColliding = true;   
+                    obj2.isColliding = true;
+                    /*
                     console.log(obj1.name + ' y:' + obj1.y);
                     math.Vec2.Print(obj1.boxCollider.center);
                     math.Vec2.Print(obj1.boxCollider.extends);
@@ -72,7 +73,7 @@ module managers {
                     +  ' md.min.y : ' +  md.min.y
                     +  ' md.max.x : ' +  md.max.x
                     +  ' md.max.y : ' +  md.max.y
-                    );                 
+                    );  */               
                 }
                 return true;
             }

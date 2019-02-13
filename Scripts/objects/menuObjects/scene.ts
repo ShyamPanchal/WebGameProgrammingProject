@@ -3,6 +3,7 @@ module objects
     export class Scene extends createjs.Container
     {
         public assetManager;
+        public isPaused: boolean; 
         constructor(assetManager: createjs.LoadQueue)
         {
             super();
@@ -22,6 +23,11 @@ module objects
         public Main():void
         {
             
+        }
+
+        public CheckPaused():void
+        {
+          this.isPaused = objects.Game.keyboard.pause;
         }
 
         public StartCountdown(seconds, callback: () => any) :void {

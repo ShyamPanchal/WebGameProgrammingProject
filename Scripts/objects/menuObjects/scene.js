@@ -26,6 +26,9 @@ var objects;
         };
         Scene.prototype.Main = function () {
         };
+        Scene.prototype.CheckPaused = function () {
+            this.isPaused = objects.Game.keyboard.pause;
+        };
         Scene.prototype.StartCountdown = function (seconds, callback) {
             var counter = seconds;
             var interval = setInterval(function () {

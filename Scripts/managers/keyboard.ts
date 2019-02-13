@@ -33,7 +33,8 @@ module managers {
                     this.moveRight = true;
                 break;
                 case config.Keys.ESCAPE:
-                    console.log("Pause!!");
+                    //console.log("Pause!!");
+                    
                 break;
             }
         }
@@ -56,7 +57,9 @@ module managers {
                 case config.Keys.RIGHT_ARROW:
                     this.moveRight = false;
                 break;
-                case config.Keys.ESCAPE:                    
+                case config.Keys.ESCAPE:    
+                    //  this.pause = false;
+                    this.pause = !this.pause;
                 break;
             }
         }

@@ -32,6 +32,14 @@ var managers;
             }
             return boundsPoint;
         };
+        //work only if this object is the result of checking aabb collision using minkowskiDifference
+        AABB.prototype.CheckCollided = function () {
+            this.isCollided = this.min.x <= 0 &&
+                this.max.x >= 0 &&
+                this.min.y <= 0 &&
+                this.max.y >= 0;
+            return this.isCollided;
+        };
         return AABB;
     }());
     managers.AABB = AABB;

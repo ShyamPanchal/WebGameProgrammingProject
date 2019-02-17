@@ -6,5 +6,6 @@ module objects
         public static assetManager: createjs.LoadQueue;
         public static currentScene: number;
         public static keyboard: managers.Keyboard;
+        public static isDebug: boolean;
     }
 }

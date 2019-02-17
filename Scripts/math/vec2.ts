@@ -24,8 +24,8 @@ module math {
             return new math.Vec2(P.x/d, P.y/d);
         }
 
-        public static Print (P:Vec2) {
-            console.log("x: " + P.x + " y: " + P.y);
+        public static Print (P:Vec2): string {
+            return "x: " + P.x + " y: " + P.y;
         }
     }
 }

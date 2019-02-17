@@ -33,6 +33,9 @@ var objects;
         EmptyGameObject.prototype.GetHeightBounds = function () {
             return this.height;
         };
+        EmptyGameObject.prototype.Update = function () {
+            _super.prototype.Update.call(this);
+        };
         return EmptyGameObject;
     }(objects.GameObject));
     objects.EmptyGameObject = EmptyGameObject;

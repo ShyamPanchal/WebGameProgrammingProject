@@ -34,7 +34,7 @@ var math;
             return new math.Vec2(P.x / d, P.y / d);
         };
         Vec2.Print = function (P) {
-            console.log("x: " + P.x + " y: " + P.y);
+            return "x: " + P.x + " y: " + P.y;
         };
         Vec2.zero = new Vec2(0, 0);
         return Vec2;

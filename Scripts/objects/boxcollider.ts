@@ -15,9 +15,7 @@ module objects {
 
         public center:math.Vec2 = new math.Vec2();
         public extends:math.Vec2 = new math.Vec2();
-
-        private graphics:createjs.Graphics;
-        private cached :createjs.Shape;
+        public aabb: managers.AABB;
 
         constructor(offset_x:number, offset_y:number, x:number, y:number, width:number, height:number) {
             this.x = x;
@@ -36,22 +34,27 @@ module objects {
         public Update(x:number, y:number):void {
             this.x = x;
             this.y = y;
-            this.center = new math.Vec2(this.offset_x + x + this.halfW, this.offset_y + y + this.halfH);
-            this.extends = new math.Vec2(this.halfW, this.halfH);
+            this.aabb = this.GetAABB(this.x, this.y);
         }
 
+        public GetAABB(x:number, y:number):managers.AABB {
+            this.center = new math.Vec2(this.offset_x + x + this.halfW, this.offset_y + y + this.halfH);
+            this.extends = new math.Vec2(this.halfW, this.halfH);
+            return new managers.AABB(this.center, this.extends);
+        }
+
+        private cached :createjs.Shape;
         public DebugLine() :void {
-
+            
             if (this.cached !== null) {
-            objects.Game.stage.removeChild(this.cached);
+                objects.Game.stage.removeChild(this.cached);
             }
-            this.graphics = new createjs.Graphics();
-            this.graphics.beginStroke("#000637")
-            .drawRect(this.offset_x + this.x, this.offset_y + this.y, this.width, this.height)
-            .endStroke();
+            let graphics = new createjs.Graphics();
+            graphics.beginStroke("#000637")
+                .drawRect(this.offset_x + this.x, this.offset_y + this.y, this.width, this.height)
+                .endStroke();
 
-            //console.log('w : ' + this.width + ' h : ' + this.height);
-            this.cached = new createjs.Shape(this.graphics);
+            this.cached = new createjs.Shape(graphics);
             objects.Game.stage.addChild(this.cached);
         
           }

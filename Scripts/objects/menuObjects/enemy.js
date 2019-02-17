@@ -31,8 +31,8 @@ var objects;
             console.log('In Enemy');
         };
         Enemy.prototype.Update = function () {
+            _super.prototype.Update.call(this);
             this.Move();
-            this.DebugLine();
         };
         Enemy.prototype.Reset = function () { };
         Enemy.prototype.Move = function () {

@@ -12,12 +12,8 @@ module objects{
 
     public isColliding:boolean;
     public isGrounded:boolean;
-    public isDebug: boolean;
 
     public isGravityAffected:boolean;
-
-    private graphics:createjs.Graphics;
-    private cached :createjs.Shape;
         
     public boxCollider : objects.BoxCollider;
     public lastPosition: math.Vec2;
@@ -45,9 +41,8 @@ module objects{
       this.isColliding = false;
       this.isGrounded = false;
       this.isGravityAffected = false;
-      this.isDebug = false;
       this.lastPosition = new math.Vec2();
-      this.boxCollider = new objects.BoxCollider(0 , 0,this.x, this.y, this.width, this.height);
+      this.boxCollider = new objects.BoxCollider(0 , 0, this.x, this.y, this.width, this.height);
     }
 
     protected GetWidthBounds() : number {
@@ -61,9 +56,19 @@ module objects{
     public Start(): void{
     }
 
-    public Update(): void{
-      this.boxCollider.x = this.x;
-      this.boxCollider.y = this.y;
+    protected Update(): void{
+      this.boxCollider.Update(this.x, this.y);
+
+      if (objects.Game.isDebug) {
+        this.DrawDebugLine()
+      }
+
+      if (this.isGravityAffected) {
+        //this.DoGravityEffect();
+      }
+    }
+    public CheckNextWorldPosition(): boolean {
+      return false;
     }
 
     public Reset(): void{
@@ -78,38 +83,36 @@ module objects{
 
     }
 
-    public GravityEffect(): void {
-        if (this.isGravityAffected) {
-          //console.log(this.height); player height = 60
-          this.y-=config.Gravity.gravity*60/3;
-        }
+    public DoGravityEffect(): void {
+        this.y -= config.Gravity.gravitySpeed;
     }
 
+    //called only when the function managers.Collision.CheckAABB is called
     public OnColliderEnter(penetration: math.Vec2, obj: GameObject) {
 
     }
 
+    //called only when the function managers.Collision.CheckAABB is called
     public OnColliderExit(penetration: math.Vec2, obj: GameObject) {
 
     }
 
-    public DebugLine() :void {
+    private cached :createjs.Shape;
+    public DrawDebugLine() :void {
+      if (this.boxCollider != null) {          
+        this.boxCollider.DebugLine();
+      }
 
-      if (this.isDebug) {
-        if (this.boxCollider != null) {          
-          this.boxCollider.DebugLine();
-        }
-
-        if (this.cached !== null) {
-          this.parent.removeChild(this.cached);
-        }
-        this.graphics = new createjs.Graphics();
-        this.graphics.beginStroke("#FF0099")
+      if (this.cached !== null) {
+        objects.Game.stage.removeChild(this.cached);
+      }
+      let graphics = new createjs.Graphics();
+      graphics.beginStroke("#FF0099")
         .drawRect(this.x, this.y, this.width, this.height)
         .endStroke();
-        this.cached = new createjs.Shape(this.graphics);
-        this.parent.addChild(this.cached);
-      }
+      this.cached = new createjs.Shape(graphics);
+      objects.Game.stage.addChild(this.cached);
     }
+  
   }
 }

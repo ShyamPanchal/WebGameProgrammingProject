@@ -18,8 +18,8 @@ module objects {
         }
 
         public Update():void {
+            super.Update();
             this.Move();
-            this.DebugLine();
         }        
         
         public Reset():void {}

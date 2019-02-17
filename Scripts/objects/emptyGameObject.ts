@@ -18,6 +18,10 @@ module objects{
       protected GetHeightBounds() : number {
         return this.height;
       }
+
+      public Update() {
+        super.Update();
+      }
     }
   }
   

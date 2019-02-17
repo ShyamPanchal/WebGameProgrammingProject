@@ -32,20 +32,10 @@ module managers {
             let md = aabb1.minkowskiDifference(aabb2);
 
 
-            if (md.min.x <= 0 &&
-                md.max.x >= 0 &&
-                md.min.y <= 0 &&
-                md.max.y >= 0)
+            if (md.CheckCollided())
             {
                 if(!obj2.isColliding) {                    
                     obj2.isColliding = true;
-                    /*
-                    console.log(' md.min.x : ' +md.min.x 
-                    +  ' md.min.y : ' +  md.min.y
-                    +  ' md.max.x : ' +  md.max.x
-                    +  ' md.max.y : ' +  md.max.y
-                    );
-                    */
                    var penetrationVector:math.Vec2 = md.closestPointOnBoundsToPoint(math.Vec2.zero);
                    obj1.OnColliderEnter(penetrationVector, obj2);
                 }
@@ -58,6 +48,10 @@ module managers {
             //boxA.center += penetrationVector;
             obj2.isColliding = false;
             return false;
+        }
+
+        public static CheckAABBCollision(aabb1: managers.AABB, aabb2: managers.AABB):managers.AABB {
+            return aabb1.minkowskiDifference(aabb2);
         }
     }
 }

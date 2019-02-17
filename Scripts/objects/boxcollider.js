@@ -17,20 +17,22 @@ var objects;
         BoxCollider.prototype.Update = function (x, y) {
             this.x = x;
             this.y = y;
+            this.aabb = this.GetAABB(this.x, this.y);
+        };
+        BoxCollider.prototype.GetAABB = function (x, y) {
             this.center = new math.Vec2(this.offset_x + x + this.halfW, this.offset_y + y + this.halfH);
             this.extends = new math.Vec2(this.halfW, this.halfH);
-            this.aabb = new managers.AABB(this.center, this.extends);
+            return new managers.AABB(this.center, this.extends);
         };
         BoxCollider.prototype.DebugLine = function () {
             if (this.cached !== null) {
                 objects.Game.stage.removeChild(this.cached);
             }
-            this.graphics = new createjs.Graphics();
-            this.graphics.beginStroke("#000637")
+            var graphics = new createjs.Graphics();
+            graphics.beginStroke("#000637")
                 .drawRect(this.offset_x + this.x, this.offset_y + this.y, this.width, this.height)
                 .endStroke();
-            //console.log('w : ' + this.width + ' h : ' + this.height);
-            this.cached = new createjs.Shape(this.graphics);
+            this.cached = new createjs.Shape(graphics);
             objects.Game.stage.addChild(this.cached);
         };
         return BoxCollider;

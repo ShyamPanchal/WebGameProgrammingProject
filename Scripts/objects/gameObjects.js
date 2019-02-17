@@ -35,7 +35,6 @@ var objects;
             this.isColliding = false;
             this.isGrounded = false;
             this.isGravityAffected = false;
-            this.isDebug = false;
             this.lastPosition = new math.Vec2();
             this.boxCollider = new objects.BoxCollider(0, 0, this.x, this.y, this.width, this.height);
         };
@@ -48,8 +47,16 @@ var objects;
         GameObject.prototype.Start = function () {
         };
         GameObject.prototype.Update = function () {
-            this.boxCollider.x = this.x;
-            this.boxCollider.y = this.y;
+            this.boxCollider.Update(this.x, this.y);
+            if (objects.Game.isDebug) {
+                this.DrawDebugLine();
+            }
+            if (this.isGravityAffected) {
+                //this.DoGravityEffect();
+            }
+        };
+        GameObject.prototype.CheckNextWorldPosition = function () {
+            return false;
         };
         GameObject.prototype.Reset = function () {
         };
@@ -57,31 +64,28 @@ var objects;
         };
         GameObject.prototype.Move = function () {
         };
-        GameObject.prototype.GravityEffect = function () {
-            if (this.isGravityAffected) {
-                //console.log(this.height); player height = 60
-                this.y -= config.Gravity.gravity * 60 / 3;
-            }
+        GameObject.prototype.DoGravityEffect = function () {
+            this.y -= config.Gravity.gravitySpeed;
         };
+        //called only when the function managers.Collision.CheckAABB is called
         GameObject.prototype.OnColliderEnter = function (penetration, obj) {
         };
+        //called only when the function managers.Collision.CheckAABB is called
         GameObject.prototype.OnColliderExit = function (penetration, obj) {
         };
-        GameObject.prototype.DebugLine = function () {
-            if (this.isDebug) {
-                if (this.boxCollider != null) {
-                    this.boxCollider.DebugLine();
-                }
-                if (this.cached !== null) {
-                    this.parent.removeChild(this.cached);
-                }
-                this.graphics = new createjs.Graphics();
-                this.graphics.beginStroke("#FF0099")
-                    .drawRect(this.x, this.y, this.width, this.height)
-                    .endStroke();
-                this.cached = new createjs.Shape(this.graphics);
-                this.parent.addChild(this.cached);
+        GameObject.prototype.DrawDebugLine = function () {
+            if (this.boxCollider != null) {
+                this.boxCollider.DebugLine();
             }
+            if (this.cached !== null) {
+                objects.Game.stage.removeChild(this.cached);
+            }
+            var graphics = new createjs.Graphics();
+            graphics.beginStroke("#FF0099")
+                .drawRect(this.x, this.y, this.width, this.height)
+                .endStroke();
+            this.cached = new createjs.Shape(graphics);
+            objects.Game.stage.addChild(this.cached);
         };
         return GameObject;
     }(createjs.Bitmap));

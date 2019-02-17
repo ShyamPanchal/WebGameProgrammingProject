@@ -27,19 +27,9 @@ var managers;
             var aabb1 = obj1.boxCollider.aabb;
             var aabb2 = obj2.boxCollider.aabb;
             var md = aabb1.minkowskiDifference(aabb2);
-            if (md.min.x <= 0 &&
-                md.max.x >= 0 &&
-                md.min.y <= 0 &&
-                md.max.y >= 0) {
+            if (md.CheckCollided()) {
                 if (!obj2.isColliding) {
                     obj2.isColliding = true;
-                    /*
-                    console.log(' md.min.x : ' +md.min.x
-                    +  ' md.min.y : ' +  md.min.y
-                    +  ' md.max.x : ' +  md.max.x
-                    +  ' md.max.y : ' +  md.max.y
-                    );
-                    */
                     var penetrationVector = md.closestPointOnBoundsToPoint(math.Vec2.zero);
                     obj1.OnColliderEnter(penetrationVector, obj2);
                 }
@@ -51,6 +41,9 @@ var managers;
             //boxA.center += penetrationVector;
             obj2.isColliding = false;
             return false;
+        };
+        Collision.CheckAABBCollision = function (aabb1, aabb2) {
+            return aabb1.minkowskiDifference(aabb2);
         };
         return Collision;
     }());

@@ -6,6 +6,7 @@ module managers{
         public min:math.Vec2;
         public max:math.Vec2;
         public size:math.Vec2;
+        public isCollided:boolean;
 
 
         constructor (center:math.Vec2, extents:math.Vec2) 
@@ -44,6 +45,15 @@ module managers{
                 boundsPoint = new math.Vec2(point.x, this.min.y);
             }
             return boundsPoint;
+        }
+
+        //work only if this object is the result of checking aabb collision using minkowskiDifference
+        public CheckCollided():boolean {
+            this.isCollided = this.min.x <= 0 &&
+            this.max.x >= 0 &&
+            this.min.y <= 0 &&
+            this.max.y >= 0;
+            return this.isCollided;
         }
     }
 }

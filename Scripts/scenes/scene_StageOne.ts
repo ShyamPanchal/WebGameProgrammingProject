@@ -78,9 +78,10 @@ module scenes
             this.titleShadow.alpha = 0.5;
 
             this.player = new objects.Player(this.assetManager);
-            this.player.boxCollider = new objects.BoxCollider(this.player.width/4.4, this.player.height - 8, this.player.x, 
+            
+            /*this.player.boxCollider = new objects.BoxCollider(this.player.width/4.4, this.player.height - 8, this.player.x, 
                 this.player.y, 
-                this.player.width/2.2, 8);
+                this.player.width/2.2, 8);*/
 
             this.Main();
 
@@ -107,37 +108,44 @@ module scenes
             for(let i = 0; i < this.platforms.length; i++) {
                 var platform = this.platforms[i];
                 if (managers.Collision.CheckAABB(this.player, platform)) {
-                    /*console.log('Collided with : ' + platform.name + ' <> py:' + this.player.y
-                            + ' pfy:' + platform.y);    */
+                    //console.log('Collided with : ' + platform.name + ' <> py:' + this.player.y + ' pfy:' + platform.y);
                     if(!this.player.isGrounded) {                    
-                        this.player.isGrounded = true;
+                        if (this.player.boxCollider.center.y <= platform.boxCollider.center.y) {
+                            this.player.isGrounded = true;                            
+                        } else if (this.player.boxCollider.center.y >= platform.boxCollider.center.y) {
+                            //player below
+                        }
                     }
                     break;// dont verify another platform in the case of one be grounded
                 } else {
-                    this.player.isGrounded = false;
+                    if (this.player.boxCollider.center.y < platform.boxCollider.center.y) {                           
+                        this.player.isGrounded = false;
+                    } else if (this.player.boxCollider.center.y > platform.boxCollider.center.y) {
+                        //player below
+                    }
                 }
             //console.log('is Grounded:' + this.player.isGrounded);
             }
             for(let i = 0; i < this.walls.length; i++) {     
-                var wall = this.walls[i];        
+                var wall = this.walls[i];
                 if (managers.Collision.CheckAABB(this.player, wall)) {
-                    if(!this.player.isColliding) {
+                /*    if(!this.player.isColliding) {
                         this.player.isColliding = true;
-                        if (wall.name === 'wall_l') {
-                            this.player.canMoveL = false;
-                        } else if (wall.name === 'wall_r') {
+                        if (this.player.boxCollider.center.x <= wall.boxCollider.center.x) {
                             this.player.canMoveR = false;
-                        }
+                        } else if (this.player.boxCollider.center.x >= wall.boxCollider.center.x) {
+                            this.player.canMoveL = false;
+                        }                        
                         //Todo: make it work to any object
                         break;
                     }
                 } else {
                     this.player.isColliding = false;
-                    if (wall.name === 'wall_l') {
-                        this.player.canMoveL = true;
-                    } else if (wall.name === 'wall_r') {
+                    if (this.player.boxCollider.center.x < wall.boxCollider.center.x) {
                         this.player.canMoveR = true;
-                    }
+                    } else if (this.player.boxCollider.center.x > wall.boxCollider.center.x) {
+                        this.player.canMoveL = true;
+                    }*/
                 }
             }
 
@@ -180,9 +188,7 @@ module scenes
             this.pauseButton.on("click", ()=>{this.isPaused = !this.isPaused; this.fn_pauseButtonClick;});//pause
         
         }
-
-        stage:createjs.Stage;
-        drawingCanvas:createjs.Shape;
+        
         private CreateScenery() {
             var wall_l = new objects.EmptyGameObject(this.assetManager, "wall_l", 1, 600);
             wall_l.isDebug = true;
@@ -211,17 +217,18 @@ module scenes
 
         }
         private CreateObjects():void {
-            var floor_3_Crate = new objects.EmptyGameObject(this.assetManager, "floor_3_stairs", 35, 35); 
+            var floor_3_Crate = new objects.EmptyGameObject(this.assetManager, "floor_3_crate", 35, 35); 
             this.addChild(floor_3_Crate);
             
-            this.platforms[9] = floor_3_Crate;
-            this.walls[2] = floor_3_Crate;
-
+            
             floor_3_Crate.x = 415;
             floor_3_Crate.y = 210;
             floor_3_Crate.boxCollider = new objects.BoxCollider(0, 0, floor_3_Crate.x, floor_3_Crate.y, floor_3_Crate.width, floor_3_Crate.height);
             floor_3_Crate.isDebug = true;
             floor_3_Crate.DebugLine();
+
+            this.platforms[9] = floor_3_Crate;
+            this.walls[2] = floor_3_Crate;
         }
 
         private CreatePlatformsStairs():void {

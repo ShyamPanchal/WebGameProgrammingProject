@@ -36,7 +36,8 @@ var objects;
             this.isGrounded = false;
             this.isGravityAffected = false;
             this.isDebug = false;
-            //this.boxCollider = new objects.BoxCollider(0 , 0,this.x, this.y, this.width, this.height);
+            this.lastPosition = new math.Vec2();
+            this.boxCollider = new objects.BoxCollider(0, 0, this.x, this.y, this.width, this.height);
         };
         GameObject.prototype.GetWidthBounds = function () {
             return this.getBounds().width;
@@ -47,6 +48,8 @@ var objects;
         GameObject.prototype.Start = function () {
         };
         GameObject.prototype.Update = function () {
+            this.boxCollider.x = this.x;
+            this.boxCollider.y = this.y;
         };
         GameObject.prototype.Reset = function () {
         };
@@ -56,8 +59,13 @@ var objects;
         };
         GameObject.prototype.GravityEffect = function () {
             if (this.isGravityAffected) {
-                this.y -= config.Gravity.gravity * this.height / 3;
+                //console.log(this.height); player height = 60
+                this.y -= config.Gravity.gravity * 60 / 3;
             }
+        };
+        GameObject.prototype.OnColliderEnter = function (penetration, obj) {
+        };
+        GameObject.prototype.OnColliderExit = function (penetration, obj) {
         };
         GameObject.prototype.DebugLine = function () {
             if (this.isDebug) {

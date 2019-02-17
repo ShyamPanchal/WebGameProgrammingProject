@@ -15,6 +15,7 @@ module objects {
 
         public center:math.Vec2 = new math.Vec2();
         public extends:math.Vec2 = new math.Vec2();
+        public aabb: managers.AABB;
 
         private graphics:createjs.Graphics;
         private cached :createjs.Shape;
@@ -38,6 +39,7 @@ module objects {
             this.y = y;
             this.center = new math.Vec2(this.offset_x + x + this.halfW, this.offset_y + y + this.halfH);
             this.extends = new math.Vec2(this.halfW, this.halfH);
+            this.aabb = new managers.AABB(this.center, this.extends);
         }
 
         public DebugLine() :void {

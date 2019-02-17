@@ -20,6 +20,7 @@ module objects{
     private cached :createjs.Shape;
         
     public boxCollider : objects.BoxCollider;
+    public lastPosition: math.Vec2;
 
     // Constructor
     constructor(assetManager: createjs.LoadQueue, imageString: string){
@@ -45,7 +46,8 @@ module objects{
       this.isGrounded = false;
       this.isGravityAffected = false;
       this.isDebug = false;
-      //this.boxCollider = new objects.BoxCollider(0 , 0,this.x, this.y, this.width, this.height);
+      this.lastPosition = new math.Vec2();
+      this.boxCollider = new objects.BoxCollider(0 , 0,this.x, this.y, this.width, this.height);
     }
 
     protected GetWidthBounds() : number {
@@ -60,6 +62,8 @@ module objects{
     }
 
     public Update(): void{
+      this.boxCollider.x = this.x;
+      this.boxCollider.y = this.y;
     }
 
     public Reset(): void{
@@ -76,8 +80,17 @@ module objects{
 
     public GravityEffect(): void {
         if (this.isGravityAffected) {
-          this.y-=config.Gravity.gravity*this.height/3;
+          //console.log(this.height); player height = 60
+          this.y-=config.Gravity.gravity*60/3;
         }
+    }
+
+    public OnColliderEnter(penetration: math.Vec2, obj: GameObject) {
+
+    }
+
+    public OnColliderExit(penetration: math.Vec2, obj: GameObject) {
+
     }
 
     public DebugLine() :void {

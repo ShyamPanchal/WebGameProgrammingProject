@@ -26,21 +26,98 @@ module objects{
 
     public Update():void{
       this.boxCollider.Update(this.x, this.y);
+
       if (!this.isGrounded && !this.isJumping) {
         this.GravityEffect();
-        //console.log('gravityEffect');
       } else if (this.isGrounded){
-        //this.isJumping = false;
         this.maxJumpHeight = this.y - (this.height * 0.7);
-        //console.log('grounded : ' + this.maxJumpHeight);
       }
+      
       this.Jump();
       this.Move();
       this.CheckBounds();
+      
+      this.lastPosition.x = this.x;
+      this.lastPosition.y = this.y;
     }
 
     public Reset(): void{
 
+    }
+
+    public OnColliderEnter(penetration: math.Vec2, obj: GameObject) {
+      console.log(obj.name + ' penetration : ' + math.Vec2.Print(penetration));
+      this.x = this.x - penetration.x;
+      this.y = this.y - penetration.y;
+      this.boxCollider.Update(this.x, this.y);
+
+      if (penetration.y != 0) {
+        var bellow = Math.abs((this.boxCollider.aabb.max.y - penetration.y) - obj.boxCollider.aabb.min.y);
+        var above = Math.abs((this.boxCollider.aabb.min.y - penetration.y) - obj.boxCollider.aabb.max.y);
+        console.log('above : ' + above);
+        console.log('bellow : ' + bellow);
+
+        if (above > bellow) {
+          //player is above the object
+        } else {
+          //player is bellow the object
+          this.isJumping = false;
+        }
+        this.canMoveR = true;
+        this.canMoveL = true;
+      } else {
+        var leftSide = Math.abs((this.boxCollider.aabb.max.x - penetration.x) - obj.boxCollider.aabb.min.x);
+        var rightSide = Math.abs((this.boxCollider.aabb.min.x - penetration.x) - obj.boxCollider.aabb.max.x);
+        
+        console.log('leftSide : ' + leftSide);
+        console.log('rightSide : ' + rightSide);
+
+        if (rightSide > leftSide) {
+          //player is at right side of the object
+          this.canMoveR = false;
+          console.log('right side');
+          this.x = this.x - Math.abs( penetration.x);//this.halfW);
+        } else {
+          //player is at left side of the object
+          this.canMoveL = false;
+          console.log('left side');
+          this.x = this.x + Math.abs(penetration.x);//this.halfW);
+
+        }
+        this.boxCollider.Update(this.x, this.y);
+      }
+
+/*
+      console.log('player min x' + this.boxCollider.aabb.min.x);
+      console.log('player max x' + this.boxCollider.aabb.max.x);
+
+      console.log('obj min x' + obj.boxCollider.aabb.min.x);
+      console.log('obj max x' + obj.boxCollider.aabb.max.x);
+*/
+
+
+      /*
+      this.y = this.lastPosition.y;
+      if (penetration.x > 0) {  
+        this.canMoveR = false;
+       } else {
+         this.canMoveR = true;
+       }
+       
+       if (penetration.x < 0) {  
+         this.canMoveL = false;
+       } else {
+         this.canMoveL = true;
+       }
+      */
+    }
+
+    public OnColliderExit(penetration: math.Vec2, obj: GameObject) {
+      
+      this.canMoveR = true;
+      this.canMoveL = true;
+      this.isColliding = false;
+      
     }
 
     public Jump() : void {
@@ -48,14 +125,13 @@ module objects{
         if (objects.Game.keyboard.moveUp && !this.isJumping) {
           this.isGrounded = false;
           this.isJumping = true;
-          //console.log('Perform Jump');
-          this.y+=config.Gravity.gravity*this.height;
+          this.y += config.Gravity.gravity*this.height;
         }
       } else if(this.isJumping) {
         if (this.maxJumpHeight <= this.y){
           //going higher         
           //console.log('going higher : '+ this.y + '- max :' + this.maxJumpHeight);   
-          this.y+=config.Gravity.gravity*this.height/2;
+          this.y += config.Gravity.gravity*this.height/2;
         } else {
           //console.log('reach high');
           this.isJumping = false;
@@ -72,6 +148,11 @@ module objects{
       if (objects.Game.keyboard.moveRight && this.canMoveR) {
           this.x+=Player.speed;
       }
+    }
+
+    public CanMove(): Boolean {
+      
+      return false;
     }
 
     public CheckBounds(): void{

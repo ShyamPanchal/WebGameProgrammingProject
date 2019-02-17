@@ -19,6 +19,7 @@ var objects;
             this.y = y;
             this.center = new math.Vec2(this.offset_x + x + this.halfW, this.offset_y + y + this.halfH);
             this.extends = new math.Vec2(this.halfW, this.halfH);
+            this.aabb = new managers.AABB(this.center, this.extends);
         };
         BoxCollider.prototype.DebugLine = function () {
             if (this.cached !== null) {

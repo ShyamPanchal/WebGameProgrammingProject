@@ -18,12 +18,19 @@ module objects{
     public boxCollider : objects.BoxCollider;
     public lastPosition: math.Vec2;
 
+    public gravityFactor:number;
+
     // Constructor
     constructor(assetManager: createjs.LoadQueue, imageString: string){
       super(assetManager.getResult(imageString));
 
       this.name = imageString;
+      this.gravityFactor = config.Gravity.gravityFactor;
       this.Init();
+    }
+
+    protected GetGravityFactor():number{
+      return this.gravityFactor;
     }
 
     // Methods / Functions
@@ -84,7 +91,7 @@ module objects{
     }
 
     public DoGravityEffect(): void {
-        this.y -= config.Gravity.gravitySpeed;
+        this.y -= config.Gravity.gravitySpeed*this.GetGravityFactor();
     }
 
     //called only when the function managers.Collision.CheckAABB is called

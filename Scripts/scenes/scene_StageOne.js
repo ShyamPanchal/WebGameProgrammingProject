@@ -27,10 +27,11 @@ var scenes;
             objects.Game.currentScene = config.Scene.PAUSE;
         };
         StageOne.prototype.Start = function () {
+            //config.Gravity.gravityFactor = -1;
             objects.Game.isDebug = true;
             this.isPaused = false;
-            this.platforms = new Array();
-            this.walls = new Array();
+            this.gameSceneryStaticObjects = new Array();
+            this.gameSceneryDynamicObjects = new Array();
             this.enemies = new Array();
             objects.Game.keyboard = new managers.Keyboard();
             var ghost = new objects.Enemy(this.assetManager, "ghost", 550, 245);
@@ -53,50 +54,63 @@ var scenes;
             this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
             this.player = new objects.Player(this.assetManager);
-            this.player.boxCollider = new objects.BoxCollider(16, 16, this.player.x, this.player.y, this.player.width / 2.2, this.player.height - 20);
+            this.player.boxCollider = new objects.BoxCollider(18, 16, this.player.x, this.player.y, this.player.width - 45, this.player.height - 20);
             this.Main();
         };
-        StageOne.prototype.Update = function () {
+        StageOne.prototype.CreateFunctionCheck = function (gameObject) {
             var _this = this;
-            this.CheckPaused();
-            if (this.isPaused) {
-                return;
-            }
-            var CheckPlayerMovement = function (x, y) {
+            var boxCollider = gameObject.boxCollider;
+            return function (x, y) {
                 var collided = false;
-                var aabbPlayerCollider = _this.player.boxCollider.GetAABB(x, y);
+                var aabbCollider = boxCollider.GetAABB(x, y);
                 var result;
-                for (var i = 0; i < _this.platforms.length; i++) {
-                    var platform = _this.platforms[i];
-                    result = managers.Collision.CheckAABBCollision(aabbPlayerCollider, platform.boxCollider.aabb);
+                for (var i = 0; i < _this.gameSceneryStaticObjects.length; i++) {
+                    var platform = _this.gameSceneryStaticObjects[i];
+                    result = managers.Collision.CheckAABBCollision(aabbCollider, platform.boxCollider.aabb);
                     if (result.CheckCollided()) {
                         collided = true;
                         break;
                     }
                 }
                 if (!collided) {
-                    for (var i = 0; i < _this.walls.length; i++) {
-                        var wall = _this.walls[i];
-                        result = managers.Collision.CheckAABBCollision(aabbPlayerCollider, wall.boxCollider.aabb);
-                        if (result.CheckCollided()) {
-                            collided = true;
-                            break;
+                    for (var i = 0; i < _this.gameSceneryDynamicObjects.length; i++) {
+                        var object = _this.gameSceneryDynamicObjects[i];
+                        if (object.name !== gameObject.name) {
+                            result = managers.Collision.CheckAABBCollision(aabbCollider, object.boxCollider.aabb);
+                            if (result.CheckCollided()) {
+                                collided = true;
+                                if (gameObject.name === _this.player.name) {
+                                    object.aabbResultPlayer = result;
+                                    _this.player.actionObject = object;
+                                }
+                                break;
+                            }
                         }
                     }
                 }
+                if (!collided) {
+                    _this.player.actionObject = null;
+                }
                 return result;
             };
-            this.player.UpdateIfPossible(CheckPlayerMovement);
+        };
+        StageOne.prototype.Update = function () {
+            this.CheckPaused();
+            if (this.isPaused) {
+                return;
+            }
+            var CheckMovement = this.CreateFunctionCheck(this.player);
+            this.player.UpdateIfPossible(CheckMovement);
             this.enemies.forEach(function (enemy) {
                 enemy.Update();
             });
-            for (var i = 0; i < this.platforms.length; i++) {
-                var platform = this.platforms[i];
+            for (var i = 0; i < this.gameSceneryStaticObjects.length; i++) {
+                var platform = this.gameSceneryStaticObjects[i];
                 platform.Update();
             }
-            for (var i = 0; i < this.walls.length; i++) {
-                var wall = this.walls[i];
-                wall.Update();
+            for (var i = 0; i < this.gameSceneryDynamicObjects.length; i++) {
+                var object = this.gameSceneryDynamicObjects[i];
+                object.UpdateIfPossible(this.CreateFunctionCheck(object));
             }
         };
         StageOne.prototype.Main = function () {
@@ -108,12 +122,12 @@ var scenes;
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
             this.addChild(this.player);
+            this.CreateScenery();
             this.enemies.forEach(function (ghost) {
                 _this.addChild(ghost);
             });
             this.addChild(this.background_shadow);
             //create the empties gameobjects to be the stage boundaries
-            this.CreateScenery();
             this.backButton.on("click", this.fn_ButtonClick);
             var callback = function () {
                 _this.removeChild(_this.title);
@@ -134,69 +148,76 @@ var scenes;
             wall_r.x = 840;
             wall_r.y = 10;
             this.addChild(wall_r);
-            this.walls[0] = wall_l;
-            this.walls[1] = wall_r;
+            this.gameSceneryStaticObjects[10] = wall_l;
+            this.gameSceneryStaticObjects[11] = wall_r;
             this.CreateFloors();
             this.CreatePlatformsStairs();
             this.CreateObjects();
         };
         StageOne.prototype.CreateObjects = function () {
-            var floor_3_Crate = new objects.EmptyGameObject(this.assetManager, "floor_3_crate", 35, 35);
+            var floor_3_Crate = new objects.PushableObject(this.assetManager, "crate");
+            floor_3_Crate.boxCollider = new objects.BoxCollider(0, 0, floor_3_Crate.x, floor_3_Crate.y, floor_3_Crate.width, floor_3_Crate.height - 5);
             this.addChild(floor_3_Crate);
             floor_3_Crate.x = 415;
-            floor_3_Crate.y = 210;
-            this.platforms[9] = floor_3_Crate;
-            this.walls[2] = floor_3_Crate;
+            floor_3_Crate.y = 190;
+            this.gameSceneryDynamicObjects[0] = floor_3_Crate;
         };
         StageOne.prototype.CreatePlatformsStairs = function () {
             var floor_3_stairs = new objects.EmptyGameObject(this.assetManager, "floor_3_stairs", 30, 1);
             this.addChild(floor_3_stairs);
-            this.platforms[8] = floor_3_stairs;
+            this.gameSceneryStaticObjects[9] = floor_3_stairs;
             floor_3_stairs.x = 320;
             floor_3_stairs.y = 184;
             var floor_1_stairs = new objects.EmptyGameObject(this.assetManager, "floor_1_stairs", 30, 1);
             this.addChild(floor_1_stairs);
-            this.platforms[7] = floor_1_stairs;
+            this.gameSceneryStaticObjects[8] = floor_1_stairs;
             floor_1_stairs.x = 706;
             floor_1_stairs.y = 414;
         };
         StageOne.prototype.CreateFloors = function () {
             //Floors platforms
-            var floor_4_1 = new objects.EmptyGameObject(this.assetManager, "floor_4_1", 60, 1);
+            var platform_offset = 8;
+            var floor_5 = new objects.EmptyGameObject(this.assetManager, "floor_5", 620, 1 + platform_offset);
+            this.addChild(floor_5);
+            this.gameSceneryStaticObjects[7] = floor_5;
+            floor_5.x = 220;
+            floor_5.y = 12 + platform_offset;
+            var floor_4_1 = new objects.EmptyGameObject(this.assetManager, "floor_4_1", 60, 1 + platform_offset);
             this.addChild(floor_4_1);
-            this.platforms[6] = floor_4_1;
+            this.gameSceneryStaticObjects[6] = floor_4_1;
             floor_4_1.x = 220;
-            floor_4_1.y = 130;
-            var floor_4_2 = new objects.EmptyGameObject(this.assetManager, "floor_4_2", 460, 1);
+            floor_4_1.y = 130 + platform_offset;
+            var floor_4_2 = new objects.EmptyGameObject(this.assetManager, "floor_4_2", 460, 1 + platform_offset);
             this.addChild(floor_4_2);
-            this.platforms[5] = floor_4_2;
+            this.gameSceneryStaticObjects[5] = floor_4_2;
             floor_4_2.x = 380;
-            floor_4_2.y = 130;
-            var floor_3 = new objects.EmptyGameObject(this.assetManager, "floor_3", 620, 1);
+            floor_4_2.y = 130 + platform_offset;
+            var floor_3 = new objects.EmptyGameObject(this.assetManager, "floor_3", 620, 1 + platform_offset);
             this.addChild(floor_3);
-            this.platforms[4] = floor_3;
+            this.gameSceneryStaticObjects[4] = floor_3;
             floor_3.x = 220;
-            floor_3.y = 245;
-            var floor_2_1 = new objects.EmptyGameObject(this.assetManager, "floor_2_1", 60, 1);
+            floor_3.y = 242 + platform_offset;
+            //this.player.y = 300;
+            var floor_2_1 = new objects.EmptyGameObject(this.assetManager, "floor_2_1", 60, 1 + platform_offset);
             this.addChild(floor_2_1);
-            this.platforms[3] = floor_2_1;
+            this.gameSceneryStaticObjects[3] = floor_2_1;
             floor_2_1.x = 780;
-            floor_2_1.y = 360;
-            var floor_2_2 = new objects.EmptyGameObject(this.assetManager, "floor_2_2", 460, 1);
+            floor_2_1.y = 357 + platform_offset;
+            var floor_2_2 = new objects.EmptyGameObject(this.assetManager, "floor_2_2", 455, 1 + platform_offset);
             this.addChild(floor_2_2);
-            this.platforms[2] = floor_2_2;
+            this.gameSceneryStaticObjects[2] = floor_2_2;
             floor_2_2.x = 220;
-            floor_2_2.y = 360;
-            var floor_1 = new objects.EmptyGameObject(this.assetManager, "floor_1", 620, 1);
+            floor_2_2.y = 357 + platform_offset;
+            var floor_1 = new objects.EmptyGameObject(this.assetManager, "floor_1", 620, 1 + platform_offset);
             this.addChild(floor_1);
-            this.platforms[1] = floor_1;
+            this.gameSceneryStaticObjects[1] = floor_1;
             floor_1.x = 220;
-            floor_1.y = 475;
-            var floor_0 = new objects.EmptyGameObject(this.assetManager, "floor_0", 620, 1);
+            floor_1.y = 472 + platform_offset;
+            var floor_0 = new objects.EmptyGameObject(this.assetManager, "floor_0", 620, 1 + platform_offset);
             this.addChild(floor_0);
-            this.platforms[0] = floor_0;
+            this.gameSceneryStaticObjects[0] = floor_0;
             floor_0.x = 220;
-            floor_0.y = 590;
+            floor_0.y = 580 + platform_offset;
         };
         return StageOne;
     }(objects.Scene));

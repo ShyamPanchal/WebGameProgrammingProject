@@ -121,8 +121,8 @@ var scenes;
             this.addChild(this.title);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
-            this.addChild(this.player);
             this.CreateScenery();
+            this.addChild(this.player);
             this.enemies.forEach(function (ghost) {
                 _this.addChild(ghost);
             });
@@ -155,6 +155,12 @@ var scenes;
             this.CreateObjects();
         };
         StageOne.prototype.CreateObjects = function () {
+            var floor_3_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
+            floor_3_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk.x, floor_3_Desk.y, floor_3_Desk.width, floor_3_Desk.height);
+            this.addChild(floor_3_Desk);
+            floor_3_Desk.x = 615;
+            floor_3_Desk.y = 190;
+            this.gameSceneryDynamicObjects[1] = floor_3_Desk;
             var floor_3_Crate = new objects.PushableObject(this.assetManager, "crate");
             floor_3_Crate.boxCollider = new objects.BoxCollider(0, 0, floor_3_Crate.x, floor_3_Crate.y, floor_3_Crate.width, floor_3_Crate.height - 5);
             this.addChild(floor_3_Crate);

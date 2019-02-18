@@ -138,14 +138,20 @@ module objects{
     }
 
     public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
-      let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());
+      let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());      
 
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
       this.isGrounded = md.isCollided && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y*this.GetGravityFactor() > 0);
+
     }
 
     public CheckMovement(Check: (x:number, y:number) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
       let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y);
+
+      if (this.actionObject instanceof OpenableObject) {
+        return true;
+      }
+
       return !md.isCollided;// && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
     }
 
@@ -153,6 +159,11 @@ module objects{
       let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
       this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
+
+      if (this.actionObject instanceof OpenableObject) {
+          return true;
+      }
+
       return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
       //&& (md.closestPointOnBoundsToPoint(math.Vec2.zero).y > 0 || md.closestPointOnBoundsToPoint(math.Vec2.zero).y < 0));
     }

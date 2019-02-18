@@ -25,7 +25,9 @@ var objects;
             if (this.aabbResultPlayer !== null) {
                 var isLeft = this.aabbResultPlayer.closestPointOnBoundsToPoint(math.Vec2.zero).x < 0;
                 console.log('isLeft: ' + isLeft);
-                this.Push(10, isLeft);
+                if (this.aabbResultPlayer.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0) {
+                    this.Push(10, isLeft);
+                }
             }
         };
         PushableObject.prototype.Push = function (speed, isLeft) {

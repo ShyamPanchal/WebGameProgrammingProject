@@ -29,7 +29,10 @@ console.log('code ran');
         { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
         { id: "empty", src: "../Assets/Background/empty.png" },
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
-        { id: "crate", src: "../Assets/Sprites/Objects/crate.png" }
+        { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
+        { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
+        { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" }
+
     ];
     function Init():void {
         console.log("Initialization start");

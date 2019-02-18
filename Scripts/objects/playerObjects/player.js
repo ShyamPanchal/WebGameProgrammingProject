@@ -126,12 +126,18 @@ var objects;
         };
         Player.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
             var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
+            if (this.actionObject instanceof objects.OpenableObject) {
+                return true;
+            }
             return !md.isCollided; // && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
         };
         Player.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
             var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
             //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
             this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
+            if (this.actionObject instanceof objects.OpenableObject) {
+                return true;
+            }
             return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
             //&& (md.closestPointOnBoundsToPoint(math.Vec2.zero).y > 0 || md.closestPointOnBoundsToPoint(math.Vec2.zero).y < 0));
         };

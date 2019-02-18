@@ -19,9 +19,13 @@ var objects;
         function GameObject(assetManager, imageString) {
             var _this = _super.call(this, assetManager.getResult(imageString)) || this;
             _this.name = imageString;
+            _this.gravityFactor = config.Gravity.gravityFactor;
             _this.Init();
             return _this;
         }
+        GameObject.prototype.GetGravityFactor = function () {
+            return this.gravityFactor;
+        };
         // Methods / Functions
         GameObject.prototype.Init = function () {
             this.width = this.GetWidthBounds();
@@ -65,7 +69,7 @@ var objects;
         GameObject.prototype.Move = function () {
         };
         GameObject.prototype.DoGravityEffect = function () {
-            this.y -= config.Gravity.gravitySpeed;
+            this.y -= config.Gravity.gravitySpeed * this.GetGravityFactor();
         };
         //called only when the function managers.Collision.CheckAABB is called
         GameObject.prototype.OnColliderEnter = function (penetration, obj) {

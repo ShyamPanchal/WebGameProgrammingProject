@@ -24,6 +24,8 @@ module scenes
         private gameSceneryStaticObjects:objects.EmptyGameObject[];
         private gameSceneryDynamicObjects:objects.DynamicObject[];
 
+        private timeRemaining: objects.Label;
+
 
         constructor(assetManager: createjs.LoadQueue)
         {
@@ -43,8 +45,9 @@ module scenes
 
         public Start():void
         {
+            
             //config.Gravity.gravityFactor = -1;
-
+            
             objects.Game.isDebug = true;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
@@ -58,10 +61,13 @@ module scenes
             this.enemies[0] = ghost;
 
             console.log("GAME SCENE(S)...");        
+
+            //this.timeRemaining = new objects.Timer(objects.Game.stageTimer, (1066/2), 50, true);
+            this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 66, 65, true);
         
             this.background = new objects.Background(this.assetManager, "level_01");           
             this.background_main = new objects.Background(this.assetManager, "level_01_house");           
-            this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");           
+            this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
             
             this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
             this.txtButton.x = 910;
@@ -136,6 +142,8 @@ module scenes
             } 
 
             
+            this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel();
+            
             let CheckMovement = this.CreateFunctionCheck(this.player);
 
             this.player.UpdateIfPossible(CheckMovement);
@@ -157,10 +165,11 @@ module scenes
 
         public Main():void
         {        
-
+            this.timeRemaining.fn_TimerTicker(objects.Game.stageTimer);
             //this.addChild(this.background);
             this.addChild(this.background_main);
             
+            this.addChild(this.timeRemaining);
             
             this.addChild(this.titleShadow);
             this.addChild(this.title);

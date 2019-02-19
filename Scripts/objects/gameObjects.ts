@@ -20,6 +20,9 @@ module objects{
 
     public gravityFactor:number;
 
+    public isLeft;
+    public isInverted;
+
     // Constructor
     constructor(assetManager: createjs.LoadQueue, imageString: string){
       super(assetManager.getResult(imageString));
@@ -35,6 +38,8 @@ module objects{
 
     // Methods / Functions
     protected Init():void{
+      this.isInverted = false;
+      this.isLeft = false;
       this.width = this.GetWidthBounds();
       this.height = this.GetHeightBounds();
       this.halfW = this.width * 0.5;
@@ -73,7 +78,12 @@ module objects{
       if (this.isGravityAffected) {
         //this.DoGravityEffect();
       }
+
+      if (this.GetGravityFactor() == -1 && !(this.isInverted)) {
+        this.FlipVertically();
+      }
     }
+    
     public CheckNextWorldPosition(): boolean {
       return false;
     }
@@ -86,7 +96,7 @@ module objects{
 
     }
 
-    public Move(): void{
+    public Move(): void {
 
     }
 
@@ -102,6 +112,30 @@ module objects{
     //called only when the function managers.Collision.CheckAABB is called
     public OnColliderExit(penetration: math.Vec2, obj: GameObject) {
 
+    }
+
+    protected FlipHorizontally() : void
+    {
+        this.isLeft = !this.isLeft;
+        this.scaleX = this.scaleX*-1;
+        this.boxCollider.offset_x = this.width - this.boxCollider.width - this.boxCollider.offset_x;        
+        if (this.isLeft) {
+          this.regX = this.width;
+        } else {
+          this.regX = 0;
+        }
+    }
+
+    protected FlipVertically() : void
+    {
+        this.isInverted = !this.isInverted;
+        this.scaleY = this.scaleY*-1;
+        if (this.isInverted) {
+          this.regY = this.height;
+        } else {
+          this.regY = 0;
+        }
+        this.boxCollider.offset_y = this.height - this.boxCollider.height - this.boxCollider.offset_y;
     }
 
     private cached :createjs.Shape;

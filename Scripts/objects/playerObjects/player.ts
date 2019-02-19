@@ -128,11 +128,17 @@ module objects{
           //this.scaleX *=-1;          
           this.x -= Player.speed;
         }
+        if (!this.isLeft) {
+          this.FlipHorizontally();
+        }
       }
 
       if (objects.Game.keyboard.moveRight) {
         if (this.CheckMovement(this.CheckCollision, false, Player.speed)) {
           this.x += Player.speed;
+        }
+        if (this.isLeft) {
+          this.FlipHorizontally();
         }
       }
     }
@@ -168,7 +174,7 @@ module objects{
       //&& (md.closestPointOnBoundsToPoint(math.Vec2.zero).y > 0 || md.closestPointOnBoundsToPoint(math.Vec2.zero).y < 0));
     }
 
-    public CheckBounds(): void{
+    public CheckBounds(): void {
       // hardcoding the play area for now
       /*if (this.x >= 837.5){
         this.x = 837.5;

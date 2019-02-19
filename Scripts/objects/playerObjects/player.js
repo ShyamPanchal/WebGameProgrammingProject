@@ -112,10 +112,16 @@ var objects;
                     //this.scaleX *=-1;          
                     this.x -= Player.speed;
                 }
+                if (!this.isLeft) {
+                    this.FlipHorizontally();
+                }
             }
             if (objects.Game.keyboard.moveRight) {
                 if (this.CheckMovement(this.CheckCollision, false, Player.speed)) {
                     this.x += Player.speed;
+                }
+                if (this.isLeft) {
+                    this.FlipHorizontally();
                 }
             }
         };

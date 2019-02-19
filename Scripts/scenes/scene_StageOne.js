@@ -38,6 +38,8 @@ var scenes;
             ghost.y = ghost.y - ghost.height;
             this.enemies[0] = ghost;
             console.log("GAME SCENE(S)...");
+            //this.timeRemaining = new objects.Timer(objects.Game.stageTimer, (1066/2), 50, true);
+            this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 66, 65, true);
             this.background = new objects.Background(this.assetManager, "level_01");
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
@@ -99,6 +101,7 @@ var scenes;
             if (this.isPaused) {
                 return;
             }
+            this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel();
             var CheckMovement = this.CreateFunctionCheck(this.player);
             this.player.UpdateIfPossible(CheckMovement);
             this.enemies.forEach(function (enemy) {
@@ -115,8 +118,10 @@ var scenes;
         };
         StageOne.prototype.Main = function () {
             var _this = this;
+            this.timeRemaining.fn_TimerTicker(objects.Game.stageTimer);
             //this.addChild(this.background);
             this.addChild(this.background_main);
+            this.addChild(this.timeRemaining);
             this.addChild(this.titleShadow);
             this.addChild(this.title);
             this.addChild(this.backButton);

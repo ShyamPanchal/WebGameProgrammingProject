@@ -13,6 +13,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var objects;
 (function (objects) {
+    var timer;
     var Label = /** @class */ (function (_super) {
         __extends(Label, _super);
         function Label(labelString, fontSize, fontFamily, fontColour, x, y, isCentered) {
@@ -28,6 +29,21 @@ var objects;
             _this.y = y;
             return _this;
         }
+        Label.prototype.fn_TimerTicker = function (seconds) {
+            timer = seconds;
+            var timeLimit = setInterval(function () {
+                timer--;
+                console.log(timer);
+                if (timer <= 0) {
+                    clearInterval(timeLimit);
+                    objects.Game.currentScene = config.Scene.FINISH;
+                }
+                ;
+            }, 1000);
+        };
+        Label.prototype.fn_ChangeLabel = function () {
+            return timer;
+        };
         return Label;
     }(createjs.Text));
     objects.Label = Label;

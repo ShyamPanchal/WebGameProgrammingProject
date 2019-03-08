@@ -8,6 +8,6 @@ module objects
         public static keyboard: managers.Keyboard;
         public static isDebug: boolean;
 
-        public static stageTimer: number = 1800; // in seconds || 3 minutes
+        public static stageTimer: number = 180; // in seconds || 3 minutes
     }
 }

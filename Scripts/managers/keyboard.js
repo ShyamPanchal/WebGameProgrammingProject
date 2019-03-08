@@ -25,10 +25,6 @@ var managers;
                 case config.Keys.RIGHT_ARROW:
                     this.moveRight = true;
                     break;
-                case config.Keys.S:
-                case config.Keys.DOWN_ARROW:
-                    this.moveDown = true;
-                    break;
                 case config.Keys.ESCAPE:
                     //console.log("Pause!!");
                     break;
@@ -51,10 +47,6 @@ var managers;
                 case config.Keys.D:
                 case config.Keys.RIGHT_ARROW:
                     this.moveRight = false;
-                    break;
-                case config.Keys.S:
-                case config.Keys.DOWN_ARROW:
-                    this.moveDown = false;
                     break;
                 case config.Keys.ESCAPE:
                     //  this.pause = false;

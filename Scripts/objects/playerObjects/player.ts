@@ -3,10 +3,10 @@ module objects{
 
     // Variables
     private static speed:number = 5;
-    private static maxHightRate:number = 1 ; //the player can jump at highest 90% of the height
+    private static maxHightRate:number = 0.9 ; //the player can jump at highest 90% of the height
 
     public maxJumpHeight: number;
-  //  public isJumping: boolean;
+    public isJumping: boolean;
 
     public actionObject:DynamicObject;
     public time: number;
@@ -26,10 +26,10 @@ module objects{
 
     // Methods / Functions
     public Start():void{
-      this.x = 40;
-      this.y = 40;
+      this.x = 400;
+      this.y = 45;
       
-     // this.isJumping = false;      
+      this.isJumping = false;      
     }
 
     private CheckCollision: (x:number, y:number) => managers.AABB;
@@ -42,16 +42,16 @@ module objects{
     protected Update():void{
       super.Update();
       
-     // this.CheckGrounded(this.CheckCollision);
-/*
+      this.CheckGrounded(this.CheckCollision);
+
       if (!this.isGrounded && !this.isJumping) {
         this.DoGravityEffect();
       } else if (this.isGrounded){
         this.maxJumpHeight = this.y - (this.height * Player.maxHightRate)*this.GetGravityFactor();
         this.isJumping = false;
-      }*/
+      }
       
-    //  this.Jump();
+      this.Jump();
       this.Move();
       
       this.Action();      
@@ -72,7 +72,7 @@ module objects{
 
     public OnColliderExit(penetration: math.Vec2, obj: GameObject) {
     }
-/*
+
     public Jump() : void {
       if (this.isGrounded) {
         if (objects.Game.keyboard.moveUp && !this.isJumping) {
@@ -104,7 +104,7 @@ module objects{
       }
     }
 
-    */
+    
     public Action() :void {
       
       if (this.deltaTime != 0 && (this.timeToAction > this.deltaTime)) {
@@ -141,32 +141,15 @@ module objects{
           this.FlipHorizontally();
         }
       }
-    
-
-    if (objects.Game.keyboard.moveUp) {
-      if (this.CheckMovement(this.CheckCollision, true, Player.speed)) {
-        //this.scaleX *=-1;          
-        this.y -= Player.speed;
-      }
-     
     }
 
-    if (objects.Game.keyboard.moveDown) {
-      if (this.CheckMovement(this.CheckCollision, false, Player.speed)) {
-        this.y += Player.speed;
-      }
-      
-    }
-  }
-
-/*
     public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
       let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());      
 
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
       this.isGrounded = md.isCollided && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y*this.GetGravityFactor() > 0);
 
-    }*/
+    }
 
     public CheckMovement(Check: (x:number, y:number) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
       let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y);
@@ -179,15 +162,15 @@ module objects{
     }
 
     public CheckVerticalMovement(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
-      let md:managers.AABB = Check(this.x, this.y + (isUp?0 - speed:speed));
+      let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
-     // this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
+      this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
 
       if (this.actionObject instanceof OpenableObject) {
           return true;
       }
 
-      return !md.isCollided;// || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
+      return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
       //&& (md.closestPointOnBoundsToPoint(math.Vec2.zero).y > 0 || md.closestPointOnBoundsToPoint(math.Vec2.zero).y < 0));
     }
 

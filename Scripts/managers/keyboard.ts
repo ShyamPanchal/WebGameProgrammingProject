@@ -3,6 +3,7 @@ module managers {
         public moveUp: boolean;
         public moveLeft: boolean;
         public moveRight: boolean;
+        public moveDown: boolean;
         public action: boolean;
         public enabled: boolean;
         public pause: boolean;
@@ -32,6 +33,10 @@ module managers {
                 case config.Keys.RIGHT_ARROW:
                     this.moveRight = true;
                 break;
+                case config.Keys.S:
+                case config.Keys.DOWN_ARROW:
+                    this.moveDown = true;
+                break;
                 case config.Keys.ESCAPE:
                     //console.log("Pause!!");
                     
@@ -56,6 +61,10 @@ module managers {
                 case config.Keys.D:
                 case config.Keys.RIGHT_ARROW:
                     this.moveRight = false;
+                break;
+                case config.Keys.S:
+                case config.Keys.DOWN_ARROW:
+                    this.moveDown = false;
                 break;
                 case config.Keys.ESCAPE:    
                     //  this.pause = false;

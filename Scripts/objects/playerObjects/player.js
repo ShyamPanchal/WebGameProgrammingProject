@@ -27,9 +27,9 @@ var objects;
         }
         // Methods / Functions
         Player.prototype.Start = function () {
-            this.x = 400;
-            this.y = 45;
-            this.isJumping = false;
+            this.x = 40;
+            this.y = 40;
+            // this.isJumping = false;      
         };
         Player.prototype.UpdateIfPossible = function (Check) {
             this.CheckCollision = Check;
@@ -37,15 +37,15 @@ var objects;
         };
         Player.prototype.Update = function () {
             _super.prototype.Update.call(this);
-            this.CheckGrounded(this.CheckCollision);
-            if (!this.isGrounded && !this.isJumping) {
-                this.DoGravityEffect();
-            }
-            else if (this.isGrounded) {
-                this.maxJumpHeight = this.y - (this.height * Player.maxHightRate) * this.GetGravityFactor();
-                this.isJumping = false;
-            }
-            this.Jump();
+            // this.CheckGrounded(this.CheckCollision);
+            /*
+                  if (!this.isGrounded && !this.isJumping) {
+                    this.DoGravityEffect();
+                  } else if (this.isGrounded){
+                    this.maxJumpHeight = this.y - (this.height * Player.maxHightRate)*this.GetGravityFactor();
+                    this.isJumping = false;
+                  }*/
+            //  this.Jump();
             this.Move();
             this.Action();
             this.CheckBounds();
@@ -59,39 +59,39 @@ var objects;
         };
         Player.prototype.OnColliderExit = function (penetration, obj) {
         };
-        Player.prototype.Jump = function () {
-            if (this.isGrounded) {
+        /*
+            public Jump() : void {
+              if (this.isGrounded) {
                 if (objects.Game.keyboard.moveUp && !this.isJumping) {
-                    this.isGrounded = false;
-                    this.isJumping = true;
-                    //this.y += config.Gravity.gravityForce*this.height;
-                    this.Move_Vertically(true, config.Gravity.gravityForce * this.GetGravityFactor() * this.height);
+                  this.isGrounded = false;
+                  this.isJumping = true;
+                  //this.y += config.Gravity.gravityForce*this.height;
+                  this.Move_Vertically(true, config.Gravity.gravityForce*this.GetGravityFactor()*this.height);
                 }
+              } else if(this.isJumping) {
+                if (this.maxJumpHeight*this.GetGravityFactor() <= this.y*this.GetGravityFactor()){
+                  //going higher
+                  //this.y += config.Gravity.gravityForce*this.height/2;
+                  this.Move_Vertically(true, config.Gravity.gravityForce*this.GetGravityFactor()*this.height/2);
+                } else {
+                  //console.log('reach high');
+                  this.isJumping = false;
+                }
+              }
             }
-            else if (this.isJumping) {
-                if (this.maxJumpHeight * this.GetGravityFactor() <= this.y * this.GetGravityFactor()) {
-                    //going higher
-                    //this.y += config.Gravity.gravityForce*this.height/2;
-                    this.Move_Vertically(true, config.Gravity.gravityForce * this.GetGravityFactor() * this.height / 2);
-                }
-                else {
-                    //console.log('reach high');
-                    this.isJumping = false;
-                }
-            }
-        };
-        Player.prototype.Move_Vertically = function (up, speed) {
-            if (up) {
+            public Move_Vertically(up:boolean, speed:number) :void {
+              if (up) {
                 if (this.CheckVerticalMovement(this.CheckCollision, true, speed)) {
-                    this.y += speed;
+                  this.y += speed;
                 }
-            }
-            else {
+              } else {
                 if (this.CheckVerticalMovement(this.CheckCollision, false, speed)) {
-                    this.y -= speed;
+                  this.y -= speed;
                 }
+              }
             }
-        };
+        
+            */
         Player.prototype.Action = function () {
             if (this.deltaTime != 0 && (this.timeToAction > this.deltaTime)) {
                 this.deltaTime += 1 / 60;
@@ -124,12 +124,26 @@ var objects;
                     this.FlipHorizontally();
                 }
             }
+            if (objects.Game.keyboard.moveUp) {
+                if (this.CheckMovement(this.CheckCollision, true, Player.speed)) {
+                    //this.scaleX *=-1;          
+                    this.y -= Player.speed;
+                }
+            }
+            if (objects.Game.keyboard.moveDown) {
+                if (this.CheckMovement(this.CheckCollision, false, Player.speed)) {
+                    this.y += Player.speed;
+                }
+            }
         };
-        Player.prototype.CheckGrounded = function (Check) {
-            var md = Check(this.x, this.y - config.Gravity.gravitySpeed * this.GetGravityFactor());
-            //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
-            this.isGrounded = md.isCollided && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y * this.GetGravityFactor() > 0);
-        };
+        /*
+            public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
+              let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());
+        
+              //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
+              this.isGrounded = md.isCollided && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y*this.GetGravityFactor() > 0);
+        
+            }*/
         Player.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
             var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
             if (this.actionObject instanceof objects.OpenableObject) {
@@ -138,13 +152,13 @@ var objects;
             return !md.isCollided; // && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
         };
         Player.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
-            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
+            var md = Check(this.x, this.y + (isUp ? 0 - speed : speed));
             //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
-            this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
+            // this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
             if (this.actionObject instanceof objects.OpenableObject) {
                 return true;
             }
-            return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
+            return !md.isCollided; // || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
             //&& (md.closestPointOnBoundsToPoint(math.Vec2.zero).y > 0 || md.closestPointOnBoundsToPoint(math.Vec2.zero).y < 0));
         };
         Player.prototype.CheckBounds = function () {
@@ -159,7 +173,7 @@ var objects;
         };
         // Variables
         Player.speed = 5;
-        Player.maxHightRate = 0.9; //the player can jump at highest 90% of the height
+        Player.maxHightRate = 1; //the player can jump at highest 90% of the height
         return Player;
     }(objects.GameObject));
     objects.Player = Player;

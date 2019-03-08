@@ -66,25 +66,14 @@ module scenes
             this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 66, 65, true);
         
             this.background = new objects.Background(this.assetManager, "level_01");           
-            this.background_main = new objects.Background(this.assetManager, "level_01_house");           
+            this.background_main = new objects.Background(this.assetManager, "level_01");           
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
             
             this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
             this.txtButton.x = 910;
             this.txtButton.y = 565;  
             
-            //pause button            
-            this.pauseButton = new objects.Button(this.assetManager, "startButton", -10, 550);
-            this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff",this.pauseButton.x+80, this.pauseButton.y+10);
-            //pause button end
-
-            this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
-            this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
-            this.title.alpha = 1;
-
-            this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
-            this.titleShadow.alpha = 0.5;
-
+            
             this.player = new objects.Player(this.assetManager);            
             this.player.boxCollider = new objects.BoxCollider(18, 16, this.player.x, 
                 this.player.y, 
@@ -169,57 +158,72 @@ module scenes
             //this.addChild(this.background);
             this.addChild(this.background_main);
             
-            this.addChild(this.timeRemaining);
+         //   this.addChild(this.timeRemaining);
             
-            this.addChild(this.titleShadow);
-            this.addChild(this.title);
+         //   this.addChild(this.titleShadow);
+         //   this.addChild(this.title);
             
-            this.addChild(this.backButton);
-            this.addChild(this.txtButton);
+         //   this.addChild(this.backButton);
+         //   this.addChild(this.txtButton);
             
             this.CreateScenery();
             this.addChild(this.player);
-            this.enemies.forEach(ghost => {
-                this.addChild(ghost);  
-            });
+         //   this.enemies.forEach(ghost => {
+          //      this.addChild(ghost);  
+          //  });
 
-            this.addChild(this.background_shadow);
+          //  this.addChild(this.background_shadow);
             
             //create the empties gameobjects to be the stage boundaries
 
-            this.backButton.on("click", this.fn_ButtonClick);
+         //   this.backButton.on("click", this.fn_ButtonClick);
 
-            var callback = () : void => {
-                this.removeChild(this.title);
-                this.removeChild(this.titleShadow);
-            }
-            this.StartCountdown(3, callback);
+         //   var callback = () : void => {
+         //       this.removeChild(this.title);
+         //       this.removeChild(this.titleShadow);
+         //   }
+        //    this.StartCountdown(3, callback);
 
-            this.addChild(this.pauseButton);
-            this.addChild(this.pauseTxtButton);
+          //  this.addChild(this.pauseButton);
+         //   this.addChild(this.pauseTxtButton);
             
-            this.backButton.on("click", this.fn_ButtonClick);
-            this.pauseButton.on("click", ()=>{this.isPaused = !this.isPaused; this.fn_pauseButtonClick;});//pause
+        //    this.backButton.on("click", this.fn_ButtonClick);
+         //   this.pauseButton.on("click", ()=>{this.isPaused = !this.isPaused; this.fn_pauseButtonClick;});//pause
         
         }
         
         private CreateScenery() {
+            
+            //Boundary
             var wall_l = new objects.EmptyGameObject(this.assetManager, "wall_l", 1, 600);
-            wall_l.x = 220;
-            wall_l.y = 10;
+            wall_l.x = 1;
+            wall_l.y = 1;
             this.addChild(wall_l);
             
             var wall_r = new objects.EmptyGameObject(this.assetManager, "wall_r", 1, 600);
-            wall_r.x = 840;
-            wall_r.y = 10;
+            wall_r.x = 1065;
+            wall_r.y = 1;
             this.addChild(wall_r);
+
+            var wall_t = new objects.EmptyGameObject(this.assetManager, "wall_t", 1066, 1);
+            wall_t.x = 1;
+            wall_t.y = 1;
+            this.addChild(wall_t);
+            
+            var wall_d = new objects.EmptyGameObject(this.assetManager, "wall_d", 1066, 1);
+            wall_d.x = 1;
+            wall_d.y = 599;
+            this.addChild(wall_d);
 
             this.gameSceneryStaticObjects[10] = wall_l;
             this.gameSceneryStaticObjects[11] = wall_r;
+            this.gameSceneryStaticObjects[12] = wall_t;
+            this.gameSceneryStaticObjects[9] = wall_d;
+
 
             this.CreateFloors();
-            this.CreatePlatformsStairs();
-            this.CreateObjects();
+          //  this.CreatePlatformsStairs();
+           // this.CreateObjects();
 
         }
         private CreateObjects():void {
@@ -243,42 +247,35 @@ module scenes
 
             this.gameSceneryDynamicObjects[0] = floor_3_Crate;
 
-        }
-
-        private CreatePlatformsStairs():void {
-            var floor_3_stairs = new objects.EmptyGameObject(this.assetManager, "floor_3_stairs", 30, 1); 
-            this.addChild(floor_3_stairs);
-            this.gameSceneryStaticObjects[9] = floor_3_stairs;
-            floor_3_stairs.x = 320;
-            floor_3_stairs.y = 184;
-
-            var floor_1_stairs = new objects.EmptyGameObject(this.assetManager, "floor_1_stairs", 30, 1); 
-            this.addChild(floor_1_stairs);
-            this.gameSceneryStaticObjects[8] = floor_1_stairs;
-            floor_1_stairs.x = 706;
-            floor_1_stairs.y = 414;
+        
         }
         
         private CreateFloors():void {
             //Floors platforms
-            let platform_offset = 8;
-            var floor_5 = new objects.EmptyGameObject(this.assetManager, "floor_5", 620, 1 + platform_offset); 
-            this.addChild(floor_5);
-            this.gameSceneryStaticObjects[7] = floor_5;
-            floor_5.x = 220;
-            floor_5.y = 12 + platform_offset;
+            let platform_offset = 20;
+            var wall_1 = new objects.EmptyGameObject(this.assetManager, "wall_1", 470, 21); 
+            this.addChild(wall_1);
+            this.gameSceneryStaticObjects[7] = wall_1;
+            wall_1.x = 145;
+            wall_1.y = 65;
 
-            var floor_4_1 = new objects.EmptyGameObject(this.assetManager, "floor_4_1", 60, 1 + platform_offset); 
-            this.addChild(floor_4_1);
-            this.gameSceneryStaticObjects[6] = floor_4_1;
-            floor_4_1.x = 220;
-            floor_4_1.y = 130 + platform_offset;
+            var wall_11 = new objects.EmptyGameObject(this.assetManager, "wall_11", 310, 21); 
+            this.addChild(wall_11);
+            this.gameSceneryStaticObjects[8] = wall_11;
+            wall_11.x = 681;
+            wall_11.y = 65;
+
+            var wall_21 = new objects.EmptyGameObject(this.assetManager, "wall_21", 160, 21); 
+            this.addChild(wall_21);
+            this.gameSceneryStaticObjects[6] = wall_21;
+            wall_21.x = 145;
+            wall_21.y = 140;
     
-            var floor_4_2 = new objects.EmptyGameObject(this.assetManager, "floor_4_2", 460, 1 + platform_offset); 
-            this.addChild(floor_4_2);
-            this.gameSceneryStaticObjects[5] = floor_4_2;
-            floor_4_2.x = 380;
-            floor_4_2.y = 130 + platform_offset;
+            var wall_22 = new objects.EmptyGameObject(this.assetManager, "wall_22", 220, 21); 
+            this.addChild(wall_22);
+            this.gameSceneryStaticObjects[5] = wall_22;
+            wall_22.x = 370;
+            wall_22.y = 141;
 
             var floor_3 = new objects.EmptyGameObject(this.assetManager, "floor_3", 620, 1 + platform_offset); 
             this.addChild(floor_3);

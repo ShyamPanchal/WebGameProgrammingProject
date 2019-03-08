@@ -34,12 +34,6 @@ module scenes
             this.startButton.scaleX = 0.75;
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#f7fffd",this.startButton.x,this.startButton.y + 2, true);     
 
-            this.gameTitle = new objects.Label("Help us Escape!", "bold 48px", "Cambay", "#ffffff", 1066 / 2, 600 / 4, true);
-            this.gameTitle.alpha = 1;
-
-            this.gameTitleShadow = new objects.Label("Help us Escape!", "bold 48px", "Cambay", "#828166", (1066 / 2)+4, 600 / 4, true);
-            this.gameTitleShadow.alpha = 0.75;
-
             this.hDivider = new objects.Image(this.assetManager,"hdivider" ,1066 * 0.5, 600 * 0.3, true);
             this.hDivider.scaleX = 2;
 
@@ -77,8 +71,7 @@ module scenes
             this.addChild(this.gameTitle);
             this.addChild(this.startButton);
             this.addChild(this.txtStartButton);
-            this.addChild(this.hDivider);
-            this.addChild(this.hDivider2);
+            
             this.startButton.on("click", this.fn_ButtonClick);
         }
     }

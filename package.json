@@ -24,6 +24,7 @@
     "@types/soundjs": "^0.6.27",
     "@types/tweenjs": "^1.0.0",
     "easeljs": "^1.0.2",
+    "lite-server": "^2.4.0",
     "preloadjs": "^1.0.1",
     "soundjs": "^1.0.1",
     "tweenjs": "^1.0.2"

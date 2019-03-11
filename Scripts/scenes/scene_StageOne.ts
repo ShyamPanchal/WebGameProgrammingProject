@@ -40,6 +40,7 @@ module scenes
 
         private fn_pauseButtonClick():void
         {
+            console.log("called");
             objects.Game.currentScene = config.Scene.PAUSE;
         }
 
@@ -63,7 +64,7 @@ module scenes
             console.log("GAME SCENE(S)...");        
 
             //this.timeRemaining = new objects.Timer(objects.Game.stageTimer, (1066/2), 50, true);
-            this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 66, 65, true);
+            this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 50, 65, true);
         
             this.background = new objects.Background(this.assetManager, "level_01");           
             this.background_main = new objects.Background(this.assetManager, "level_01_house");           
@@ -137,10 +138,12 @@ module scenes
         public Update():void
         {
             this.CheckPaused();
+            
+            this.timeRemaining.is_paused = this.isPaused;
+
             if (this.isPaused){
                 return;
             } 
-
             
             this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel();
             
@@ -199,7 +202,9 @@ module scenes
             this.addChild(this.pauseTxtButton);
             
             this.backButton.on("click", this.fn_ButtonClick);
-            this.pauseButton.on("click", ()=>{this.isPaused = !this.isPaused; this.fn_pauseButtonClick;});//pause
+            this.pauseButton.on("click", ()=>{
+                this.isPaused = !this.isPaused; 
+                this.fn_pauseButtonClick;});//pause
         
         }
         

@@ -49,7 +49,8 @@ console.log('code ran');
         // Initialize CreateJS
         stage = new createjs.Stage(canvas);
         stage.enableMouseOver(20);
-        createjs.Ticker.framerate = 60; // 60 FPS
+        objects.Game.frameRate = 60;
+        createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
 
         objects.Game.stage = stage;

@@ -7,6 +7,7 @@ module objects
         public static currentScene: number;
         public static keyboard: managers.Keyboard;
         public static isDebug: boolean;
+        public static frameRate: number;
 
         public static stageTimer: number = 180; // in seconds || 3 minutes
     }

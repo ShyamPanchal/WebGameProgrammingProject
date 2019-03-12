@@ -17,6 +17,7 @@ var scenes;
         __extends(StageOne, _super);
         function StageOne(assetManager) {
             var _this = _super.call(this, assetManager) || this;
+            _this.timerCounter = 0;
             _this.Start();
             return _this;
         }
@@ -25,7 +26,7 @@ var scenes;
         };
         StageOne.prototype.fn_pauseButtonClick = function () {
             console.log("called");
-            objects.Game.currentScene = config.Scene.PAUSE;
+            objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
         };
         StageOne.prototype.Start = function () {
             //config.Gravity.gravityFactor = -1;
@@ -99,11 +100,19 @@ var scenes;
         };
         StageOne.prototype.Update = function () {
             this.CheckPaused();
-            this.timeRemaining.is_paused = this.isPaused;
+            //this.timeRemaining.is_paused = this.isPaused;
             if (this.isPaused) {
                 return;
             }
-            this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel();
+            this.timerCounter++;
+            if (this.timerCounter == objects.Game.frameRate) {
+                this.timer--;
+                this.timerCounter = 0;
+            }
+            if (this.timer <= 0) {
+                objects.Game.currentScene = config.Scene.FINISH;
+            }
+            this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
             var CheckMovement = this.CreateFunctionCheck(this.player);
             this.player.UpdateIfPossible(CheckMovement);
             this.enemies.forEach(function (enemy) {
@@ -120,8 +129,9 @@ var scenes;
         };
         StageOne.prototype.Main = function () {
             var _this = this;
-            this.timeRemaining.fn_TimerTicker(objects.Game.stageTimer);
+            //this.timeRemaining.fn_TimerTicker(objects.Game.stageTimer);
             //this.addChild(this.background);
+            this.timer = objects.Game.stageTimer;
             this.addChild(this.background_main);
             this.addChild(this.timeRemaining);
             this.addChild(this.titleShadow);
@@ -144,10 +154,7 @@ var scenes;
             this.addChild(this.pauseButton);
             this.addChild(this.pauseTxtButton);
             this.backButton.on("click", this.fn_ButtonClick);
-            this.pauseButton.on("click", function () {
-                _this.isPaused = !_this.isPaused;
-                _this.fn_pauseButtonClick;
-            }); //pause
+            this.pauseButton.on("click", this.fn_pauseButtonClick);
         };
         StageOne.prototype.CreateScenery = function () {
             var wall_l = new objects.EmptyGameObject(this.assetManager, "wall_l", 1, 600);

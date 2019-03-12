@@ -26,6 +26,7 @@ module scenes
 
         private timeRemaining: objects.Label;
 
+        private timerCounter: number = 0;
 
         constructor(assetManager: createjs.LoadQueue)
         {
@@ -41,7 +42,7 @@ module scenes
         private fn_pauseButtonClick():void
         {
             console.log("called");
-            objects.Game.currentScene = config.Scene.PAUSE;
+            objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
         }
 
         public Start():void
@@ -139,13 +140,23 @@ module scenes
         {
             this.CheckPaused();
             
-            this.timeRemaining.is_paused = this.isPaused;
-
+            //this.timeRemaining.is_paused = this.isPaused;
             if (this.isPaused){
                 return;
             } 
             
-            this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel();
+            this.timerCounter++;
+            
+            if(this.timerCounter == objects.Game.frameRate){
+                this.timer--;
+                this.timerCounter = 0;
+            }
+
+            if(this.timer <= 0){
+                objects.Game.currentScene = config.Scene.FINISH;
+            }
+            
+            this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
             
             let CheckMovement = this.CreateFunctionCheck(this.player);
 
@@ -168,8 +179,9 @@ module scenes
 
         public Main():void
         {        
-            this.timeRemaining.fn_TimerTicker(objects.Game.stageTimer);
+            //this.timeRemaining.fn_TimerTicker(objects.Game.stageTimer);
             //this.addChild(this.background);
+            this.timer = objects.Game.stageTimer;
             this.addChild(this.background_main);
             
             this.addChild(this.timeRemaining);
@@ -202,9 +214,7 @@ module scenes
             this.addChild(this.pauseTxtButton);
             
             this.backButton.on("click", this.fn_ButtonClick);
-            this.pauseButton.on("click", ()=>{
-                this.isPaused = !this.isPaused; 
-                this.fn_pauseButtonClick;});//pause
+            this.pauseButton.on("click", this.fn_pauseButtonClick);
         
         }
         

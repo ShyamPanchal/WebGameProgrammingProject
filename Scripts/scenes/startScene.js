@@ -17,7 +17,7 @@ var scenes;
         __extends(StartScene, _super);
         function StartScene(assetManager) {
             var _this = _super.call(this, assetManager) || this;
-            _this.timer = 0;
+            _this.animtimer = 0;
             _this.zoomInOut = false;
             _this.Start();
             return _this;
@@ -42,9 +42,9 @@ var scenes;
             this.Main();
         };
         StartScene.prototype.Update = function () {
-            this.timer += 1;
-            if (this.timer >= 30) {
-                this.timer = 0;
+            this.animtimer += 1;
+            if (this.animtimer >= 30) {
+                this.animtimer = 0;
                 if (this.zoomInOut) {
                     this.startButton.scaleX = 0.85;
                     this.txtStartButton.scaleX = 1.25;

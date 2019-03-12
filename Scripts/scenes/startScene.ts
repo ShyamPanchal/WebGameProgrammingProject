@@ -10,7 +10,7 @@ module scenes
         private hDivider: objects.Image;
         private hDivider2: objects.Image;
 
-        private timer: number = 0;
+        private animtimer: number = 0;
         private zoomInOut: boolean = false;
 
         constructor(assetManager: createjs.LoadQueue)
@@ -50,9 +50,9 @@ module scenes
         
         public Update():void
         {
-            this.timer += 1;
-            if (this.timer >= 30) {
-                this.timer = 0;
+            this.animtimer += 1;
+            if (this.animtimer >= 30) {
+                this.animtimer = 0;
                 if (this.zoomInOut) {
                     this.startButton.scaleX = 0.85;
                     this.txtStartButton.scaleX = 1.25;

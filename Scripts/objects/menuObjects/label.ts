@@ -1,9 +1,8 @@
 module objects {
-    var timer;
-    
+
     export class Label extends createjs.Text {
 
-        public is_paused:boolean;
+        public is_paused: boolean;
         constructor(labelString: string, fontSize: string, fontFamily: string, fontColour: string, x: number = 0, y: number = 0, isCentered: boolean = false) {
             super(labelString, fontSize + " " + fontFamily, fontColour);
 
@@ -16,26 +15,24 @@ module objects {
             this.x = x;
             this.y = y;
         }
-
-        public fn_TimerTicker(seconds): void {
-            timer = seconds;
-
-            var timeLimit = setInterval(function () {
-                if (!this.is_paused) {
-                    timer--;
-                    //console.log(timer);
-                    if (timer <= 0) {
-                        clearInterval(timeLimit);
-                        objects.Game.currentScene = config.Scene.FINISH;
-                    };
+        /*
+                public fn_TimerTicker(seconds): void {
+                    timer = seconds;
+        
+                    var timeLimit = setInterval(function () {
+                        if (!this.is_paused) {
+                            timer--;
+                            //console.log(timer);
+                            if (timer <= 0) {
+                                clearInterval(timeLimit);
+                                objects.Game.currentScene = config.Scene.FINISH;
+                            };
+                        }
+        
+                    }, 1000)
                 }
-
-            }, 1000)
-
-
-        }
-
-        public fn_ChangeLabel() {
+        */
+        public fn_ChangeLabel(timer) {
             let minutes = Math.floor(timer / 60);
             if (minutes < 0)
                 minutes = 0;
@@ -45,8 +42,5 @@ module objects {
             else
                 return minutes + " : " + seconds;
         }
-
     }
-
-
 }

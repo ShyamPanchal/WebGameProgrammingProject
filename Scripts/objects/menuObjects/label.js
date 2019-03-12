@@ -13,7 +13,6 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var objects;
 (function (objects) {
-    var timer;
     var Label = /** @class */ (function (_super) {
         __extends(Label, _super);
         function Label(labelString, fontSize, fontFamily, fontColour, x, y, isCentered) {
@@ -30,21 +29,24 @@ var objects;
             _this.y = y;
             return _this;
         }
-        Label.prototype.fn_TimerTicker = function (seconds) {
-            timer = seconds;
-            var timeLimit = setInterval(function () {
-                if (!this.is_paused) {
-                    timer--;
-                    //console.log(timer);
-                    if (timer <= 0) {
-                        clearInterval(timeLimit);
-                        objects.Game.currentScene = config.Scene.FINISH;
-                    }
-                    ;
+        /*
+                public fn_TimerTicker(seconds): void {
+                    timer = seconds;
+        
+                    var timeLimit = setInterval(function () {
+                        if (!this.is_paused) {
+                            timer--;
+                            //console.log(timer);
+                            if (timer <= 0) {
+                                clearInterval(timeLimit);
+                                objects.Game.currentScene = config.Scene.FINISH;
+                            };
+                        }
+        
+                    }, 1000)
                 }
-            }, 1000);
-        };
-        Label.prototype.fn_ChangeLabel = function () {
+        */
+        Label.prototype.fn_ChangeLabel = function (timer) {
             var minutes = Math.floor(timer / 60);
             if (minutes < 0)
                 minutes = 0;

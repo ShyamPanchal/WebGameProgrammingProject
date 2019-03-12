@@ -28,7 +28,8 @@
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
         { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
         { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
-        { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" }
+        { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" },
+        { id: "pauseBackground", src: "../Assets/Background/pause.png" }
     ];
     function Init() {
         console.log("Initialization start");
@@ -42,7 +43,8 @@
         // Initialize CreateJS
         stage = new createjs.Stage(canvas);
         stage.enableMouseOver(20);
-        createjs.Ticker.framerate = 60; // 60 FPS
+        objects.Game.frameRate = 60;
+        createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
         objects.Game.stage = stage;
         objects.Game.currentScene = config.Scene.START;
@@ -64,25 +66,24 @@
             case config.Scene.START:
                 stage.removeAllChildren();
                 currentScene = new scenes.StartScene(assetManager);
+                //objects.Game.currentSceneObject = currentScene;
                 stage.addChild(currentScene);
                 break;
             case config.Scene.INGAME:
                 stage.removeAllChildren();
                 currentScene = new scenes.StageOne(assetManager);
+                //objects.Game.currentSceneObject = currentScene;
                 stage.addChild(currentScene);
                 break;
             case config.Scene.FINISH:
                 stage.removeAllChildren();
                 currentScene = new scenes.EndScene(assetManager);
-                stage.addChild(currentScene);
-                break;
-            case config.Scene.PAUSE:
-                stage.removeAllChildren();
-                currentScene = new scenes.PauseScene(assetManager);
+                //objects.Game.currentSceneObject = currentScene;
                 stage.addChild(currentScene);
                 break;
         }
         currentState = objects.Game.currentScene;
+        //objects.Game.currentSceneObject = currentScene;
         stage.addChild(currentScene);
     }
     window.onload = Init;

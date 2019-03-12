@@ -28,7 +28,8 @@
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
         { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
         { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
-        { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" }
+        { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" },
+        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" }
     ];
     function Init() {
         console.log("Initialization start");

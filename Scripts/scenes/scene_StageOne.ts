@@ -1,6 +1,7 @@
 
 module scenes {
     export class StageOne extends objects.Scene {
+        //#region Stage Variables
         private title: objects.Label;
         private titleShadow: objects.Label;
 
@@ -29,6 +30,7 @@ module scenes {
         private gamePausedText: objects.Label;
 
         private overTitle: objects.Label;
+        //#endregion
 
         constructor(assetManager: createjs.LoadQueue) {
             super(assetManager);

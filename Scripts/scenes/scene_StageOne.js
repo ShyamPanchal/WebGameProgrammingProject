@@ -15,6 +15,7 @@ var scenes;
 (function (scenes) {
     var StageOne = /** @class */ (function (_super) {
         __extends(StageOne, _super);
+        //#endregion
         function StageOne(assetManager) {
             var _this = _super.call(this, assetManager) || this;
             _this.timerCounter = 0;

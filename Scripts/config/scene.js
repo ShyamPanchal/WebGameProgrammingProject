@@ -2,9 +2,10 @@ var config;
 (function (config) {
     var Scene;
     (function (Scene) {
-        Scene[Scene["START"] = 0] = "START";
-        Scene[Scene["INGAME"] = 1] = "INGAME";
-        Scene[Scene["FINISH"] = 2] = "FINISH";
+        Scene[Scene["PROLOGUE"] = 0] = "PROLOGUE";
+        Scene[Scene["START"] = 1] = "START";
+        Scene[Scene["INGAME"] = 2] = "INGAME";
+        Scene[Scene["FINISH"] = 3] = "FINISH";
     })(Scene = config.Scene || (config.Scene = {}));
 })(config || (config = {}));
 //# sourceMappingURL=scene.js.map

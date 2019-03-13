@@ -66,24 +66,25 @@
             case config.Scene.START:
                 stage.removeAllChildren();
                 currentScene = new scenes.StartScene(assetManager);
-                //objects.Game.currentSceneObject = currentScene;
+                stage.addChild(currentScene);
+                break;
+            case config.Scene.PROLOGUE:
+                stage.removeAllChildren();
+                currentScene = new scenes.Prologue(assetManager);
                 stage.addChild(currentScene);
                 break;
             case config.Scene.INGAME:
                 stage.removeAllChildren();
                 currentScene = new scenes.StageOne(assetManager);
-                //objects.Game.currentSceneObject = currentScene;
                 stage.addChild(currentScene);
                 break;
             case config.Scene.FINISH:
                 stage.removeAllChildren();
                 currentScene = new scenes.EndScene(assetManager);
-                //objects.Game.currentSceneObject = currentScene;
                 stage.addChild(currentScene);
                 break;
         }
         currentState = objects.Game.currentScene;
-        //objects.Game.currentSceneObject = currentScene;
         stage.addChild(currentScene);
     }
     window.onload = Init;

@@ -15,6 +15,7 @@ var scenes;
 (function (scenes) {
     var StageOne = /** @class */ (function (_super) {
         __extends(StageOne, _super);
+        //#endregion
         function StageOne(assetManager) {
             var _this = _super.call(this, assetManager) || this;
             _this.timerCounter = 0;
@@ -36,6 +37,7 @@ var scenes;
             this.enemies = new Array();
             objects.Game.keyboard = new managers.Keyboard();
             var ghost = new objects.Enemy(this.assetManager, "ghost", 550, 245);
+            ghost.alpha = 0.8;
             ghost.y = ghost.y - ghost.height;
             this.enemies[0] = ghost;
             console.log("GAME SCENE(S)...");
@@ -70,6 +72,7 @@ var scenes;
             this.pauseBackground.scaleY = 0.9;
             this.pauseBackground.visible = false;
             //#endregion
+            this.overTitle = new objects.Label("Player dead...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 * 0.35, true);
             this.Main();
         };
         StageOne.prototype.createDialog = function (scene, text) {
@@ -131,6 +134,7 @@ var scenes;
             };
         };
         StageOne.prototype.Update = function () {
+            var _this = this;
             this.CheckPaused();
             this.pauseBackground.visible = this.isPaused;
             this.gamePausedText.visible = this.isPaused;
@@ -166,6 +170,16 @@ var scenes;
             this.player.UpdateIfPossible(CheckMovement);
             this.enemies.forEach(function (enemy) {
                 enemy.Update();
+                _this.player.isDead = managers.Collision.CheckDistance(_this.player, enemy);
+                if (_this.player.isDead) {
+                    var overNote = function () {
+                        objects.Game.currentScene = config.Scene.FINISH;
+                    };
+                    _this.StartCount(2, overNote);
+                    _this.overTitle.visible = true;
+                    _this.player.x = 1500; //sending player and ghost to out of screen 
+                    enemy.x = 1500;
+                }
             });
             for (var i = 0; i < this.gameSceneryStaticObjects.length; i++) {
                 var platform = this.gameSceneryStaticObjects[i];
@@ -198,6 +212,8 @@ var scenes;
                 _this.removeChild(_this.titleShadow);
             };
             this.StartCountdown(3, callback);
+            this.addChild(this.overTitle);
+            this.overTitle.visible = false;
             this.addChild(this.pauseBackground);
             this.addChild(this.pauseButton);
             this.addChild(this.pauseButton.text);

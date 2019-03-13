@@ -13,6 +13,7 @@ module objects{
     private timeToAction:number = 0.5;
     public deltaTime: number;
     
+    public dialog: any;
     
     // Constructor
     constructor(assetManager:createjs.LoadQueue){
@@ -60,6 +61,10 @@ module objects{
       
       this.lastPosition.x = this.x;
       this.lastPosition.y = this.y;
+
+      if (this.dialog != null) {
+        this.dialog.dialog.Update(this.x + this.width, this.y - this.halfH)
+      }
     }
 
     public Reset(): void{
@@ -146,6 +151,10 @@ module objects{
     public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
       let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());      
 
+      if (md.isCollided && md.objectCollided instanceof OpenableObject) {
+        this.isGrounded = false;
+        return;
+      }
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
       this.isGrounded = md.isCollided && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y*this.GetGravityFactor() > 0);
 
@@ -164,11 +173,11 @@ module objects{
     public CheckVerticalMovement(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
       let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
-      this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
-
-      if (this.actionObject instanceof OpenableObject) {
-          return true;
+      
+      if (md.isCollided && this.actionObject instanceof OpenableObject) {
+        return true;
       }
+      this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
 
       return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
       //&& (md.closestPointOnBoundsToPoint(math.Vec2.zero).y > 0 || md.closestPointOnBoundsToPoint(math.Vec2.zero).y < 0));

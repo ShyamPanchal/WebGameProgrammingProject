@@ -19,29 +19,29 @@ var objects;
         function Enemy(assetManager, imageString, x, y) {
             if (x === void 0) { x = 0; }
             if (y === void 0) { y = 0; }
-            var _this = _super.call(this, assetManager.getResult(imageString)) || this;
+            var _this = _super.call(this, assetManager, imageString) || this;
             // Variables
             _this.leftSide = true;
-            _this.x = 550;
-            _this.y = 205;
-            console.log('In Enemy');
+            _this.x = x;
+            _this.y = y;
+            _this.Start();
             return _this;
         }
         Enemy.prototype.Start = function () {
-            console.log('In Enemy start');
+            console.log('In Enemy');
         };
         Enemy.prototype.Update = function () {
+            _super.prototype.Update.call(this);
             this.Move();
-            console.log('In enem update');
         };
         Enemy.prototype.Reset = function () { };
         Enemy.prototype.Move = function () {
-            this.x -= 3;
+            this.x -= 2;
             if (this.x < 200)
                 this.x = 800;
         };
         return Enemy;
-    }(createjs.Bitmap));
+    }(objects.GameObject));
     objects.Enemy = Enemy;
 })(objects || (objects = {}));
 //# sourceMappingURL=enemy.js.map

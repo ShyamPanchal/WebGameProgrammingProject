@@ -23,10 +23,17 @@ console.log('code ran');
         { id: "background", src: "../Assets/Background/mainMenu.jpg" },
         { id: "level_01", src: "../Assets/Background/level_01.png" },
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" },
+        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
+        { id: "ghost", src: "../Assets/Sprites/Ghost.png"},
+        { id: "level_01_house", src: "../Assets/Background/level_01_house.png" },
+        { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
+        { id: "empty", src: "../Assets/Background/empty.png" },
+        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
+        { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
+        { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
+        { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" },
+        { id: "pauseBackground", src: "../Assets/Background/pause.png" }
 
-        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" }
-
-        { id: "ghost", src: "../Assets/Sprites/Ghost.png"}
     ];
     function Init():void {
         console.log("Initialization start");
@@ -43,7 +50,9 @@ console.log('code ran');
         // Initialize CreateJS
         stage = new createjs.Stage(canvas);
         stage.enableMouseOver(20);
-        createjs.Ticker.framerate = 60; // 60 FPS
+        
+        objects.Game.frameRate = 60;
+        createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
 
         objects.Game.stage = stage;
@@ -71,17 +80,24 @@ console.log('code ran');
             currentScene = new scenes.StartScene(assetManager);
             stage.addChild(currentScene);
             break;
+
+            case config.Scene.PROLOGUE:
+            stage.removeAllChildren();
+            currentScene = new scenes.Prologue(assetManager);
+            stage.addChild(currentScene);
+            break;
+
             case config.Scene.INGAME:
             stage.removeAllChildren();
             currentScene = new scenes.StageOne(assetManager);
             stage.addChild(currentScene);
             break;
+
             case config.Scene.FINISH:
             stage.removeAllChildren();
-            currentScene = new scenes.EndScene(assetManager);
+            currentScene = new scenes.EndScene(assetManager);            
             stage.addChild(currentScene);
             break;
-
         }
         currentState = objects.Game.currentScene;
         stage.addChild(currentScene);

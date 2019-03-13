@@ -20,8 +20,16 @@
         { id: "background", src: "../Assets/Background/mainMenu.jpg" },
         { id: "level_01", src: "../Assets/Background/level_01.png" },
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" },
-        { id: "ghost", src: "../Assets/Sprites/Ghost.png" }
-        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" }
+        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
+        { id: "ghost", src: "../Assets/Sprites/Ghost.png" },
+        { id: "level_01_house", src: "../Assets/Background/level_01_house.png" },
+        { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
+        { id: "empty", src: "../Assets/Background/empty.png" },
+        { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
+        { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
+        { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
+        { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" },
+        { id: "pauseBackground", src: "../Assets/Background/pause.png" }
     ];
     function Init() {
         console.log("Initialization start");
@@ -35,7 +43,8 @@
         // Initialize CreateJS
         stage = new createjs.Stage(canvas);
         stage.enableMouseOver(20);
-        createjs.Ticker.framerate = 60; // 60 FPS
+        objects.Game.frameRate = 60;
+        createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
         objects.Game.stage = stage;
         objects.Game.currentScene = config.Scene.START;
@@ -57,6 +66,11 @@
             case config.Scene.START:
                 stage.removeAllChildren();
                 currentScene = new scenes.StartScene(assetManager);
+                stage.addChild(currentScene);
+                break;
+            case config.Scene.PROLOGUE:
+                stage.removeAllChildren();
+                currentScene = new scenes.Prologue(assetManager);
                 stage.addChild(currentScene);
                 break;
             case config.Scene.INGAME:

@@ -24,11 +24,11 @@ module scenes
             console.log("END MENU...");        
         
             this.background = new objects.Background(this.assetManager, "background");           
-            
-            this.backButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, true);
-            this.txtButton = new objects.Label("Exit", "20px", "Cambay", "#ffffff", this.backButton.x, this.backButton.y + 3, true);
+           
+            this.txtButton = new objects.Label("Exit", "20px", "Cambay", "#ffffff", 0,0, true);
+            this.backButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75,this.txtButton, true);
             this.backButton.scaleX = 0.75;
-
+            
             this.label = new objects.Label("Game End!", "bold 80px", "Cambay", "#ffffff", 1066 * 0.5, 600 * 0.25, true);
             
             this.Main();

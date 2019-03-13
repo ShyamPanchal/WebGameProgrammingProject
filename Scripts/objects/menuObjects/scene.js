@@ -43,14 +43,14 @@ var objects;
             }, 1000);
         };
         ;
-        Scene.prototype.StartCount = function (seconds, trial) {
+        Scene.prototype.StartCount = function (seconds, overNote) {
             var counter = seconds;
             var interval = setInterval(function () {
                 //console.log(counter);
                 counter--;
                 if (counter < 0) {
                     clearInterval(interval);
-                    trial();
+                    overNote();
                     //console.log('Ding!');
                 }
                 ;

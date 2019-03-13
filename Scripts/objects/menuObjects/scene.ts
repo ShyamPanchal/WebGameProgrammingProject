@@ -41,7 +41,7 @@ module objects {
     };
 
 
-    public StartCount(seconds, trial: () => any): void {
+    public StartCount(seconds, overNote: () => any): void {
       var counter = seconds;
 
       var interval = setInterval(() => {
@@ -50,7 +50,7 @@ module objects {
 
         if (counter < 0) {
           clearInterval(interval);
-          trial();
+          overNote();
           //console.log('Ding!');
         };
       }, 1000);

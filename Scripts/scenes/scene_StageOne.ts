@@ -199,10 +199,10 @@ module scenes {
 
                 this.player.isDead = managers.Collision.CheckDistance(this.player, enemy);
                 if(this.player.isDead){
-                    var trial = (): void => {
+                    var overNote = (): void => {
                         objects.Game.currentScene = config.Scene.FINISH;
                     }
-                    this.StartCount(2, trial);
+                    this.StartCount(2, overNote);
                     this.overTitle.visible = true;
                     this.player.x = 1500; //sending player and ghost to out of screen 
                     enemy.x = 1500;

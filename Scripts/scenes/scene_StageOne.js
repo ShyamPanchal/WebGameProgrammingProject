@@ -154,10 +154,10 @@ var scenes;
                 enemy.Update();
                 _this.player.isDead = managers.Collision.CheckDistance(_this.player, enemy);
                 if (_this.player.isDead) {
-                    var trial = function () {
+                    var overNote = function () {
                         objects.Game.currentScene = config.Scene.FINISH;
                     };
-                    _this.StartCount(2, trial);
+                    _this.StartCount(2, overNote);
                     _this.overTitle.visible = true;
                     _this.player.x = 1500; //sending player and ghost to out of screen 
                     enemy.x = 1500;

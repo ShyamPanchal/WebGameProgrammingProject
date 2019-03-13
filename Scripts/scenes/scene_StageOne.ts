@@ -28,6 +28,8 @@ module scenes {
         private resumeText: objects.Label;
         private gamePausedText: objects.Label;
 
+        private overTitle: objects.Label;
+
         constructor(assetManager: createjs.LoadQueue) {
             super(assetManager);
             this.Start();
@@ -53,8 +55,11 @@ module scenes {
 
             objects.Game.keyboard = new managers.Keyboard();
             var ghost = new objects.Enemy(this.assetManager, "ghost", 550, 245);
+            ghost.alpha = 0.8;
             ghost.y = ghost.y - ghost.height;
             this.enemies[0] = ghost;
+        
+            
 
             console.log("GAME SCENE(S)...");
 
@@ -99,6 +104,8 @@ module scenes {
             this.pauseBackground.scaleY = 0.9;
             this.pauseBackground.visible = false;
             //#endregion
+
+            this.overTitle = new objects.Label("Player dead...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 *0.35, true);
 
             this.Main();
 
@@ -187,6 +194,17 @@ module scenes {
 
             this.enemies.forEach(enemy => {
                 enemy.Update();
+
+                this.player.isDead = managers.Collision.CheckDistance(this.player, enemy);
+                if(this.player.isDead){
+                    var trial = (): void => {
+                        objects.Game.currentScene = config.Scene.FINISH;
+                    }
+                    this.StartCount(2, trial);
+                    this.overTitle.visible = true;
+                    this.player.x = 1500; //sending player and ghost to out of screen 
+                    enemy.x = 1500;
+                }
             });
 
             for (let i = 0; i < this.gameSceneryStaticObjects.length; i++) {
@@ -230,6 +248,8 @@ module scenes {
             }
             this.StartCountdown(3, callback);
             
+            this.addChild(this.overTitle);
+            this.overTitle.visible = false;
             this.addChild(this.pauseBackground);
 
             this.addChild(this.pauseButton);

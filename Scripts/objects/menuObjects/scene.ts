@@ -40,5 +40,21 @@ module objects {
       }, 1000);
     };
 
+
+    public StartCount(seconds, trial: () => any): void {
+      var counter = seconds;
+
+      var interval = setInterval(() => {
+        //console.log(counter);
+        counter--;
+
+        if (counter < 0) {
+          clearInterval(interval);
+          trial();
+          //console.log('Ding!');
+        };
+      }, 1000);
+    };
+
   }
 }

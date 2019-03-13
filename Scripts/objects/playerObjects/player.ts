@@ -4,7 +4,7 @@ module objects{
     // Variables
     private static speed:number = 5;
     private static maxHightRate:number = 0.9 ; //the player can jump at highest 90% of the height
-
+    public isDead:boolean;
     public maxJumpHeight: number;
     public isJumping: boolean;
 

@@ -43,6 +43,20 @@ var objects;
             }, 1000);
         };
         ;
+        Scene.prototype.StartCount = function (seconds, trial) {
+            var counter = seconds;
+            var interval = setInterval(function () {
+                //console.log(counter);
+                counter--;
+                if (counter < 0) {
+                    clearInterval(interval);
+                    trial();
+                    //console.log('Ding!');
+                }
+                ;
+            }, 1000);
+        };
+        ;
         return Scene;
     }(createjs.Container));
     objects.Scene = Scene;

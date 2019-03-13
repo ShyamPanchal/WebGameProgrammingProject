@@ -51,6 +51,9 @@ var objects;
             this.CheckBounds();
             this.lastPosition.x = this.x;
             this.lastPosition.y = this.y;
+            if (this.dialog != null) {
+                this.dialog.dialog.Update(this.x + this.width, this.y - this.halfH);
+            }
         };
         Player.prototype.Reset = function () {
         };
@@ -127,6 +130,10 @@ var objects;
         };
         Player.prototype.CheckGrounded = function (Check) {
             var md = Check(this.x, this.y - config.Gravity.gravitySpeed * this.GetGravityFactor());
+            if (md.isCollided && md.objectCollided instanceof objects.OpenableObject) {
+                this.isGrounded = false;
+                return;
+            }
             //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
             this.isGrounded = md.isCollided && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y * this.GetGravityFactor() > 0);
         };
@@ -140,10 +147,10 @@ var objects;
         Player.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
             var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
             //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
-            this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
-            if (this.actionObject instanceof objects.OpenableObject) {
+            if (md.isCollided && this.actionObject instanceof objects.OpenableObject) {
                 return true;
             }
+            this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
             return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
             //&& (md.closestPointOnBoundsToPoint(math.Vec2.zero).y > 0 || md.closestPointOnBoundsToPoint(math.Vec2.zero).y < 0));
         };

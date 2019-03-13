@@ -30,7 +30,7 @@ var scenes;
         };
         StageOne.prototype.Start = function () {
             //config.Gravity.gravityFactor = -1;
-            objects.Game.isDebug = false;
+            objects.Game.isDebug = true;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array();
             this.gameSceneryDynamicObjects = new Array();
@@ -44,9 +44,6 @@ var scenes;
             this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 50, 65, true);
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
-            this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
-            this.txtButton.x = 910;
-            this.txtButton.y = 565;
             //#region pause button
             this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff", 0, 0, true);
             this.resumeText = new objects.Label("Resume", "20px", "Cambay", "#ffffff", 0, 0, true);
@@ -57,7 +54,7 @@ var scenes;
             //#endregion
             this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
-            this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
+            //this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
             this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
             //#region Player Init
@@ -77,6 +74,17 @@ var scenes;
             //#endregion
             this.overTitle = new objects.Label("Player dead...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 * 0.35, true);
             this.Main();
+        };
+        StageOne.prototype.createDialog = function (scene, text) {
+            return new function () {
+                this.dialog = new objects.Dialog(scene.assetManager, text);
+                this.showDialog = function () {
+                    this.dialog.showDialog(scene);
+                };
+                this.disposeDialog = function () {
+                    this.dialog.hideDialog(scene);
+                };
+            };
         };
         StageOne.prototype.CreateFunctionCheck = function (gameObject) {
             var _this = this;
@@ -100,9 +108,16 @@ var scenes;
                             result = managers.Collision.CheckAABBCollision(aabbCollider, object.boxCollider.aabb);
                             if (result.CheckCollided()) {
                                 collided = true;
+                                result.objectCollided = object;
                                 if (gameObject.name === _this.player.name) {
                                     object.aabbResultPlayer = result;
                                     _this.player.actionObject = object;
+                                    if (!object.alreadyHandled) {
+                                        //show Dialog
+                                        if (_this.player.dialog != null) {
+                                            _this.player.dialog.showDialog();
+                                        }
+                                    }
                                 }
                                 break;
                             }
@@ -110,6 +125,9 @@ var scenes;
                     }
                 }
                 if (!collided) {
+                    if (_this.player.dialog != null) {
+                        _this.player.dialog.disposeDialog();
+                    }
                     _this.player.actionObject = null;
                 }
                 return result;
@@ -179,7 +197,7 @@ var scenes;
             this.addChild(this.timeRemaining);
             this.addChild(this.titleShadow);
             this.addChild(this.title);
-            this.addChild(this.backButton);
+            //this.addChild(this.backButton);
             //this.addChild(this.txtButton);
             this.CreateScenery();
             this.addChild(this.player);
@@ -188,7 +206,7 @@ var scenes;
             });
             this.addChild(this.background_shadow);
             //create the empties gameobjects to be the stage boundaries
-            this.backButton.on("click", this.fn_ButtonClick);
+            //this.backButton.on("click", this.fn_ButtonClick);
             var callback = function () {
                 _this.removeChild(_this.title);
                 _this.removeChild(_this.titleShadow);
@@ -200,7 +218,7 @@ var scenes;
             this.addChild(this.pauseButton);
             this.addChild(this.pauseButton.text);
             this.addChild(this.gamePausedText);
-            this.backButton.on("click", this.fn_ButtonClick);
+            //this.backButton.on("click", this.fn_ButtonClick);
             this.pauseButton.on("click", this.fn_pauseButtonClick);
         };
         StageOne.prototype.CreateScenery = function () {
@@ -219,6 +237,13 @@ var scenes;
             this.CreateObjects();
         };
         StageOne.prototype.CreateObjects = function () {
+            this.player.dialog = this.createDialog(this, "...");
+            var floor_3_Door = new objects.OpenableObject(this.assetManager, "closed_door", "open_door", "bck_door");
+            floor_3_Door.boxCollider = new objects.BoxCollider(0, 0, floor_3_Door.x, floor_3_Door.y, floor_3_Door.width, floor_3_Door.height + 5);
+            this.addChild(floor_3_Door);
+            floor_3_Door.x = 770;
+            floor_3_Door.y = 180;
+            this.gameSceneryDynamicObjects[2] = floor_3_Door;
             var floor_3_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
             floor_3_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk.x, floor_3_Desk.y, floor_3_Desk.width, floor_3_Desk.height);
             this.addChild(floor_3_Desk);

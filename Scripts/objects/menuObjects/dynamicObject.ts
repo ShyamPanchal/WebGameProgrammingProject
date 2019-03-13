@@ -2,13 +2,16 @@ module objects{
     export class DynamicObject extends objects.GameObject {
 
         public aabbResultPlayer:managers.AABB;
+        public alreadyHandled: boolean;
 
         constructor(assetManager: createjs.LoadQueue, imageString: string){
             super(assetManager, imageString);
+            this.alreadyHandled = false;
           }
 
         public Action(): void {
-            console.log('ACTION');
+            this.alreadyHandled = true;
+            //console.log('ACTION');
         }
 
         protected CheckCollision: (x:number, y:number) => managers.AABB;

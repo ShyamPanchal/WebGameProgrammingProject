@@ -1,15 +1,17 @@
 module objects{
     export class OpenableObject extends objects.DynamicObject {
 
+        private backgroundImage: any;
         private openedImage: any;
         private closedImage: any;
         private isClosed: boolean;
+        private  gameObject: objects.GameObject;
 
-
-        constructor(assetManager: createjs.LoadQueue, imageStringClosed : string, imageStringOpened: string){
+        constructor(assetManager: createjs.LoadQueue, imageStringClosed : string, imageStringOpened: string, backgroundImage: string = imageStringOpened){
             super(assetManager, imageStringClosed);
             this.openedImage = assetManager.getResult(imageStringOpened);
             this.closedImage = assetManager.getResult(imageStringClosed);
+            this.backgroundImage = assetManager.getResult(backgroundImage);
             this.isClosed = true;
 
             this.isGravityAffected = true;

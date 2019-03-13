@@ -29,7 +29,11 @@
         { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
         { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
         { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" },
-        { id: "pauseBackground", src: "../Assets/Background/pause.png" }
+        { id: "pauseBackground", src: "../Assets/Background/pause.png" },
+        { id: "closed_door", src: "../Assets/Sprites/Objects/closed_door.png" },
+        { id: "open_door", src: "../Assets/Sprites/Objects/open_door.png" },
+        { id: "bkc_door", src: "../Assets/Sprites/Objects/bck_door.png" },
+        { id: "speech_ballom", src: "../Assets/Sprites/Objects/speech_ballom.png" }
     ];
     function Init() {
         console.log("Initialization start");

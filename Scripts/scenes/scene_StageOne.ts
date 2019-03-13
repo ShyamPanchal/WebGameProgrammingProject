@@ -5,9 +5,8 @@ module scenes {
         private title: objects.Label;
         private titleShadow: objects.Label;
 
-        private backButton: objects.Button;
+        //private backButton: objects.Button;
         private pauseButton: objects.Button;
-        private txtButton: objects.Label;
 
         private enemies: objects.Enemy[];
 
@@ -48,7 +47,7 @@ module scenes {
         public Start(): void {
 
             //config.Gravity.gravityFactor = -1;
-            objects.Game.isDebug = false;
+            objects.Game.isDebug = true;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
             this.gameSceneryDynamicObjects = new Array<objects.DynamicObject>();
@@ -70,10 +69,6 @@ module scenes {
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
 
-            this.txtButton = new objects.Label("Bypass!", "18px", "bold Cambay", "#ffffff");
-            this.txtButton.x = 910;
-            this.txtButton.y = 565;
-
             //#region pause button
             this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff", 0, 0, true);
             this.resumeText = new objects.Label("Resume", "20px", "Cambay", "#ffffff", 0, 0, true);
@@ -85,7 +80,8 @@ module scenes {
 
             this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
-            this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
+
+            //this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
 
             this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
@@ -113,6 +109,20 @@ module scenes {
 
         }
 
+        public createDialog(scene:objects.Scene, text: string): any {
+            return new function() {
+                
+                this.dialog = new objects.Dialog(scene.assetManager, text);
+
+                this.showDialog = function ():void{
+                    this.dialog.showDialog(scene);
+                };
+                this.disposeDialog = function ():void{
+                    this.dialog.hideDialog(scene);
+                };
+            };
+        }
+
         public CreateFunctionCheck(gameObject: objects.GameObject) {
             let boxCollider: objects.BoxCollider = gameObject.boxCollider;
             return (x: number, y: number): managers.AABB => {
@@ -135,9 +145,16 @@ module scenes {
                             result = managers.Collision.CheckAABBCollision(aabbCollider, object.boxCollider.aabb);
                             if (result.CheckCollided()) {
                                 collided = true;
+                                result.objectCollided = object;
                                 if (gameObject.name === this.player.name) {
                                     object.aabbResultPlayer = result;
                                     this.player.actionObject = object;
+                                    if (!object.alreadyHandled) {
+                                        //show Dialog
+                                        if (this.player.dialog != null) {
+                                            this.player.dialog.showDialog();
+                                        }
+                                    }
                                 }
                                 break;
                             }
@@ -146,6 +163,9 @@ module scenes {
                 }
 
                 if (!collided) {
+                    if (this.player.dialog != null) {
+                        this.player.dialog.disposeDialog();
+                    }
                     this.player.actionObject = null;
                 }
                 return result;
@@ -229,7 +249,7 @@ module scenes {
             this.addChild(this.titleShadow);
             this.addChild(this.title);
 
-            this.addChild(this.backButton);
+            //this.addChild(this.backButton);
             //this.addChild(this.txtButton);
 
             this.CreateScenery();
@@ -242,7 +262,7 @@ module scenes {
 
             //create the empties gameobjects to be the stage boundaries
 
-            this.backButton.on("click", this.fn_ButtonClick);
+            //this.backButton.on("click", this.fn_ButtonClick);
 
             var callback = (): void => {
                 this.removeChild(this.title);
@@ -259,7 +279,7 @@ module scenes {
 
             this.addChild(this.gamePausedText);
 
-            this.backButton.on("click", this.fn_ButtonClick);
+            //this.backButton.on("click", this.fn_ButtonClick);
             this.pauseButton.on("click", this.fn_pauseButtonClick);
 
         }
@@ -285,6 +305,20 @@ module scenes {
         }
 
         private CreateObjects(): void {
+            this.player.dialog = this.createDialog(this, "...");
+            
+            var floor_3_Door = new objects.OpenableObject(this.assetManager, "closed_door", "open_door", "bck_door");
+            floor_3_Door.boxCollider = new objects.BoxCollider(0, 0, floor_3_Door.x, floor_3_Door.y,
+                floor_3_Door.width, floor_3_Door.height+5);
+                
+            
+            this.addChild(floor_3_Door);
+            
+            floor_3_Door.x = 770;
+            floor_3_Door.y = 180;
+
+            this.gameSceneryDynamicObjects[2] = floor_3_Door;
+
             var floor_3_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
             floor_3_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk.x, floor_3_Desk.y,
                 floor_3_Desk.width, floor_3_Desk.height);

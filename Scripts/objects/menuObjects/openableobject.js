@@ -15,10 +15,12 @@ var objects;
 (function (objects) {
     var OpenableObject = /** @class */ (function (_super) {
         __extends(OpenableObject, _super);
-        function OpenableObject(assetManager, imageStringClosed, imageStringOpened) {
+        function OpenableObject(assetManager, imageStringClosed, imageStringOpened, backgroundImage) {
+            if (backgroundImage === void 0) { backgroundImage = imageStringOpened; }
             var _this = _super.call(this, assetManager, imageStringClosed) || this;
             _this.openedImage = assetManager.getResult(imageStringOpened);
             _this.closedImage = assetManager.getResult(imageStringClosed);
+            _this.backgroundImage = assetManager.getResult(backgroundImage);
             _this.isClosed = true;
             _this.isGravityAffected = true;
             return _this;

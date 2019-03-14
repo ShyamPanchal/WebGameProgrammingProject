@@ -21,7 +21,7 @@ module scenes
 
         private fn_ButtonClick():void
         {
-            objects.Game.currentScene = config.Scene.INGAME;
+            objects.Game.currentScene = config.Scene.PROLOGUE;
         }
 
         public Start():void

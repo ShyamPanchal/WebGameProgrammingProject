@@ -1,9 +1,9 @@
 module objects{
-  export class Player extends objects.GameObject {
+  export class Player extends objects.TextureAtlas {
 
     // Variables
-    private static speed:number = 5;
-    private static maxHightRate:number = 0.9 ; //the player can jump at highest 90% of the height
+    private speed:number = 5;
+    private maxHightRate:number = 0.9 ; //the player can jump at highest 90% of the height
     public isDead:boolean;
     public maxJumpHeight: number;
     public isJumping: boolean;
@@ -12,9 +12,21 @@ module objects{
     public time: number;
     private timeToAction:number = 0.5;
     public deltaTime: number;
-    
+
     public dialog: any;
-    public inventory:Inventory;
+
+
+    public listener: any;
+
+    public animationState = "Jump";
+
+    public playerNum;
+
+    // Constructor
+    constructor(textureAtlas: createjs.SpriteSheet, imageString: string, scaleX:number, scaleY:number, flipOffsetX: number,  x: number, y: number, playerNum: number = 1,){
+      super(textureAtlas, imageString, scaleX, scaleY, flipOffsetX);
+
+   /* public inventory:Inventory;
 
     public picture:GameObject;
     public timeScore:number;
@@ -22,26 +34,30 @@ module objects{
     // Constructor
     constructor(assetManager:createjs.LoadQueue, inventory:Inventory){
       super(assetManager, "player");
+ Levels*/
       this.Start();
       this.picture = new GameObject(assetManager, "p1");
       this.picture.alpha = 0.5;
       this.isGravityAffected = true;
+
+      this.playerNum = playerNum;
+
       
       this.inventory = inventory;      
       this.inventory.player = this;
       this.picture.x = inventory.x;
       this.picture.y = inventory.y;
 
+
       this.time = 0;
       this.deltaTime = 0;
+      this.x = x;
+      this.y = y;
     }
 
     // Methods / Functions
     public Start():void{
-      this.x = 400;
-      this.y = 45;
-      
-      this.isJumping = false;      
+      this.isJumping = false;
     }
 
     private CheckCollision: (x:number, y:number) => managers.AABB;
@@ -51,25 +67,25 @@ module objects{
       this.Update();
     }
 
-    protected Update():void{
+    public Update():void{
       super.Update();
-      
+
       this.CheckGrounded(this.CheckCollision);
 
       if (!this.isGrounded && !this.isJumping) {
         this.DoGravityEffect();
       } else if (this.isGrounded){
-        this.maxJumpHeight = this.y - (this.height * Player.maxHightRate)*this.GetGravityFactor();
+        this.maxJumpHeight = this.y - (this.height * this.maxHightRate)*this.GetGravityFactor();
         this.isJumping = false;
       }
-      
+
       this.Jump();
       this.Move();
-      
-      this.Action();      
-      
+
+      this.Action();
+
       this.CheckBounds();
-      
+
       this.lastPosition.x = this.x;
       this.lastPosition.y = this.y;
 
@@ -83,17 +99,26 @@ module objects{
     }
 
     public OnColliderEnter(penetration: math.Vec2, obj: GameObject) {
-      console.log(obj.name + ' penetration : ' + math.Vec2.Print(penetration));  
+      console.log(obj.name + ' penetration : ' + math.Vec2.Print(penetration));
     }
 
     public OnColliderExit(penetration: math.Vec2, obj: GameObject) {
     }
 
+    public cancelStopEvent(e){
+        this.stop();
+        this.off("animationend", this.listener);
+        this.animationState = "Waiting";
+    }
+
     public Jump() : void {
       if (this.isGrounded) {
-        if (objects.Game.keyboard.moveUp && !this.isJumping) {
+        if ((objects.Game.keyboard.player1MoveUp && this.playerNum == 1) || (objects.Game.keyboard.player2MoveUp && this.playerNum == 2) && !this.isJumping) {
           this.isGrounded = false;
           this.isJumping = true;
+          this.gotoAndPlay("Jump");
+          this.animationState = "Jump";
+          this.listener =  this.on("animationend", this.cancelStopEvent);
           //this.y += config.Gravity.gravityForce*this.height;
           this.Move_Vertically(true, config.Gravity.gravityForce*this.GetGravityFactor()*this.height);
         }
@@ -109,61 +134,109 @@ module objects{
       }
     }
     public Move_Vertically(up:boolean, speed:number) :void {
+
       if (up) {
-        if (this.CheckVerticalMovement(this.CheckCollision, true, speed)) { 
+        if (this.CheckVerticalMovement(this.CheckCollision, true, speed)) {
           this.y += speed;
         }
       } else {
         if (this.CheckVerticalMovement(this.CheckCollision, false, speed)) {
           this.y -= speed;
-        }          
+        }
       }
     }
 
-    
+
     public Action() :void {
-      
+
       if (this.deltaTime != 0 && (this.timeToAction > this.deltaTime)) {
         this.deltaTime+=1/60;
         return;
-      } 
+      }
       this.deltaTime=0;
 
+      if ((objects.Game.keyboard.player1Action && this.playerNum == 1) || (objects.Game.keyboard.player2Action && this.playerNum == 2)) {
+        if (this.actionObject != null) {
+            this.gotoAndPlay("Action");
+            this.animationState = "Action";
+            this.listener =  this.on("animationend", this.cancelStopEvent);
+          this.actionObject.Action();
+/*
       if (objects.Game.keyboard.action) {
         if (this.actionObject == null) {
           this.inventory.DropItem();
           this.deltaTime+=1/60;
         } else {
           this.actionObject.Action();                    
+*/
           this.deltaTime+=1/60;
         }
-      }            
+      }
     }
 
     public Move() :void {
       //this.x = objects.Game.stage.mouseX;
-      if (objects.Game.keyboard.moveLeft) {
-        if (this.CheckMovement(this.CheckCollision, true, Player.speed)) {
-          //this.scaleX *=-1;          
-          this.x -= Player.speed;
+      if ((objects.Game.keyboard.player1MoveLeft && this.playerNum == 1) || (objects.Game.keyboard.player2MoveLeft && this.playerNum == 2)) {
+        if (this.CheckMovement(this.CheckCollision, true, this.speed)) {
+          //this.scaleX *=-1;
+          this.x -= this.speed;
+          if (this.isGrounded){
+              if (this.animationState != "Run" && this.animationState != "Action"){
+                  this.gotoAndPlay("Run");
+                  this.animationState = "Run";
+              }
+          }
+        }
+        else{
+            if (this.isGrounded){
+                if (this.animationState != "Idle" && this.animationState != "Action"){
+                    this.gotoAndPlay("Idle");
+                    this.animationState = "Idle";
+                }
+            }
         }
         if (!this.isLeft) {
           this.FlipHorizontally();
         }
       }
+      else if ((objects.Game.keyboard.player1MoveRight && this.playerNum == 1) || (objects.Game.keyboard.player2MoveRight && this.playerNum == 2)) {
+        if (this.CheckMovement(this.CheckCollision, false, this.speed)) {
+          this.x += this.speed;
+          if (this.isGrounded){
+              if (this.animationState != "Run" && this.animationState != "Action"){
+                  this.gotoAndPlay("Run");
+                  this.animationState = "Run";
+              }
 
-      if (objects.Game.keyboard.moveRight) {
-        if (this.CheckMovement(this.CheckCollision, false, Player.speed)) {
-          this.x += Player.speed;
+          }
+        }
+        else{
+            if (this.isGrounded){
+                if (this.animationState != "Idle" && this.animationState != "Action"){
+                    this.gotoAndPlay("Idle");
+                    this.animationState = "Idle";
+                }
+
+            }
         }
         if (this.isLeft) {
           this.FlipHorizontally();
         }
       }
+      else{
+          if (this.isGrounded){
+              if (this.animationState != "Idle" && this.animationState != "Action"){
+                  this.gotoAndPlay("Idle");
+                  this.animationState = "Idle";
+              }
+          }
+      }
+
+
     }
 
     public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
-      let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());      
+      let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());
 
       if (md.isCollided && (md.objectCollided instanceof Door || md.objectCollided instanceof HandableObject)) {
         this.isGrounded = false;
@@ -180,13 +253,16 @@ module objects{
       if (md.objectCollided instanceof OpenableObject || md.objectCollided instanceof HandableObject) {
         return true;
       }
-
+      // if (this.actionObject instanceof PushableObject){
+      //     return false;
+      // }
       return !md.isCollided;// && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
     }
 
     public CheckVerticalMovement(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
       let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
+
       
       if (md.isCollided && (md.objectCollided instanceof Door || this.actionObject instanceof HandableObject)) {
         return true;

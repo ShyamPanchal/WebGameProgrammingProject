@@ -23,7 +23,7 @@ var scenes;
             return _this;
         }
         StartScene.prototype.fn_ButtonClick = function () {
-            objects.Game.currentScene = config.Scene.INGAME;
+            objects.Game.currentScene = config.Scene.PROLOGUE;
         };
         StartScene.prototype.Start = function () {
             console.log("Main Menu/Start Menu...");

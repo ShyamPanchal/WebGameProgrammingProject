@@ -6,7 +6,7 @@ module objects {
 
         public offset_x:number;
         public offset_y:number;
-    
+
         public width: number;
         public height: number;
 
@@ -45,7 +45,7 @@ module objects {
 
         private cached :createjs.Shape;
         public DebugLine() :void {
-            
+
             if (this.cached !== null) {
                 objects.Game.stage.removeChild(this.cached);
             }
@@ -56,7 +56,7 @@ module objects {
 
             this.cached = new createjs.Shape(graphics);
             objects.Game.stage.addChild(this.cached);
-        
+
           }
     }
 }

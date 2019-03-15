@@ -22,24 +22,26 @@ var objects;
             // Variables
             _this.speed = 5;
             _this.maxHightRate = 0.9; //the player can jump at highest 90% of the height
-/*
-        function Player(assetManager, inventory) {
-            var _this = _super.call(this, assetManager, "player") || this;
-*/
             _this.timeToAction = 0.5;
             _this.animationState = "Jump";
+            /* public inventory:Inventory;
+         
+             public picture:GameObject;
+             public timeScore:number;
+         
+             // Constructor
+             constructor(assetManager:createjs.LoadQueue, inventory:Inventory){
+               super(assetManager, "player");
+          Levels*/
             _this.Start();
             _this.picture = new objects.GameObject(assetManager, "p1");
             _this.picture.alpha = 0.5;
             _this.isGravityAffected = true;
-
             _this.playerNum = playerNum;
-/*
             _this.inventory = inventory;
             _this.inventory.player = _this;
             _this.picture.x = inventory.x;
             _this.picture.y = inventory.y;
-*/
             _this.time = 0;
             _this.deltaTime = 0;
             _this.x = x;
@@ -133,15 +135,15 @@ var objects;
                     this.gotoAndPlay("Action");
                     this.animationState = "Action";
                     this.listener = this.on("animationend", this.cancelStopEvent);
-/*
-            if (objects.Game.keyboard.action) {
-                if (this.actionObject == null) {
-                    this.inventory.DropItem();
-                    this.deltaTime += 1 / 60;
-                }
-                else {
-*/
                     this.actionObject.Action();
+                    /*
+                          if (objects.Game.keyboard.action) {
+                            if (this.actionObject == null) {
+                              this.inventory.DropItem();
+                              this.deltaTime+=1/60;
+                            } else {
+                              this.actionObject.Action();
+                    */
                     this.deltaTime += 1 / 60;
                 }
             }

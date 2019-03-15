@@ -190,7 +190,8 @@
         { id: "closed_door", src: "../Assets/Sprites/Objects/closed_door.png" },
         { id: "open_door", src: "../Assets/Sprites/Objects/open_door.png" },
         { id: "bkc_door", src: "../Assets/Sprites/Objects/bck_door.png" },
-        { id: "speech_ballom", src: "../Assets/Sprites/Objects/speech_ballom.png" }
+        { id: "speech_ballom", src: "../Assets/Sprites/Objects/speech_ballom.png" },
+        { id: "play_music", src: "./Assets/Sound/spook.mp3" }
     ];
     function Init() {
         console.log("Initialization start");

@@ -11,7 +11,8 @@ module scenes {
         private enemies: objects.Enemy[];
 
         //private ghost: objects.Enemy;
-        private player: objects.Player;
+        private player1: objects.Player;
+        private player2: objects.Player;
 
         private pauseTxtButton: objects.Label;
 
@@ -59,8 +60,8 @@ module scenes {
             ghost.alpha = 0.8;
             ghost.y = ghost.y - ghost.height;
             this.enemies[0] = ghost;
-        
-            
+
+
 
             console.log("GAME SCENE(S)...");
 
@@ -87,8 +88,10 @@ module scenes {
             this.titleShadow.alpha = 0.5;
 
             //#region Player Init
-            this.player = new objects.Player(this.assetManager);
-            this.player.boxCollider = new objects.BoxCollider(18, 16, this.player.x, this.player.y, this.player.width - 45, this.player.height - 20);
+            this.player1 = new objects.Player(objects.Game.player1TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 45);
+            this.player1.boxCollider = new objects.BoxCollider(0, 0, this.player1.x, this.player1.y, this.player1.width, this.player1.height);
+            this.player2 = new objects.Player(objects.Game.player2TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 350, 2);
+            this.player2.boxCollider = new objects.BoxCollider(0, 0, this.player2.x, this.player2.y, this.player2.width, this.player2.height);
             //#endregion
 
             //#region PauseMenu
@@ -111,7 +114,7 @@ module scenes {
 
         public createDialog(scene:objects.Scene, text: string): any {
             return new function() {
-                
+
                 this.dialog = new objects.Dialog(scene.assetManager, text);
 
                 this.showDialog = function ():void{
@@ -123,7 +126,7 @@ module scenes {
             };
         }
 
-        public CreateFunctionCheck(gameObject: objects.GameObject) {
+        public CreateFunctionCheck(gameObject: any, player: objects.Player = null) {
             let boxCollider: objects.BoxCollider = gameObject.boxCollider;
             return (x: number, y: number): managers.AABB => {
                 let collided = false;
@@ -146,27 +149,47 @@ module scenes {
                             if (result.CheckCollided()) {
                                 collided = true;
                                 result.objectCollided = object;
-                                if (gameObject.name === this.player.name) {
+                                if (gameObject.name === player.name) {
                                     object.aabbResultPlayer = result;
-                                    this.player.actionObject = object;
+                                    if (player.playerNum == 1){
+                                        this.player1.actionObject = object;
+                                    }
+                                    else if (player.playerNum == 2){
+                                        this.player2.actionObject = object;
+                                    }
                                     if (!object.alreadyHandled) {
                                         //show Dialog
-                                        if (this.player.dialog != null) {
-                                            this.player.dialog.showDialog();
+                                        if (player.dialog != null) {
+                                            if (player.playerNum == 1){
+                                                this.player1.dialog.showDialog();
+                                            }
+                                            else if (player.playerNum == 2){
+                                                this.player2.dialog.showDialog();
+                                            }
                                         }
                                     }
                                 }
-                                break;
                             }
                         }
                     }
                 }
 
-                if (!collided) {
-                    if (this.player.dialog != null) {
-                        this.player.dialog.disposeDialog();
+                if (!collided && player != null) {
+                    if (player.dialog != null) {
+                        if (player.playerNum == 1){
+                            this.player1.dialog.disposeDialog();
+                        }
+                        else if (player.playerNum == 2){
+                            this.player2.dialog.disposeDialog();
+                        }
                     }
-                    this.player.actionObject = null;
+                    if (player.playerNum == 1){
+                        this.player1.actionObject = null;
+                    }
+                    else if (player.playerNum == 2){
+                        this.player2.actionObject = null;
+                    }
+
                 }
                 return result;
             };
@@ -210,22 +233,28 @@ module scenes {
 
             this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
 
-            let CheckMovement = this.CreateFunctionCheck(this.player);
+            let CheckMovement = this.CreateFunctionCheck(this.player1, this.player1);
 
-            this.player.UpdateIfPossible(CheckMovement);
+            this.player1.UpdateIfPossible(CheckMovement);
+
+            CheckMovement = this.CreateFunctionCheck(this.player2, this.player2);
+
+            this.player2.UpdateIfPossible(CheckMovement);
 
             this.enemies.forEach(enemy => {
                 enemy.Update();
 
-                this.player.isDead = managers.Collision.CheckDistance(this.player, enemy);
-                if(this.player.isDead){
+                this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
+                this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
+                if(this.player1.isDead && this.player2.isDead){
                     var overNote = (): void => {
                         objects.Game.currentScene = config.Scene.FINISH;
                     }
                     this.StartCount(2, overNote);
                     this.overTitle.visible = true;
-                    this.player.x = 1500; //sending player and ghost to out of screen 
-                    enemy.x = 1500;
+                    this.player1.x = 1500; //sending player and ghost to out of screen
+                    this.player2.x = 1500;
+                    enemy.x = 3000;
                 }
             });
 
@@ -253,7 +282,8 @@ module scenes {
             //this.addChild(this.txtButton);
 
             this.CreateScenery();
-            this.addChild(this.player);
+            this.addChild(this.player1);
+            this.addChild(this.player2);
             this.enemies.forEach(ghost => {
                 this.addChild(ghost);
             });
@@ -269,7 +299,7 @@ module scenes {
                 this.removeChild(this.titleShadow);
             }
             this.StartCountdown(3, callback);
-            
+
             this.addChild(this.overTitle);
             this.overTitle.visible = false;
             this.addChild(this.pauseBackground);
@@ -305,15 +335,16 @@ module scenes {
         }
 
         private CreateObjects(): void {
-            this.player.dialog = this.createDialog(this, "...");
-            
+            this.player1.dialog = this.createDialog(this, "...");
+            this.player2.dialog = this.createDialog(this, "...");
+
             var floor_3_Door = new objects.OpenableObject(this.assetManager, "closed_door", "open_door", "bck_door");
             floor_3_Door.boxCollider = new objects.BoxCollider(0, 0, floor_3_Door.x, floor_3_Door.y,
                 floor_3_Door.width, floor_3_Door.height+5);
-                
-            
+
+
             this.addChild(floor_3_Door);
-            
+
             floor_3_Door.x = 770;
             floor_3_Door.y = 180;
 

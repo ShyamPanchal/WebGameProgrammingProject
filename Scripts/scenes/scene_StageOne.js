@@ -58,8 +58,10 @@ var scenes;
             this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
             //#region Player Init
-            this.player = new objects.Player(this.assetManager);
-            this.player.boxCollider = new objects.BoxCollider(18, 16, this.player.x, this.player.y, this.player.width - 45, this.player.height - 20);
+            this.player1 = new objects.Player(objects.Game.player1TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 45);
+            this.player1.boxCollider = new objects.BoxCollider(0, 0, this.player1.x, this.player1.y, this.player1.width, this.player1.height);
+            this.player2 = new objects.Player(objects.Game.player2TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 350, 2);
+            this.player2.boxCollider = new objects.BoxCollider(0, 0, this.player2.x, this.player2.y, this.player2.width, this.player2.height);
             //#endregion
             //#region PauseMenu
             this.pauseBackground = new objects.Background(this.assetManager, "pauseBackground");
@@ -86,8 +88,9 @@ var scenes;
                 };
             };
         };
-        StageOne.prototype.CreateFunctionCheck = function (gameObject) {
+        StageOne.prototype.CreateFunctionCheck = function (gameObject, player) {
             var _this = this;
+            if (player === void 0) { player = null; }
             var boxCollider = gameObject.boxCollider;
             return function (x, y) {
                 var collided = false;
@@ -109,26 +112,45 @@ var scenes;
                             if (result.CheckCollided()) {
                                 collided = true;
                                 result.objectCollided = object;
-                                if (gameObject.name === _this.player.name) {
+                                if (gameObject.name === player.name) {
                                     object.aabbResultPlayer = result;
-                                    _this.player.actionObject = object;
+                                    if (player.playerNum == 1) {
+                                        _this.player1.actionObject = object;
+                                    }
+                                    else if (player.playerNum == 2) {
+                                        _this.player2.actionObject = object;
+                                    }
                                     if (!object.alreadyHandled) {
                                         //show Dialog
-                                        if (_this.player.dialog != null) {
-                                            _this.player.dialog.showDialog();
+                                        if (player.dialog != null) {
+                                            if (player.playerNum == 1) {
+                                                _this.player1.dialog.showDialog();
+                                            }
+                                            else if (player.playerNum == 2) {
+                                                _this.player2.dialog.showDialog();
+                                            }
                                         }
                                     }
                                 }
-                                break;
                             }
                         }
                     }
                 }
-                if (!collided) {
-                    if (_this.player.dialog != null) {
-                        _this.player.dialog.disposeDialog();
+                if (!collided && player != null) {
+                    if (player.dialog != null) {
+                        if (player.playerNum == 1) {
+                            _this.player1.dialog.disposeDialog();
+                        }
+                        else if (player.playerNum == 2) {
+                            _this.player2.dialog.disposeDialog();
+                        }
                     }
-                    _this.player.actionObject = null;
+                    if (player.playerNum == 1) {
+                        _this.player1.actionObject = null;
+                    }
+                    else if (player.playerNum == 2) {
+                        _this.player2.actionObject = null;
+                    }
                 }
                 return result;
             };
@@ -166,19 +188,23 @@ var scenes;
                 objects.Game.currentScene = config.Scene.FINISH;
             }
             this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
-            var CheckMovement = this.CreateFunctionCheck(this.player);
-            this.player.UpdateIfPossible(CheckMovement);
+            var CheckMovement = this.CreateFunctionCheck(this.player1, this.player1);
+            this.player1.UpdateIfPossible(CheckMovement);
+            CheckMovement = this.CreateFunctionCheck(this.player2, this.player2);
+            this.player2.UpdateIfPossible(CheckMovement);
             this.enemies.forEach(function (enemy) {
                 enemy.Update();
-                _this.player.isDead = managers.Collision.CheckDistance(_this.player, enemy);
-                if (_this.player.isDead) {
+                _this.player1.isDead = managers.Collision.CheckDistance(_this.player1, enemy);
+                _this.player2.isDead = managers.Collision.CheckDistance(_this.player2, enemy);
+                if (_this.player1.isDead && _this.player2.isDead) {
                     var overNote = function () {
                         objects.Game.currentScene = config.Scene.FINISH;
                     };
                     _this.StartCount(2, overNote);
                     _this.overTitle.visible = true;
-                    _this.player.x = 1500; //sending player and ghost to out of screen 
-                    enemy.x = 1500;
+                    _this.player1.x = 1500; //sending player and ghost to out of screen
+                    _this.player2.x = 1500;
+                    enemy.x = 3000;
                 }
             });
             for (var i = 0; i < this.gameSceneryStaticObjects.length; i++) {
@@ -200,7 +226,8 @@ var scenes;
             //this.addChild(this.backButton);
             //this.addChild(this.txtButton);
             this.CreateScenery();
-            this.addChild(this.player);
+            this.addChild(this.player1);
+            this.addChild(this.player2);
             this.enemies.forEach(function (ghost) {
                 _this.addChild(ghost);
             });
@@ -237,7 +264,8 @@ var scenes;
             this.CreateObjects();
         };
         StageOne.prototype.CreateObjects = function () {
-            this.player.dialog = this.createDialog(this, "...");
+            this.player1.dialog = this.createDialog(this, "...");
+            this.player2.dialog = this.createDialog(this, "...");
             var floor_3_Door = new objects.OpenableObject(this.assetManager, "closed_door", "open_door", "bck_door");
             floor_3_Door.boxCollider = new objects.BoxCollider(0, 0, floor_3_Door.x, floor_3_Door.y, floor_3_Door.width, floor_3_Door.height + 5);
             this.addChild(floor_3_Door);

@@ -32,7 +32,7 @@ module objects{
       this.Init();
     }
 
-    protected GetGravityFactor():number{
+    public GetGravityFactor():number{
       return this.gravityFactor;
     }
 

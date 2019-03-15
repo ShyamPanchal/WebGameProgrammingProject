@@ -6,7 +6,7 @@ module managers {
             let p1: math.Vec2 = new math.Vec2(obj1.x, obj1.y);
             let p2: math.Vec2 = new math.Vec2(obj2.x, obj2.y);
 
-            if(math.Vec2.Distance(p1, p2) < (obj1.halfH + obj2.halfH)) {
+            if(math.Vec2.Distance(p1, p2) < (obj1.boxCollider.halfH + obj2.boxCollider.halfH)) {
                 if(!obj2.isColliding) {
                     // console.log("Colliding with " + obj2.name);
                     switch(obj2.name) {

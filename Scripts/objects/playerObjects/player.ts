@@ -14,13 +14,24 @@ module objects{
     public deltaTime: number;
     
     public dialog: any;
-    
+    public inventory:Inventory;
+
+    public picture:GameObject;
+    public timeScore:number;
+
     // Constructor
-    constructor(assetManager:createjs.LoadQueue){
+    constructor(assetManager:createjs.LoadQueue, inventory:Inventory){
       super(assetManager, "player");
       this.Start();
+      this.picture = new GameObject(assetManager, "p1");
+      this.picture.alpha = 0.5;
       this.isGravityAffected = true;
       
+      this.inventory = inventory;      
+      this.inventory.player = this;
+      this.picture.x = inventory.x;
+      this.picture.y = inventory.y;
+
       this.time = 0;
       this.deltaTime = 0;
     }
@@ -63,7 +74,7 @@ module objects{
       this.lastPosition.y = this.y;
 
       if (this.dialog != null) {
-        this.dialog.dialog.Update(this.x + this.width, this.y - this.halfH)
+        this.dialog.dialog.Update(this.x + this.width, this.y - 0.3*this.halfH)
       }
     }
 
@@ -119,7 +130,10 @@ module objects{
       this.deltaTime=0;
 
       if (objects.Game.keyboard.action) {
-        if (this.actionObject != null) {
+        if (this.actionObject == null) {
+          this.inventory.DropItem();
+          this.deltaTime+=1/60;
+        } else {
           this.actionObject.Action();                    
           this.deltaTime+=1/60;
         }
@@ -151,7 +165,7 @@ module objects{
     public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
       let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());      
 
-      if (md.isCollided && md.objectCollided instanceof OpenableObject) {
+      if (md.isCollided && (md.objectCollided instanceof Door || md.objectCollided instanceof HandableObject)) {
         this.isGrounded = false;
         return;
       }
@@ -163,7 +177,7 @@ module objects{
     public CheckMovement(Check: (x:number, y:number) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
       let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y);
 
-      if (this.actionObject instanceof OpenableObject) {
+      if (md.objectCollided instanceof OpenableObject || md.objectCollided instanceof HandableObject) {
         return true;
       }
 
@@ -174,7 +188,7 @@ module objects{
       let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
       //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
       
-      if (md.isCollided && this.actionObject instanceof OpenableObject) {
+      if (md.isCollided && (md.objectCollided instanceof Door || this.actionObject instanceof HandableObject)) {
         return true;
       }
       this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;

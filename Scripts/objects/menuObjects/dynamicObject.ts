@@ -3,6 +3,7 @@ module objects{
 
         public aabbResultPlayer:managers.AABB;
         public alreadyHandled: boolean;
+        public player:Player;
 
         constructor(assetManager: createjs.LoadQueue, imageString: string){
             super(assetManager, imageString);
@@ -28,7 +29,9 @@ module objects{
         }
 
         public DoGravityEffect():void {
+          if (this.isGravityAffected) {
             this.Move_Vertically(false, config.Gravity.gravitySpeed*this.GetGravityFactor());
+          }
         }
 
         public Move_Vertically(up:boolean, speed:number) :void {

@@ -35,8 +35,20 @@ console.log('code ran');
         { id: "pauseBackground", src: "../Assets/Background/pause.png" },
         { id: "closed_door", src: "../Assets/Sprites/Objects/closed_door.png" },
         { id: "open_door", src: "../Assets/Sprites/Objects/open_door.png" },
+        { id: "open_door_out", src: "../Assets/Sprites/Objects/open_door_out.png" },
+        { id: "open_door_dark", src: "../Assets/Sprites/Objects/open_door_dark.png" },
         { id: "bkc_door", src: "../Assets/Sprites/Objects/bck_door.png" },
-        { id: "speech_ballom", src: "../Assets/Sprites/Objects/speech_ballom.png" }
+        { id: "speech_ballom", src: "../Assets/Sprites/Objects/speech_ballom_alpha.png" },
+        { id: "globet", src: "../Assets/Sprites/Objects/Items/loot01goblet.png" },
+        { id: "crystal", src: "../Assets/Sprites/Objects/Items/loot02crystal.png" },
+        { id: "coins", src: "../Assets/Sprites/Objects/Items/loot04coins.png" },
+        { id: "key", src: "../Assets/Sprites/Objects/Items/loot05key.png" },
+        { id: "sack", src: "../Assets/Sprites/Objects/Items/loot07treasuresack.png" },
+        { id: "inventory", src: "../Assets/Sprites/Objects/inventory.png" },
+        { id: "p1", src: "../Assets/Sprites/Objects/p1.png" },
+        { id: "p2", src: "../Assets/Sprites/Objects/p2.png" },
+        { id: "p1_big", src: "../Assets/Sprites/Objects/p1_big.png" },
+        { id: "p2_big", src: "../Assets/Sprites/Objects/p2_big.png" }
     ];
     function Init():void {
         console.log("Initialization start");
@@ -79,7 +91,7 @@ console.log('code ran');
         switch(objects.Game.currentScene)
         {
             case config.Scene.START:
-            stage.removeAllChildren();
+            stage.removeAllChildren();            
             currentScene = new scenes.StartScene(assetManager);
             stage.addChild(currentScene);
             break;
@@ -93,6 +105,12 @@ console.log('code ran');
             case config.Scene.INGAME:
             stage.removeAllChildren();
             currentScene = new scenes.StageOne(assetManager);
+            stage.addChild(currentScene);
+            break;
+
+            case config.Scene.REWARD:
+            stage.removeAllChildren();
+            currentScene = new scenes.SceneReward(assetManager);
             stage.addChild(currentScene);
             break;
 

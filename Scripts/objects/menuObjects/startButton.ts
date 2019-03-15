@@ -50,7 +50,7 @@ module objects
 
         constructor(assetManager: createjs.LoadQueue, text:string)
         {
-            this.txtLabel = new objects.Label(text, "20px bold", "Cambay", "#000000",0,0, true);     
+            this.txtLabel = new objects.Label(text, "20px bold", "Cambay", "#ffffff",0,0, true);     
             this.dialogObj = new objects.Button(assetManager, "speech_ballom", 0, 0, this.txtLabel, true);
             this.dialogObj.on("mouseover", ()=>{});
             this.dialogObj.on("mouseout",  ()=>{});

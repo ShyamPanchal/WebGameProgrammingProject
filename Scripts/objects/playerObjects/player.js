@@ -22,11 +22,24 @@ var objects;
             // Variables
             _this.speed = 5;
             _this.maxHightRate = 0.9; //the player can jump at highest 90% of the height
+/*
+        function Player(assetManager, inventory) {
+            var _this = _super.call(this, assetManager, "player") || this;
+*/
             _this.timeToAction = 0.5;
             _this.animationState = "Jump";
             _this.Start();
+            _this.picture = new objects.GameObject(assetManager, "p1");
+            _this.picture.alpha = 0.5;
             _this.isGravityAffected = true;
+
             _this.playerNum = playerNum;
+/*
+            _this.inventory = inventory;
+            _this.inventory.player = _this;
+            _this.picture.x = inventory.x;
+            _this.picture.y = inventory.y;
+*/
             _this.time = 0;
             _this.deltaTime = 0;
             _this.x = x;
@@ -58,7 +71,7 @@ var objects;
             this.lastPosition.x = this.x;
             this.lastPosition.y = this.y;
             if (this.dialog != null) {
-                this.dialog.dialog.Update(this.x + this.width, this.y - this.halfH);
+                this.dialog.dialog.Update(this.x + this.width, this.y - 0.3 * this.halfH);
             }
         };
         Player.prototype.Reset = function () {
@@ -120,6 +133,14 @@ var objects;
                     this.gotoAndPlay("Action");
                     this.animationState = "Action";
                     this.listener = this.on("animationend", this.cancelStopEvent);
+/*
+            if (objects.Game.keyboard.action) {
+                if (this.actionObject == null) {
+                    this.inventory.DropItem();
+                    this.deltaTime += 1 / 60;
+                }
+                else {
+*/
                     this.actionObject.Action();
                     this.deltaTime += 1 / 60;
                 }
@@ -183,7 +204,7 @@ var objects;
         };
         Player.prototype.CheckGrounded = function (Check) {
             var md = Check(this.x, this.y - config.Gravity.gravitySpeed * this.GetGravityFactor());
-            if (md.isCollided && md.objectCollided instanceof objects.OpenableObject) {
+            if (md.isCollided && (md.objectCollided instanceof objects.Door || md.objectCollided instanceof objects.HandableObject)) {
                 this.isGrounded = false;
                 return;
             }
@@ -192,7 +213,7 @@ var objects;
         };
         Player.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
             var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
-            if (this.actionObject instanceof objects.OpenableObject) {
+            if (md.objectCollided instanceof objects.OpenableObject || md.objectCollided instanceof objects.HandableObject) {
                 return true;
             }
             // if (this.actionObject instanceof PushableObject){
@@ -203,7 +224,7 @@ var objects;
         Player.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
             var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
             //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
-            if (md.isCollided && this.actionObject instanceof objects.OpenableObject) {
+            if (md.isCollided && (md.objectCollided instanceof objects.Door || this.actionObject instanceof objects.HandableObject)) {
                 return true;
             }
             this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;

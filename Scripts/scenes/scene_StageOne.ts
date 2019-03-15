@@ -14,6 +14,10 @@ module scenes {
         private player1: objects.Player;
         private player2: objects.Player;
 
+        private firstPlayerReachEnd: boolean;
+        private secondPlayerReachEnd: boolean;
+
+
         private pauseTxtButton: objects.Label;
 
         private background_main: objects.Background;
@@ -30,6 +34,10 @@ module scenes {
         private gamePausedText: objects.Label;
 
         private overTitle: objects.Label;
+
+        private positionInventoryP2: math.Vec2 = new math.Vec2(25, 350);
+        private positionInventoryP1: math.Vec2 = new math.Vec2(970, 50);
+
         //#endregion
 
         constructor(assetManager: createjs.LoadQueue) {
@@ -48,7 +56,8 @@ module scenes {
         public Start(): void {
 
             //config.Gravity.gravityFactor = -1;
-            objects.Game.isDebug = true;
+            objects.Game.isDebug = false;
+            this.firstPlayerReachEnd = true;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
             this.gameSceneryDynamicObjects = new Array<objects.DynamicObject>();
@@ -60,8 +69,6 @@ module scenes {
             ghost.alpha = 0.8;
             ghost.y = ghost.y - ghost.height;
             this.enemies[0] = ghost;
-
-
 
             console.log("GAME SCENE(S)...");
 
@@ -79,19 +86,28 @@ module scenes {
             this.gamePausedText.visible = false;
             //#endregion
 
-            this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
+            this.title = new objects.Label("Corridors!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
 
             //this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
 
-            this.titleShadow = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
+            this.titleShadow = new objects.Label("Corridors!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
 
             //#region Player Init
+/*
             this.player1 = new objects.Player(objects.Game.player1TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 45);
             this.player1.boxCollider = new objects.BoxCollider(0, 0, this.player1.x, this.player1.y, this.player1.width, this.player1.height);
             this.player2 = new objects.Player(objects.Game.player2TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 350, 2);
             this.player2.boxCollider = new objects.BoxCollider(0, 0, this.player2.x, this.player2.y, this.player2.width, this.player2.height);
+*/
+            let inventory = new objects.Inventory(this.assetManager);
+            inventory.x = this.positionInventoryP1.x;
+            inventory.y = this.positionInventoryP1.y;
+            this.player = new objects.Player(this.assetManager, inventory);            
+            this.player.boxCollider = new objects.BoxCollider(18, 16, this.player.x, this.player.y, this.player.width - 45, this.player.height - 20);
+            this.player.dialog = this.createDialog(this, "...");
+
             //#endregion
 
             //#region PauseMenu
@@ -149,7 +165,12 @@ module scenes {
                             if (result.CheckCollided()) {
                                 collided = true;
                                 result.objectCollided = object;
+/*
                                 if (gameObject.name === player.name) {
+*/
+                                if (gameObject.name === this.player.name) {
+                                    object.player = <objects.Player>gameObject;//informing which player did the action
+
                                     object.aabbResultPlayer = result;
                                     if (player.playerNum == 1){
                                         this.player1.actionObject = object;
@@ -195,9 +216,19 @@ module scenes {
             };
         }
 
+        public CheckNextLevel (): void {            
+            if (this.firstPlayerReachEnd && this.secondPlayerReachEnd) {
+                var nextLevel = (): void => {                
+                    objects.Game.previousScene = config.Scene.INGAME;
+                    objects.Game.currentScene = config.Scene.REWARD;                    
+                }
+                this.StartCount(1, nextLevel);
+            }
+        }
+
         public Update(): void {
             this.CheckPaused();
-
+            this.CheckNextLevel();
             this.pauseBackground.visible = this.isPaused;
             this.gamePausedText.visible = this.isPaused;
             if (this.isPaused) {
@@ -221,8 +252,9 @@ module scenes {
             }
 
             this.timerCounter++;
-
-            if (this.timerCounter == objects.Game.frameRate) {
+            //double the speed of the timer in the case the first player reach the end without the second player
+            let speedTimer = this.firstPlayerReachEnd?1/2:1;
+            if (this.timerCounter == objects.Game.frameRate*speedTimer) {
                 this.timer--;
                 this.timerCounter = 0;
             }
@@ -244,17 +276,30 @@ module scenes {
             this.enemies.forEach(enemy => {
                 enemy.Update();
 
+/*
                 this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
                 this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
                 if(this.player1.isDead && this.player2.isDead){
                     var overNote = (): void => {
+*/
+                this.player.isDead = managers.Collision.CheckDistance(this.player, enemy);
+                if(this.player.isDead){
+                   /* 
+                   var overNote = (): void => {
+
                         objects.Game.currentScene = config.Scene.FINISH;
                     }
                     this.StartCount(2, overNote);
                     this.overTitle.visible = true;
+
                     this.player1.x = 1500; //sending player and ghost to out of screen
                     this.player2.x = 1500;
                     enemy.x = 3000;
+
+                    this.player.x = 1500; //sending player and ghost to out of screen 
+                    enemy.x = 1500;
+                    */
+s
                 }
             });
 
@@ -280,6 +325,9 @@ module scenes {
 
             //this.addChild(this.backButton);
             //this.addChild(this.txtButton);
+
+            this.addChild(this.player.inventory);
+            this.addChild(this.player.picture);
 
             this.CreateScenery();
             this.addChild(this.player1);
@@ -334,6 +382,7 @@ module scenes {
 
         }
 
+/*
         private CreateObjects(): void {
             this.player1.dialog = this.createDialog(this, "...");
             this.player2.dialog = this.createDialog(this, "...");
@@ -345,29 +394,63 @@ module scenes {
 
             this.addChild(floor_3_Door);
 
+*/
+        private CreateObjects(): void {            
+            
+            var floor_3_Door = new objects.Door(this.assetManager, true);
+            floor_3_Door.isLocked = true;
+            floor_3_Door.boxCollider = new objects.BoxCollider(0, 0, floor_3_Door.x, floor_3_Door.y,
+                floor_3_Door.width, floor_3_Door.height+5);                
+            floor_3_Door.EnterDoorAction = (player:objects.Player)=>{
+                if (this.firstPlayerReachEnd) {
+                    this.secondPlayerReachEnd = true
+                } else {
+                    this.firstPlayerReachEnd = true;
+                }
+                player.x = 1500;
+                if (player.name=='player2') {
+                    objects.Game.scoreManagerP2 = new managers.Score(player.inventory.GetItems(), this.timer);
+                    console.log('p2 finished ' + this.timer);
+                } else {
+                    objects.Game.scoreManagerP1 = new managers.Score(player.inventory.GetItems(), this.timer);
+                    console.log('p1 finished '  + this.timer);
+                }
+            };
+            this.addChild(floor_3_Door);
+
             floor_3_Door.x = 770;
             floor_3_Door.y = 180;
+            this.gameSceneryDynamicObjects[4] = floor_3_Door;
 
-            this.gameSceneryDynamicObjects[2] = floor_3_Door;
+            var floor_3_Treasure = new objects.HandableObject(this.assetManager,"sack", 1000);                
+            this.addChild(floor_3_Treasure);            
+            floor_3_Treasure.x = 370;
+            floor_3_Treasure.y = 180;
+            this.gameSceneryDynamicObjects[3] = floor_3_Treasure;
+
+            var floor_3_Key = new objects.Key(this.assetManager);                
+            this.addChild(floor_3_Key);            
+            floor_3_Key.x = 1500;
+            //floor_3_Key.y = 180;
+            this.gameSceneryDynamicObjects[2] = floor_3_Key;
+            
 
             var floor_3_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
             floor_3_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk.x, floor_3_Desk.y,
                 floor_3_Desk.width, floor_3_Desk.height);
             this.addChild(floor_3_Desk);
-
             floor_3_Desk.x = 615;
             floor_3_Desk.y = 190;
-
             this.gameSceneryDynamicObjects[1] = floor_3_Desk;
+            floor_3_Key.isGravityAffected = false;
+            floor_3_Desk.objectInside.push(floor_3_Key);
 
             var floor_3_Crate = new objects.PushableObject(this.assetManager, "crate");
             floor_3_Crate.boxCollider = new objects.BoxCollider(0, 0, floor_3_Crate.x, floor_3_Crate.y,
                 floor_3_Crate.width, floor_3_Crate.height - 5);
             this.addChild(floor_3_Crate);
-
             floor_3_Crate.x = 415;
             floor_3_Crate.y = 190;
-
             this.gameSceneryDynamicObjects[0] = floor_3_Crate;
 
         }

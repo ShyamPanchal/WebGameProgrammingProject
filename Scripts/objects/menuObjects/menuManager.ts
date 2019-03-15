@@ -9,6 +9,8 @@ module objects
         public static isDebug: boolean;
         public static frameRate: number;
         public static currentSceneObject: objects.Scene;
+        public static player1TextureAtlas: createjs.SpriteSheet;
+        public static player2TextureAtlas: createjs.SpriteSheet;
 
         public static stageTimer: number = 180; // in seconds || 3 minutes
     }

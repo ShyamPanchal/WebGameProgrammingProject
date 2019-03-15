@@ -16,19 +16,25 @@ var objects;
     var Player = /** @class */ (function (_super) {
         __extends(Player, _super);
         // Constructor
-        function Player(assetManager) {
-            var _this = _super.call(this, assetManager, "player") || this;
+        function Player(textureAtlas, imageString, scaleX, scaleY, flipOffsetX, x, y, playerNum) {
+            if (playerNum === void 0) { playerNum = 1; }
+            var _this = _super.call(this, textureAtlas, imageString, scaleX, scaleY, flipOffsetX) || this;
+            // Variables
+            _this.speed = 5;
+            _this.maxHightRate = 0.9; //the player can jump at highest 90% of the height
             _this.timeToAction = 0.5;
+            _this.animationState = "Jump";
             _this.Start();
             _this.isGravityAffected = true;
+            _this.playerNum = playerNum;
             _this.time = 0;
             _this.deltaTime = 0;
+            _this.x = x;
+            _this.y = y;
             return _this;
         }
         // Methods / Functions
         Player.prototype.Start = function () {
-            this.x = 400;
-            this.y = 45;
             this.isJumping = false;
         };
         Player.prototype.UpdateIfPossible = function (Check) {
@@ -42,7 +48,7 @@ var objects;
                 this.DoGravityEffect();
             }
             else if (this.isGrounded) {
-                this.maxJumpHeight = this.y - (this.height * Player.maxHightRate) * this.GetGravityFactor();
+                this.maxJumpHeight = this.y - (this.height * this.maxHightRate) * this.GetGravityFactor();
                 this.isJumping = false;
             }
             this.Jump();
@@ -62,11 +68,19 @@ var objects;
         };
         Player.prototype.OnColliderExit = function (penetration, obj) {
         };
+        Player.prototype.cancelStopEvent = function (e) {
+            this.stop();
+            this.off("animationend", this.listener);
+            this.animationState = "Waiting";
+        };
         Player.prototype.Jump = function () {
             if (this.isGrounded) {
-                if (objects.Game.keyboard.moveUp && !this.isJumping) {
+                if ((objects.Game.keyboard.player1MoveUp && this.playerNum == 1) || (objects.Game.keyboard.player2MoveUp && this.playerNum == 2) && !this.isJumping) {
                     this.isGrounded = false;
                     this.isJumping = true;
+                    this.gotoAndPlay("Jump");
+                    this.animationState = "Jump";
+                    this.listener = this.on("animationend", this.cancelStopEvent);
                     //this.y += config.Gravity.gravityForce*this.height;
                     this.Move_Vertically(true, config.Gravity.gravityForce * this.GetGravityFactor() * this.height);
                 }
@@ -101,8 +115,11 @@ var objects;
                 return;
             }
             this.deltaTime = 0;
-            if (objects.Game.keyboard.action) {
+            if ((objects.Game.keyboard.player1Action && this.playerNum == 1) || (objects.Game.keyboard.player2Action && this.playerNum == 2)) {
                 if (this.actionObject != null) {
+                    this.gotoAndPlay("Action");
+                    this.animationState = "Action";
+                    this.listener = this.on("animationend", this.cancelStopEvent);
                     this.actionObject.Action();
                     this.deltaTime += 1 / 60;
                 }
@@ -110,21 +127,57 @@ var objects;
         };
         Player.prototype.Move = function () {
             //this.x = objects.Game.stage.mouseX;
-            if (objects.Game.keyboard.moveLeft) {
-                if (this.CheckMovement(this.CheckCollision, true, Player.speed)) {
-                    //this.scaleX *=-1;          
-                    this.x -= Player.speed;
+            if ((objects.Game.keyboard.player1MoveLeft && this.playerNum == 1) || (objects.Game.keyboard.player2MoveLeft && this.playerNum == 2)) {
+                if (this.CheckMovement(this.CheckCollision, true, this.speed)) {
+                    //this.scaleX *=-1;
+                    this.x -= this.speed;
+                    if (this.isGrounded) {
+                        if (this.animationState != "Run" && this.animationState != "Action") {
+                            this.gotoAndPlay("Run");
+                            this.animationState = "Run";
+                        }
+                    }
+                }
+                else {
+                    if (this.isGrounded) {
+                        if (this.animationState != "Idle" && this.animationState != "Action") {
+                            this.gotoAndPlay("Idle");
+                            this.animationState = "Idle";
+                        }
+                    }
                 }
                 if (!this.isLeft) {
                     this.FlipHorizontally();
                 }
             }
-            if (objects.Game.keyboard.moveRight) {
-                if (this.CheckMovement(this.CheckCollision, false, Player.speed)) {
-                    this.x += Player.speed;
+            else if ((objects.Game.keyboard.player1MoveRight && this.playerNum == 1) || (objects.Game.keyboard.player2MoveRight && this.playerNum == 2)) {
+                if (this.CheckMovement(this.CheckCollision, false, this.speed)) {
+                    this.x += this.speed;
+                    if (this.isGrounded) {
+                        if (this.animationState != "Run" && this.animationState != "Action") {
+                            this.gotoAndPlay("Run");
+                            this.animationState = "Run";
+                        }
+                    }
+                }
+                else {
+                    if (this.isGrounded) {
+                        if (this.animationState != "Idle" && this.animationState != "Action") {
+                            this.gotoAndPlay("Idle");
+                            this.animationState = "Idle";
+                        }
+                    }
                 }
                 if (this.isLeft) {
                     this.FlipHorizontally();
+                }
+            }
+            else {
+                if (this.isGrounded) {
+                    if (this.animationState != "Idle" && this.animationState != "Action") {
+                        this.gotoAndPlay("Idle");
+                        this.animationState = "Idle";
+                    }
                 }
             }
         };
@@ -142,6 +195,9 @@ var objects;
             if (this.actionObject instanceof objects.OpenableObject) {
                 return true;
             }
+            // if (this.actionObject instanceof PushableObject){
+            //     return false;
+            // }
             return !md.isCollided; // && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
         };
         Player.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
@@ -164,11 +220,8 @@ var objects;
               this.x = 235.5;
             }*/
         };
-        // Variables
-        Player.speed = 5;
-        Player.maxHightRate = 0.9; //the player can jump at highest 90% of the height
         return Player;
-    }(objects.GameObject));
+    }(objects.TextureAtlas));
     objects.Player = Player;
 })(objects || (objects = {}));
 //# sourceMappingURL=player.js.map

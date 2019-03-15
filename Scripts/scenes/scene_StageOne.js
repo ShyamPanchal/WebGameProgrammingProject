@@ -26,9 +26,13 @@ var scenes;
             objects.Game.currentScene = config.Scene.FINISH;
         };
         StageOne.prototype.fn_pauseButtonClick = function () {
+            // this.backgroundMusic.stop();
             objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
         };
         StageOne.prototype.Start = function () {
+            // this.backgroundMusic = createjs.Sound.play("play_music");
+            //this.backgroundMusic.loop = -1; // Looping forever
+            //this.backgroundMusic.volume = 0.3;
             //config.Gravity.gravityFactor = -1;
             objects.Game.isDebug = true;
             this.isPaused = false;

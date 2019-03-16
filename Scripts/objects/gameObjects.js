@@ -83,14 +83,28 @@ var objects;
         GameObject.prototype.OnColliderExit = function (penetration, obj) {
         };
         GameObject.prototype.FlipHorizontally = function () {
-            this.isLeft = !this.isLeft;
-            this.scaleX = this.scaleX * -1;
-            this.boxCollider.offset_x = this.width - this.boxCollider.width - this.boxCollider.offset_x;
-            if (this.isLeft) {
-                this.regX = this.width;
+            if (this instanceof objects.Player) {
+                this.isLeft = !this.isLeft;
+                this.spriteRenderer.scaleX = this.spriteRenderer.scaleX * -1;
+                if (this.isLeft) {
+                    this.flipOffsetX = this.fixed_flipOffsetX;
+                    this.regX = this.width;
+                }
+                else {
+                    this.flipOffsetX = 0;
+                    this.regX = 0;
+                }
             }
             else {
-                this.regX = 0;
+                this.isLeft = !this.isLeft;
+                this.scaleX = this.scaleX * -1;
+                this.boxCollider.offset_x = this.width - this.boxCollider.width - this.boxCollider.offset_x;
+                if (this.isLeft) {
+                    this.regX = this.width;
+                }
+                else {
+                    this.regX = 0;
+                }
             }
         };
         GameObject.prototype.FlipVertically = function () {

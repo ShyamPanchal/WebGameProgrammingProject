@@ -202,7 +202,8 @@
         { id: "p1", src: "../Assets/Sprites/Objects/p1.png" },
         { id: "p2", src: "../Assets/Sprites/Objects/p2.png" },
         { id: "p1_big", src: "../Assets/Sprites/Objects/p1_big.png" },
-        { id: "p2_big", src: "../Assets/Sprites/Objects/p2_big.png" }
+        { id: "p2_big", src: "../Assets/Sprites/Objects/p2_big.png" },
+        { id: "play_music", src: "./Assets/Sound/spook.mp3" }
     ];
     function Init() {
         console.log("Initialization start");

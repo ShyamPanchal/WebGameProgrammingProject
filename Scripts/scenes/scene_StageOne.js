@@ -28,20 +28,27 @@ var scenes;
             objects.Game.currentScene = config.Scene.FINISH;
         };
         StageOne.prototype.fn_pauseButtonClick = function () {
+            // this.backgroundMusic.stop();
             objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
         };
         StageOne.prototype.Start = function () {
+            // this.backgroundMusic = createjs.Sound.play("play_music");
+            //this.backgroundMusic.loop = -1; // Looping forever
+            //this.backgroundMusic.volume = 0.3;
             //config.Gravity.gravityFactor = -1;
-            objects.Game.isDebug = false;
-            this.firstPlayerReachEnd = true;
+            //objects.Game.isDebug = true;
+            this.firstPlayerReachEnd = false;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array();
             this.gameSceneryDynamicObjects = new Array();
             this.enemies = new Array();
             objects.Game.keyboard = new managers.Keyboard();
             var ghost = new objects.Enemy(this.assetManager, "ghost", 550, 245);
+            //ghost.boxCollider = new objects.BoxCollider(ghost.x/4, ghost.x/4, ghost.x, ghost.y, ghost.halfW, ghost.halfH);
             ghost.alpha = 0.8;
             ghost.y = ghost.y - ghost.height;
+            ghost.scaleX = 0.7;
+            ghost.scaleY = 0.7;
             this.enemies[0] = ghost;
             console.log("GAME SCENE(S)...");
             this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 50, 65, true);
@@ -61,19 +68,22 @@ var scenes;
             this.titleShadow = new objects.Label("Corridors!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
             //#region Player Init
-
-            this.player1 = new objects.Player(objects.Game.player1TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 45);
-            this.player1.boxCollider = new objects.BoxCollider(0, 0, this.player1.x, this.player1.y, this.player1.width, this.player1.height);
-            this.player2 = new objects.Player(objects.Game.player2TextureAtlas, "Idle", 0.1, 0.1, 27, 400, 350, 2);
-            this.player2.boxCollider = new objects.BoxCollider(0, 0, this.player2.x, this.player2.y, this.player2.width, this.player2.height);
-
             var inventory = new objects.Inventory(this.assetManager);
             inventory.x = this.positionInventoryP1.x;
             inventory.y = this.positionInventoryP1.y;
-            this.player = new objects.Player(this.assetManager, inventory);
-            this.player.boxCollider = new objects.BoxCollider(18, 16, this.player.x, this.player.y, this.player.width - 45, this.player.height - 20);
-            this.player.dialog = this.createDialog(this, "...");
-
+            this.player1 = new objects.Player(this.assetManager, 1, inventory, 400, 60);
+            //for using bitmap
+            //this.player1.boxCollider = new objects.BoxCollider(18, 16, this.player1.x, this.player1.y, this.player1.width - 45, this.player1.height - 20);
+            this.player1.boxCollider = new objects.BoxCollider(0, 16, this.player1.x, this.player1.y, this.player1.width - 45, this.player1.height - 29);
+            this.player1.dialog = this.createDialog(this, "...");
+            var inventory2 = new objects.Inventory(this.assetManager);
+            inventory2.x = this.positionInventoryP2.x;
+            inventory2.y = this.positionInventoryP2.y;
+            this.player2 = new objects.Player(this.assetManager, 2, inventory2, 400, 350);
+            //for using bitmap
+            //this.player2.boxCollider = new objects.BoxCollider(18, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 20);
+            this.player2.boxCollider = new objects.BoxCollider(0, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 29);
+            this.player2.dialog = this.createDialog(this, "...");
             //#endregion
             //#region PauseMenu
             this.pauseBackground = new objects.Background(this.assetManager, "pauseBackground");
@@ -100,9 +110,8 @@ var scenes;
                 };
             };
         };
-        StageOne.prototype.CreateFunctionCheck = function (gameObject, player) {
+        StageOne.prototype.CreateFunctionCheck = function (gameObject) {
             var _this = this;
-            if (player === void 0) { player = null; }
             var boxCollider = gameObject.boxCollider;
             return function (x, y) {
                 var collided = false;
@@ -124,48 +133,27 @@ var scenes;
                             if (result.CheckCollided()) {
                                 collided = true;
                                 result.objectCollided = object;
-
-                                if (gameObject.name === _this.player.name) {
+                                if (gameObject instanceof objects.Player) {
                                     object.player = gameObject; //informing which player did the action
-
                                     object.aabbResultPlayer = result;
-                                    if (player.playerNum == 1) {
-                                        _this.player1.actionObject = object;
-                                    }
-                                    else if (player.playerNum == 2) {
-                                        _this.player2.actionObject = object;
-                                    }
+                                    gameObject.actionObject = object;
                                     if (!object.alreadyHandled) {
                                         //show Dialog
-                                        if (player.dialog != null) {
-                                            if (player.playerNum == 1) {
-                                                _this.player1.dialog.showDialog();
-                                            }
-                                            else if (player.playerNum == 2) {
-                                                _this.player2.dialog.showDialog();
-                                            }
+                                        if (gameObject.dialog != null) {
+                                            gameObject.dialog.showDialog();
                                         }
                                     }
                                 }
+                                break;
                             }
                         }
                     }
                 }
-                if (!collided && player != null) {
-                    if (player.dialog != null) {
-                        if (player.playerNum == 1) {
-                            _this.player1.dialog.disposeDialog();
-                        }
-                        else if (player.playerNum == 2) {
-                            _this.player2.dialog.disposeDialog();
-                        }
+                if (!collided && gameObject instanceof objects.Player) {
+                    if (gameObject.dialog != null) {
+                        gameObject.dialog.disposeDialog();
                     }
-                    if (player.playerNum == 1) {
-                        _this.player1.actionObject = null;
-                    }
-                    else if (player.playerNum == 2) {
-                        _this.player2.actionObject = null;
-                    }
+                    gameObject.actionObject = null;
                 }
                 return result;
             };
@@ -215,37 +203,27 @@ var scenes;
                 objects.Game.currentScene = config.Scene.FINISH;
             }
             this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
-            var CheckMovement = this.CreateFunctionCheck(this.player1, this.player1);
-            this.player1.UpdateIfPossible(CheckMovement);
-            CheckMovement = this.CreateFunctionCheck(this.player2, this.player2);
-            this.player2.UpdateIfPossible(CheckMovement);
+            var CheckMovementP1 = this.CreateFunctionCheck(this.player1);
+            var CheckMovementP2 = this.CreateFunctionCheck(this.player2);
+            this.player1.UpdateIfPossible(CheckMovementP1);
+            this.player2.UpdateIfPossible(CheckMovementP2);
             this.enemies.forEach(function (enemy) {
                 enemy.Update();
-/*
                 _this.player1.isDead = managers.Collision.CheckDistance(_this.player1, enemy);
                 _this.player2.isDead = managers.Collision.CheckDistance(_this.player2, enemy);
-                if (_this.player1.isDead && _this.player2.isDead) {
+                if (_this.player1.isDead || _this.player2.isDead) {
                     var overNote = function () {
                         objects.Game.currentScene = config.Scene.FINISH;
                     };
                     _this.StartCount(2, overNote);
                     _this.overTitle.visible = true;
-                    _this.player1.x = 1500; //sending player and ghost to out of screen
-                    _this.player2.x = 1500;
-                    enemy.x = 3000;
-*/
-                _this.player.isDead = managers.Collision.CheckDistance(_this.player, enemy);
-                if (_this.player.isDead) {
-                    /*
-                    var overNote = (): void => {
-                         objects.Game.currentScene = config.Scene.FINISH;
-                     }
-                     this.StartCount(2, overNote);
-                     this.overTitle.visible = true;
-                     this.player.x = 1500; //sending player and ghost to out of screen
-                     enemy.x = 1500;
-                     */
-
+                    if (_this.player1.isDead) {
+                        _this.player1.x = 1500; //sending player and ghost to out of screen 
+                    }
+                    if (_this.player2.isDead) {
+                        _this.player2.x = 1500; //sending player and ghost to out of screen 
+                    }
+                    enemy.x = 1500;
                 }
             });
             for (var i = 0; i < this.gameSceneryStaticObjects.length; i++) {
@@ -266,11 +244,13 @@ var scenes;
             this.addChild(this.title);
             //this.addChild(this.backButton);
             //this.addChild(this.txtButton);
-            this.addChild(this.player.inventory);
-            this.addChild(this.player.picture);
+            this.addChild(this.player1.inventory);
+            this.addChild(this.player1.picture);
+            this.addChild(this.player2.inventory);
+            this.addChild(this.player2.picture);
             this.CreateScenery();
-            this.addChild(this.player1);
-            this.addChild(this.player2);
+            this.addChild(this.player1.spriteRenderer);
+            this.addChild(this.player2.spriteRenderer);
             this.enemies.forEach(function (ghost) {
                 _this.addChild(ghost);
             });
@@ -307,17 +287,12 @@ var scenes;
             this.CreateObjects();
         };
         StageOne.prototype.CreateObjects = function () {
-/*
-            this.player1.dialog = this.createDialog(this, "...");
-            this.player2.dialog = this.createDialog(this, "...");
-            var floor_3_Door = new objects.OpenableObject(this.assetManager, "closed_door", "open_door", "bck_door");
-*/
             var _this = this;
-            var floor_3_Door = new objects.Door(this.assetManager, true);
-            floor_3_Door.isLocked = true;
-
-            floor_3_Door.boxCollider = new objects.BoxCollider(0, 0, floor_3_Door.x, floor_3_Door.y, floor_3_Door.width, floor_3_Door.height + 5);
-            floor_3_Door.EnterDoorAction = function (player) {
+            //#region Player1
+            var floor_4_Door = new objects.Door(this.assetManager, true);
+            floor_4_Door.isLocked = true;
+            floor_4_Door.boxCollider = new objects.BoxCollider(0, 0, floor_4_Door.x, floor_4_Door.y, floor_4_Door.width, floor_4_Door.height + 5);
+            floor_4_Door.EnterDoorAction = function (player) {
                 if (_this.firstPlayerReachEnd) {
                     _this.secondPlayerReachEnd = true;
                 }
@@ -325,7 +300,7 @@ var scenes;
                     _this.firstPlayerReachEnd = true;
                 }
                 player.x = 1500;
-                if (player.name == 'player2') {
+                if (player.playerNum == 2) {
                     objects.Game.scoreManagerP2 = new managers.Score(player.inventory.GetItems(), _this.timer);
                     console.log('p2 finished ' + _this.timer);
                 }
@@ -334,34 +309,99 @@ var scenes;
                     console.log('p1 finished ' + _this.timer);
                 }
             };
-            this.addChild(floor_3_Door);
-            floor_3_Door.x = 770;
-            floor_3_Door.y = 180;
-            this.gameSceneryDynamicObjects[4] = floor_3_Door;
+            this.addChild(floor_4_Door);
+            floor_4_Door.x = 770;
+            floor_4_Door.y = 50;
+            this.gameSceneryDynamicObjects.push(floor_4_Door);
             var floor_3_Treasure = new objects.HandableObject(this.assetManager, "sack", 1000);
             this.addChild(floor_3_Treasure);
-            floor_3_Treasure.x = 370;
-            floor_3_Treasure.y = 180;
-            this.gameSceneryDynamicObjects[3] = floor_3_Treasure;
+            floor_3_Treasure.x = 1570;
+            //floor_3_Treasure.y = 180;
+            this.gameSceneryDynamicObjects.push(floor_3_Treasure);
             var floor_3_Key = new objects.Key(this.assetManager);
             this.addChild(floor_3_Key);
             floor_3_Key.x = 1500;
             //floor_3_Key.y = 180;
-            this.gameSceneryDynamicObjects[2] = floor_3_Key;
+            this.gameSceneryDynamicObjects.push(floor_3_Key);
+            var floor_3_Desk_2 = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
+            floor_3_Desk_2.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk_2.x, floor_3_Desk_2.y, floor_3_Desk_2.width, floor_3_Desk_2.height);
+            this.addChild(floor_3_Desk_2);
+            floor_3_Desk_2.x = 615;
+            floor_3_Desk_2.y = 190;
+            this.gameSceneryDynamicObjects.push(floor_3_Desk_2);
+            floor_3_Key.isGravityAffected = false;
+            floor_3_Desk_2.objectInside.push(floor_3_Key);
             var floor_3_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
             floor_3_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk.x, floor_3_Desk.y, floor_3_Desk.width, floor_3_Desk.height);
             this.addChild(floor_3_Desk);
-            floor_3_Desk.x = 615;
+            floor_3_Desk.x = 715;
             floor_3_Desk.y = 190;
-            this.gameSceneryDynamicObjects[1] = floor_3_Desk;
-            floor_3_Key.isGravityAffected = false;
-            floor_3_Desk.objectInside.push(floor_3_Key);
+            this.gameSceneryDynamicObjects.push(floor_3_Desk);
+            floor_3_Treasure.isGravityAffected = false;
+            floor_3_Desk.objectInside.push(floor_3_Treasure);
             var floor_3_Crate = new objects.PushableObject(this.assetManager, "crate");
             floor_3_Crate.boxCollider = new objects.BoxCollider(0, 0, floor_3_Crate.x, floor_3_Crate.y, floor_3_Crate.width, floor_3_Crate.height - 5);
             this.addChild(floor_3_Crate);
             floor_3_Crate.x = 415;
             floor_3_Crate.y = 190;
-            this.gameSceneryDynamicObjects[0] = floor_3_Crate;
+            this.gameSceneryDynamicObjects.push(floor_3_Crate);
+            //#endregion player1
+            var floor_1_Crate = new objects.PushableObject(this.assetManager, "crate");
+            floor_1_Crate.boxCollider = new objects.BoxCollider(0, 0, floor_1_Crate.x, floor_1_Crate.y, floor_1_Crate.width, floor_1_Crate.height - 5);
+            this.addChild(floor_1_Crate);
+            floor_1_Crate.x = 515;
+            floor_1_Crate.y = 390;
+            this.gameSceneryDynamicObjects.push(floor_1_Crate);
+            var floor_2_Door = new objects.Door(this.assetManager, true);
+            floor_2_Door.isLocked = true;
+            floor_2_Door.boxCollider = new objects.BoxCollider(0, 0, floor_2_Door.x, floor_2_Door.y, floor_2_Door.width, floor_2_Door.height + 5);
+            floor_2_Door.EnterDoorAction = function (player) {
+                if (_this.firstPlayerReachEnd) {
+                    _this.secondPlayerReachEnd = true;
+                }
+                else {
+                    _this.firstPlayerReachEnd = true;
+                }
+                player.x = 1500;
+                if (player.playerNum == 2) {
+                    objects.Game.scoreManagerP2 = new managers.Score(player.inventory.GetItems(), _this.timer);
+                    console.log('p2 finished ' + _this.timer);
+                }
+                else {
+                    objects.Game.scoreManagerP1 = new managers.Score(player.inventory.GetItems(), _this.timer);
+                    console.log('p1 finished ' + _this.timer);
+                }
+            };
+            this.addChild(floor_2_Door);
+            floor_2_Door.x = 240;
+            floor_2_Door.y = 280;
+            this.gameSceneryDynamicObjects.push(floor_2_Door);
+            var floor_1_Key = new objects.Key(this.assetManager);
+            this.addChild(floor_1_Key);
+            floor_1_Key.x = 1500;
+            //floor_3_Key.y = 180;
+            this.gameSceneryDynamicObjects.push(floor_1_Key);
+            var floor_1_Treasure = new objects.HandableObject(this.assetManager, "sack", 1000);
+            this.addChild(floor_1_Treasure);
+            floor_1_Treasure.x = 1570;
+            //floor_3_Treasure.y = 180;
+            this.gameSceneryDynamicObjects.push(floor_1_Treasure);
+            var floor_1_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
+            floor_1_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_1_Desk.x, floor_1_Desk.y, floor_1_Desk.width, floor_1_Desk.height);
+            this.addChild(floor_1_Desk);
+            floor_1_Desk.x = 455;
+            floor_1_Desk.y = 390;
+            this.gameSceneryDynamicObjects.push(floor_1_Desk);
+            floor_1_Key.isGravityAffected = false;
+            floor_1_Desk.objectInside.push(floor_1_Key);
+            var floor_2_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
+            floor_2_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_2_Desk.x, floor_2_Desk.y, floor_2_Desk.width, floor_2_Desk.height);
+            this.addChild(floor_2_Desk);
+            floor_2_Desk.x = 315;
+            floor_2_Desk.y = 390;
+            this.gameSceneryDynamicObjects.push(floor_2_Desk);
+            floor_1_Key.isGravityAffected = false;
+            floor_2_Desk.objectInside.push(floor_1_Treasure);
         };
         StageOne.prototype.CreatePlatformsStairs = function () {
             var floor_3_stairs = new objects.EmptyGameObject(this.assetManager, "floor_3_stairs", 30, 1);

@@ -17,6 +17,7 @@ var scenes;
         __extends(Prologue, _super);
         function Prologue(assetManager) {
             var _this = _super.call(this, assetManager) || this;
+            _this.isPlaying = false;
             _this.storyText1 = "Alice and Alisha, the world's greatest treasure-hunting twins";
             _this.storyText2 = "sought out the mansion in the mountains after hearing tales of its great lost treasures.";
             _this.storyText3 = "Little did they know, the ghosts of the slaughtered family who previously";
@@ -27,12 +28,19 @@ var scenes;
             return _this;
         }
         Prologue.prototype.Start = function () {
-            this.storyLabel1 = new objects.Label(this.storyText1, "20px", "Cambay", "#000000", 1066 / 2, 600 / 1.5, true);
-            this.storyLabel2 = new objects.Label(this.storyText2, "20px", "Cambay", "#000000", 1066 / 2, 600 / 1.5 + 20, true);
-            this.storyLabel3 = new objects.Label(this.storyText3, "20px", "Cambay", "#000000", 1066 / 2, 600 / 1.5 + 60, true);
-            this.storyLabel4 = new objects.Label(this.storyText4, "20px", "Cambay", "#000000", 1066 / 2, 600 / 1.5 + 80, true);
-            this.storyLabel5 = new objects.Label(this.storyText5, "20px", "Cambay", "#000000", 1066 / 2, 600 / 1.5 + 120, true);
-            this.storyLabel6 = new objects.Label(this.storyText6, "20px", "Cambay", "#000000", 1066 / 2, 600 / 1.5 + 140, true);
+            if (objects.Game.isPlayingMusic == false) {
+                this.backgroundMusic = createjs.Sound.play("play_music");
+                this.backgroundMusic.loop = -1; // Looping forever
+                this.backgroundMusic.volume = 0.3;
+                objects.Game.isPlayingMusic = true;
+            }
+            this.background = new objects.Background(this.assetManager, "background");
+            this.storyLabel1 = new objects.Label(this.storyText1, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5, true);
+            this.storyLabel2 = new objects.Label(this.storyText2, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5 + 20, true);
+            this.storyLabel3 = new objects.Label(this.storyText3, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5 + 60, true);
+            this.storyLabel4 = new objects.Label(this.storyText4, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5 + 80, true);
+            this.storyLabel5 = new objects.Label(this.storyText5, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5 + 120, true);
+            this.storyLabel6 = new objects.Label(this.storyText6, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5 + 140, true);
             this.nextText = new objects.Label("Next", "20px", "Cambay", "#ffffff", 0, 0, true);
             this.nextButton = new objects.Button(this.assetManager, "startButton", 1066 / 2, 600 * 0.75, this.nextText, true);
             this.nextButton.scaleX = 0.75;
@@ -58,6 +66,7 @@ var scenes;
             }
         };
         Prologue.prototype.Main = function () {
+            this.addChild(this.background);
             this.addChild(this.storyLabel1);
             this.addChild(this.storyLabel2);
             this.addChild(this.storyLabel3);

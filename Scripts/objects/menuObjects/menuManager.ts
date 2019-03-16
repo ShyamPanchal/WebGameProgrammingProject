@@ -17,6 +17,8 @@ module objects
         public static scoreP1: number = 0;
         public static scoreP2: number = 0;
 
+        public static isPlayingMusic: boolean = false;
+
         public static scoreManagerP1: managers.Score;
         public static scoreManagerP2: managers.Score;
 

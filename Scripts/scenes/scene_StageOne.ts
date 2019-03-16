@@ -1,5 +1,8 @@
 module scenes {
     export class StageOne extends objects.Scene {
+        //Audio
+       // private backgroundMusic:createjs.AbstractSoundInstance;
+
         //#region Stage Variables
         private title: objects.Label;
         private titleShadow: objects.Label;
@@ -50,10 +53,15 @@ module scenes {
         }
 
         private fn_pauseButtonClick(): void {
+           // this.backgroundMusic.stop();
             objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
         }
 
         public Start(): void {
+
+           // this.backgroundMusic = createjs.Sound.play("play_music");
+            //this.backgroundMusic.loop = -1; // Looping forever
+            //this.backgroundMusic.volume = 0.3;
 
             //config.Gravity.gravityFactor = -1;
             //objects.Game.isDebug = true;

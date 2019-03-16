@@ -1,5 +1,9 @@
 module scenes {
     export class Prologue extends objects.Scene {
+        //Audio
+        private backgroundMusic:createjs.AbstractSoundInstance;
+        private isPlaying: boolean=false;
+
 
         private storyLabel1: objects.Label;
         private storyLabel2: objects.Label;
@@ -26,6 +30,13 @@ module scenes {
         }
 
         public Start(): void{
+            if(objects.Game.isPlayingMusic==false){                
+                this.backgroundMusic = createjs.Sound.play("play_music");
+                this.backgroundMusic.loop = -1; // Looping forever
+                this.backgroundMusic.volume = 0.3;
+                objects.Game.isPlayingMusic=true;
+            }
+            
             this.background = new objects.Background(this.assetManager, "background");
 
             this.storyLabel1 = new objects.Label(this.storyText1,"20px","Cambay","#ffffff",1066/2,600/1.5,true);
@@ -34,7 +45,7 @@ module scenes {
             this.storyLabel4 = new objects.Label(this.storyText4,"20px","Cambay","#ffffff",1066/2,600/1.5 + 80,true);
             this.storyLabel5 = new objects.Label(this.storyText5,"20px","Cambay","#ffffff",1066/2,600/1.5 + 120,true);
             this.storyLabel6 = new objects.Label(this.storyText6,"20px","Cambay","#ffffff",1066/2,600/1.5 + 140,true);
-            
+
             this.nextText = new objects.Label("Next","20px","Cambay","#ffffff",0,0,true);
             this.nextButton = new objects.Button(this.assetManager,"startButton",1066/2,600 * 0.75,this.nextText,true);
             this.nextButton.scaleX = 0.75;

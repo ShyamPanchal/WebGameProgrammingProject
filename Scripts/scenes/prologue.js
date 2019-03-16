@@ -17,6 +17,7 @@ var scenes;
         __extends(Prologue, _super);
         function Prologue(assetManager) {
             var _this = _super.call(this, assetManager) || this;
+            _this.isPlaying = false;
             _this.storyText1 = "Alice and Alisha, the world's greatest treasure-hunting twins";
             _this.storyText2 = "sought out the mansion in the mountains after hearing tales of its great lost treasures.";
             _this.storyText3 = "Little did they know, the ghosts of the slaughtered family who previously";
@@ -27,6 +28,12 @@ var scenes;
             return _this;
         }
         Prologue.prototype.Start = function () {
+            if (objects.Game.isPlayingMusic == false) {
+                this.backgroundMusic = createjs.Sound.play("play_music");
+                this.backgroundMusic.loop = -1; // Looping forever
+                this.backgroundMusic.volume = 0.3;
+                objects.Game.isPlayingMusic = true;
+            }
             this.background = new objects.Background(this.assetManager, "background");
             this.storyLabel1 = new objects.Label(this.storyText1, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5, true);
             this.storyLabel2 = new objects.Label(this.storyText2, "20px", "Cambay", "#ffffff", 1066 / 2, 600 / 1.5 + 20, true);

@@ -243,8 +243,8 @@ console.log('code ran');
         createjs.Ticker.on("tick", Update);
 
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.INGAME;
-        currentState = config.Scene.INGAME;
+        objects.Game.currentScene = config.Scene.START;
+        currentState = config.Scene.START;
 
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;

@@ -30,14 +30,21 @@ module scenes {
         }
 
         public Start(): void{
-            if(this.isPlaying==false){
-                
-            this.backgroundMusic = createjs.Sound.play("play_music");
-            this.backgroundMusic.loop = -1; // Looping forever
-            this.backgroundMusic.volume = 0.3;
-            this.isPlaying=true;
+            if(objects.Game.isPlayingMusic==false){                
+                this.backgroundMusic = createjs.Sound.play("play_music");
+                this.backgroundMusic.loop = -1; // Looping forever
+                this.backgroundMusic.volume = 0.3;
+                objects.Game.isPlayingMusic=true;
             }
             
+            this.background = new objects.Background(this.assetManager, "background");
+
+            this.storyLabel1 = new objects.Label(this.storyText1,"20px","Cambay","#ffffff",1066/2,600/1.5,true);
+            this.storyLabel2 = new objects.Label(this.storyText2,"20px","Cambay","#ffffff",1066/2,600/1.5 + 20,true);
+            this.storyLabel3 = new objects.Label(this.storyText3,"20px","Cambay","#ffffff",1066/2,600/1.5 + 60,true);
+            this.storyLabel4 = new objects.Label(this.storyText4,"20px","Cambay","#ffffff",1066/2,600/1.5 + 80,true);
+            this.storyLabel5 = new objects.Label(this.storyText5,"20px","Cambay","#ffffff",1066/2,600/1.5 + 120,true);
+            this.storyLabel6 = new objects.Label(this.storyText6,"20px","Cambay","#ffffff",1066/2,600/1.5 + 140,true);
 
             this.nextText = new objects.Label("Next","20px","Cambay","#ffffff",0,0,true);
             this.nextButton = new objects.Button(this.assetManager,"startButton",1066/2,600 * 0.75,this.nextText,true);

@@ -50,7 +50,7 @@ var objects;
     objects.Button = Button;
     var Dialog = /** @class */ (function () {
         function Dialog(assetManager, text) {
-            this.txtLabel = new objects.Label(text, "20px bold", "Cambay", "#000000", 0, 0, true);
+            this.txtLabel = new objects.Label(text, "20px bold", "Cambay", "#ffffff", 0, 0, true);
             this.dialogObj = new objects.Button(assetManager, "speech_ballom", 0, 0, this.txtLabel, true);
             this.dialogObj.on("mouseover", function () { });
             this.dialogObj.on("mouseout", function () { });

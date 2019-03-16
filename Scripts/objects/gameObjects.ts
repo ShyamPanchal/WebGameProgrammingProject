@@ -32,7 +32,7 @@ module objects{
       this.Init();
     }
 
-    protected GetGravityFactor():number{
+    public GetGravityFactor():number{
       return this.gravityFactor;
     }
 
@@ -116,14 +116,28 @@ module objects{
 
     protected FlipHorizontally() : void
     {
+      
+      if (this instanceof objects.Player) {
         this.isLeft = !this.isLeft;
-        this.scaleX = this.scaleX*-1;
-        this.boxCollider.offset_x = this.width - this.boxCollider.width - this.boxCollider.offset_x;        
+        (<objects.Player>this).spriteRenderer.scaleX = (<objects.Player>this).spriteRenderer.scaleX*-1;
         if (this.isLeft) {
+          (<objects.Player>this).flipOffsetX = (<objects.Player>this).fixed_flipOffsetX;
           this.regX = this.width;
         } else {
+          (<objects.Player>this).flipOffsetX = 0;
           this.regX = 0;
         }
+      } else {
+          this.isLeft = !this.isLeft;
+          this.scaleX = this.scaleX*-1;
+          this.boxCollider.offset_x = this.width - this.boxCollider.width - this.boxCollider.offset_x;
+          if (this.isLeft) {
+            this.regX = this.width;
+          } else {
+            this.regX = 0;
+          }
+        }
+
     }
 
     protected FlipVertically() : void

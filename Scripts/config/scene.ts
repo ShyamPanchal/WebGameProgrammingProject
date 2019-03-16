@@ -2,9 +2,12 @@ module config
 {
     export enum Scene
     {
+        PROLOGUE,
         START,
         INGAME,
-        FINISH,
-        PAUSE
+        INGAME_2,
+        INGAME_3,
+        REWARD,
+        FINISH
     }
 }

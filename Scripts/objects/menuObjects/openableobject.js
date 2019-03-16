@@ -20,22 +20,43 @@ var objects;
             _this.openedImage = assetManager.getResult(imageStringOpened);
             _this.closedImage = assetManager.getResult(imageStringClosed);
             _this.isClosed = true;
+            _this.isLocked = false;
+            _this.objectInside = new Array();
             _this.isGravityAffected = true;
             return _this;
         }
         OpenableObject.prototype.Action = function () {
-            _super.prototype.Action.call(this);
-            if (this.aabbResultPlayer !== null) {
-                this.Open();
+            if (this.isLocked) {
+                if (this.player.inventory.UseKey()) {
+                    this.isLocked = false;
+                    console.log('key used');
+                }
+                else {
+                    console.log('has not the key');
+                }
+            }
+            else {
+                _super.prototype.Action.call(this);
+                if (this.aabbResultPlayer !== null) {
+                    this.OpenClose();
+                }
             }
         };
-        OpenableObject.prototype.Open = function () {
+        OpenableObject.prototype.OpenClose = function () {
             this.isClosed = !this.isClosed;
             if (this.isClosed) {
                 this.image = this.closedImage;
+                console.log('close');
             }
             else {
+                console.log('open');
                 this.image = this.openedImage;
+                if (this.objectInside.length > 0) {
+                    var object = this.objectInside.pop();
+                    object.y = this.y;
+                    object.x = this.x + object.width + 10;
+                    object.isGravityAffected = true;
+                }
             }
         };
         return OpenableObject;

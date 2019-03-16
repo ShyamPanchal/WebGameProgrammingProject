@@ -9,12 +9,14 @@ module objects {
         {
             super(assetManager, imageString); 
             this.x = x;
-            this.y = y;     
+            this.y = y;   
+            
             this.Start();          
         }
         
         public Start():void{
             console.log('In Enemy');
+           
         }
 
         public Update():void {
@@ -24,7 +26,7 @@ module objects {
         
         public Reset():void {}
         public Move():void {
-            this.x -= 3;            
+            this.x -= 2;            
             if(this.x < 200)
                 this.x = 800;
         }

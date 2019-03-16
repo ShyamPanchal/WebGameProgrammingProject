@@ -2,13 +2,17 @@ module objects{
     export class DynamicObject extends objects.GameObject {
 
         public aabbResultPlayer:managers.AABB;
+        public alreadyHandled: boolean;
+        public player:Player;
 
         constructor(assetManager: createjs.LoadQueue, imageString: string){
             super(assetManager, imageString);
+            this.alreadyHandled = false;
           }
 
         public Action(): void {
-            console.log('ACTION');
+            this.alreadyHandled = true;
+            //console.log('ACTION');
         }
 
         protected CheckCollision: (x:number, y:number) => managers.AABB;
@@ -25,7 +29,9 @@ module objects{
         }
 
         public DoGravityEffect():void {
+          if (this.isGravityAffected) {
             this.Move_Vertically(false, config.Gravity.gravitySpeed*this.GetGravityFactor());
+          }
         }
 
         public Move_Vertically(up:boolean, speed:number) :void {

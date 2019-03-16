@@ -16,10 +16,13 @@ var objects;
     var DynamicObject = /** @class */ (function (_super) {
         __extends(DynamicObject, _super);
         function DynamicObject(assetManager, imageString) {
-            return _super.call(this, assetManager, imageString) || this;
+            var _this = _super.call(this, assetManager, imageString) || this;
+            _this.alreadyHandled = false;
+            return _this;
         }
         DynamicObject.prototype.Action = function () {
-            console.log('ACTION');
+            this.alreadyHandled = true;
+            //console.log('ACTION');
         };
         DynamicObject.prototype.UpdateIfPossible = function (Check) {
             this.CheckCollision = Check;
@@ -31,7 +34,9 @@ var objects;
             this.Move();
         };
         DynamicObject.prototype.DoGravityEffect = function () {
-            this.Move_Vertically(false, config.Gravity.gravitySpeed * this.GetGravityFactor());
+            if (this.isGravityAffected) {
+                this.Move_Vertically(false, config.Gravity.gravitySpeed * this.GetGravityFactor());
+            }
         };
         DynamicObject.prototype.Move_Vertically = function (up, speed) {
             if (up) {

@@ -36,7 +36,7 @@ var objects;
         };
         Enemy.prototype.Reset = function () { };
         Enemy.prototype.Move = function () {
-            this.x -= 3;
+            this.x -= 2;
             if (this.x < 200)
                 this.x = 800;
         };

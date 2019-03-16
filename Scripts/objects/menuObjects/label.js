@@ -24,10 +24,38 @@ var objects;
                 _this.regX = _this.getMeasuredWidth() * 0.5;
                 _this.regY = _this.getMeasuredHeight() * 0.5;
             }
+            _this.is_paused = false;
             _this.x = x;
             _this.y = y;
             return _this;
         }
+        /*
+                public fn_TimerTicker(seconds): void {
+                    timer = seconds;
+        
+                    var timeLimit = setInterval(function () {
+                        if (!this.is_paused) {
+                            timer--;
+                            //console.log(timer);
+                            if (timer <= 0) {
+                                clearInterval(timeLimit);
+                                objects.Game.currentScene = config.Scene.FINISH;
+                            };
+                        }
+        
+                    }, 1000)
+                }
+        */
+        Label.prototype.fn_ChangeLabel = function (timer) {
+            var minutes = Math.floor(timer / 60);
+            if (minutes < 0)
+                minutes = 0;
+            var seconds = timer % 60;
+            if (seconds < 10)
+                return minutes + " : 0" + seconds;
+            else
+                return minutes + " : " + seconds;
+        };
         return Label;
     }(createjs.Text));
     objects.Label = Label;

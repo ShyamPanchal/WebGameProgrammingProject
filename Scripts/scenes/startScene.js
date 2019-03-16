@@ -28,12 +28,14 @@ var scenes;
             objects.Game.currentScene = config.Scene.INGAME;
         };
         StartScene.prototype.fn_ControlsButton = function () {
+            console.log(this.isPaused);
             //objects.Game.controlsImage.visible = true;
             if (objects.Game.controlsImage.visible) {
                 console.log("reached");
                 objects.Game.controlsImage.visible = false;
             }
             else {
+                console.log('gone');
                 objects.Game.controlsImage.visible = true;
             }
         };

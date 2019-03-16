@@ -11,6 +11,9 @@ module scenes
         private pauseButton: objects.Button;
         private txtButton: objects.Label;
 
+        private menuButton: objects.Button;
+        private menuTxtButton: objects.Label;
+
         private enemies:objects.Enemy[];        
 
         //private ghost: objects.Enemy;
@@ -41,9 +44,33 @@ module scenes
 
         private fn_pauseButtonClick():void
         {
-            console.log("called");
-            objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
+            console.log("called");     
+                  
+            objects.Game.keyboard.pause = !objects.Game.keyboard.pause;    
+            
+            if(objects.Game.controlsImage.visible)
+            {
+                objects.Game.controlsImage.visible = false;
+            }
+            
         }
+
+        private fn_controlsButtonClick():void
+        {
+            console.log('show controls');
+            objects.Game.controlsImage.visible = true;
+
+            if(objects.Game.controlsImage.visible)
+            {
+                
+            }
+            else
+            {
+                objects.Game.controlsImage.visible = false;
+            }
+        }
+
+        
 
         public Start():void
         {
@@ -79,6 +106,17 @@ module scenes
             this.pauseButton = new objects.Button(this.assetManager, "startButton", -10, 550);
             this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff",this.pauseButton.x+80, this.pauseButton.y+10);
             //pause button end
+
+            //pause button: controls button
+            this.menuButton = new objects.Button(this.assetManager, "startButton", -10, 500);
+            this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff", this.menuButton.x + 80, this.menuButton.y + 10);
+            this.menuButton.visible = false;
+            this.menuTxtButton.visible = false;
+
+            objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
+            objects.Game.controlsImage.visible = false ;
+
+            //pause button controls: button end
 
             this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
             this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
@@ -142,8 +180,21 @@ module scenes
             
             //this.timeRemaining.is_paused = this.isPaused;
             if (this.isPaused){
+                //attempt to change 'pause' text to 'resume' text on pause button
+                /*
+                objects.Game.stage.removeChild(this.pauseTxtButton);
+                this.pauseTxtButton = new objects.Label("Resume", "20px", "Cambay", "#ffffff", this.pauseButton.x + 80, this.pauseButton.y + 10)
+                objects.Game.stage.addChild(this.pauseTxtButton);
+                */
+                this.menuButton.visible = true;
+                this.menuTxtButton.visible = true;
                 return;
             } 
+            else
+            {
+                this.menuButton.visible = false;
+                this.menuTxtButton.visible = false;
+            }
             
             this.timerCounter++;
             
@@ -212,9 +263,14 @@ module scenes
 
             this.addChild(this.pauseButton);
             this.addChild(this.pauseTxtButton);
+
+            this.addChild(this.menuButton);
+            this.addChild(this.menuTxtButton);
+            this.addChild(objects.Game.controlsImage);
             
             this.backButton.on("click", this.fn_ButtonClick);
             this.pauseButton.on("click", this.fn_pauseButtonClick);
+           this.menuButton.on("click", this.fn_controlsButtonClick);
         
         }
         

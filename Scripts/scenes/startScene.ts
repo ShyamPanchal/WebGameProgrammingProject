@@ -31,7 +31,7 @@ module scenes
 
         private fn_ControlsButton():void
         {
-            
+            console.log(this.isPaused);
             //objects.Game.controlsImage.visible = true;
             if(objects.Game.controlsImage.visible)
             {
@@ -40,6 +40,7 @@ module scenes
             }
             else
             {
+                console.log('gone');
                 objects.Game.controlsImage.visible = true;
             }
             
@@ -57,7 +58,7 @@ module scenes
             this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, true);
             this.txtControlsButton = new objects.Label("CONTROLS", "20px", "Cambay", "#f7fffd", this.controlsButton.x, this.controlsButton.y, true);
             objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
-           objects.Game.controlsImage.visible = false;
+            objects.Game.controlsImage.visible = false;
             this.startButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, true);
             this.startButton.scaleX = 0.75;
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#f7fffd",this.startButton.x,this.startButton.y + 2, true);     

@@ -1,9 +1,15 @@
 module managers {
     export class Keyboard {
-        public moveUp: boolean;
-        public moveLeft: boolean;
-        public moveRight: boolean;
-        public action: boolean;
+        public player1MoveUp: boolean;
+        public player1MoveLeft: boolean;
+        public player1MoveRight: boolean;
+        public player1Action: boolean;
+
+        public player2MoveUp: boolean;
+        public player2MoveLeft: boolean;
+        public player2MoveRight: boolean;
+        public player2Action: boolean;
+
         public enabled: boolean;
         public pause: boolean;
 
@@ -17,24 +23,31 @@ module managers {
         public onKeyDown(event:KeyboardEvent):void {
             switch(event.keyCode) {
                 case config.Keys.W:
+                    this.player1MoveUp = true;
+                    break;
                 case config.Keys.UP_ARROW:
-                    this.moveUp = true;
-                break;
+                    this.player2MoveUp = true;
+                    break;
                 case config.Keys.A:
+                    this.player1MoveLeft = true;
+                    break;
                 case config.Keys.LEFT_ARROW:
-                    this.moveLeft = true;
-                break;
+                    this.player2MoveLeft = true;
+                    break;
                 case config.Keys.E:
-                case config.Keys.RIGHT_SHIFT:
-                    this.action = true;
-                break;
+                    this.player1Action = true;
+                    break;
+                case config.Keys.RIGHT_CTRL:
+                    this.player2Action = true;
+                    break;
                 case config.Keys.D:
+                    this.player1MoveRight = true;
+                    break;
                 case config.Keys.RIGHT_ARROW:
-                    this.moveRight = true;
+                    this.player2MoveRight = true;
                 break;
                 case config.Keys.ESCAPE:
                     //console.log("Pause!!");
-                    
                 break;
             }
         }
@@ -42,22 +55,30 @@ module managers {
         public onKeyUp(event:KeyboardEvent):void {
             switch(event.keyCode) {
                 case config.Keys.W:
+                    this.player1MoveUp = false;
+                    break;
                 case config.Keys.UP_ARROW:
-                    this.moveUp = false;
-                break;
+                    this.player2MoveUp = false;
+                    break;
                 case config.Keys.A:
+                    this.player1MoveLeft = false;
+                    break;
                 case config.Keys.LEFT_ARROW:
-                    this.moveLeft = false;
-                break;
+                    this.player2MoveLeft = false;
+                    break;
                 case config.Keys.E:
-                case config.Keys.RIGHT_SHIFT:
-                    this.action = false;
-                break;
+                    this.player1Action = false;
+                    break;
+                case config.Keys.RIGHT_CTRL:
+                    this.player2Action = false;
+                    break;
                 case config.Keys.D:
+                    this.player1MoveRight = false;
+                    break;
                 case config.Keys.RIGHT_ARROW:
-                    this.moveRight = false;
+                    this.player2MoveRight = false;
                 break;
-                case config.Keys.ESCAPE:    
+                case config.Keys.ESCAPE:
                     //  this.pause = false;
                     this.pause = !this.pause;
                 break;

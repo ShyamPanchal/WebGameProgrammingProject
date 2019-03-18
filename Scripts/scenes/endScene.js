@@ -18,6 +18,7 @@ var scenes;
         function EndScene(assetManager) {
             var _this = _super.call(this, assetManager) || this;
             _this.Start();
+            objects.Game.skip = true;
             return _this;
         }
         EndScene.prototype.fn_ButtonClick = function () {
@@ -30,6 +31,7 @@ var scenes;
             this.backButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, this.txtButton, true);
             this.backButton.scaleX = 0.75;
             this.label = new objects.Label("Game End!", "bold 80px", "Cambay", "#ffffff", 1066 * 0.5, 600 * 0.25, true);
+            this.label1 = new objects.Label("Thank you for Helping Us Escape!", "bold 50px", "Cambay", "#ffffff", 1066 * 0.5, this.label.y + 100, true);
             this.Main();
         };
         EndScene.prototype.Update = function () {
@@ -37,6 +39,7 @@ var scenes;
         EndScene.prototype.Main = function () {
             this.addChild(this.background);
             this.addChild(this.label);
+            this.addChild(this.label1);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
             this.backButton.on("click", this.fn_ButtonClick);

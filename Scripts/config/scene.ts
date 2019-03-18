@@ -5,6 +5,9 @@ module config
         PROLOGUE,
         START,
         INGAME,
+        INGAME_2,
+        INGAME_3,
+        REWARD,
         FINISH
     }
 }

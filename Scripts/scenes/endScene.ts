@@ -4,6 +4,8 @@ module scenes
     {
         private background: objects.Background;
         private label: objects.Label;
+        private label1: objects.Label;
+
         private backButton: objects.Button;
         private txtButton: objects.Label;
 
@@ -12,6 +14,7 @@ module scenes
         {
             super(assetManager);
             this.Start();
+            objects.Game.skip = true;
         }
 
         private fn_ButtonClick():void
@@ -23,13 +26,15 @@ module scenes
         {
             console.log("END MENU...");        
         
-            this.background = new objects.Background(this.assetManager, "background");           
+            this.background = new objects.Background(this.assetManager, "background");
            
-            this.txtButton = new objects.Label("Exit", "20px", "Cambay", "#ffffff", 0,0, true);
+            this.txtButton = new objects.Label("Exit", "20px", "Cambay", "#ffffff", 0, 0, true);
             this.backButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75,this.txtButton, true);
+
             this.backButton.scaleX = 0.75;
             
             this.label = new objects.Label("Game End!", "bold 80px", "Cambay", "#ffffff", 1066 * 0.5, 600 * 0.25, true);
+            this.label1 = new objects.Label("Thank you for Helping Us Escape!", "bold 50px", "Cambay", "#ffffff", 1066 * 0.5, this.label.y + 100, true);
             
             this.Main();
         }
@@ -43,6 +48,8 @@ module scenes
         {
             this.addChild(this.background);
             this.addChild(this.label);
+            this.addChild(this.label1);
+
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
             

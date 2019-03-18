@@ -7,6 +7,7 @@ module managers{
         public max:math.Vec2;
         public size:math.Vec2;
         public isCollided:boolean;
+        public objectCollided: objects.GameObject;
 
 
         constructor (center:math.Vec2, extents:math.Vec2) 

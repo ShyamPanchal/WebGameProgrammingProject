@@ -13,6 +13,11 @@ module scenes
         private animtimer: number = 0;
         private zoomInOut: boolean = false;
 
+        private controlsButton: objects.Button;
+        private txtControlsButton: objects.Label;
+        //private controlsImage: objects.UIHelper;
+        private clicked: boolean = false;
+
         constructor(assetManager: createjs.LoadQueue)
         {
             super(assetManager);
@@ -21,15 +26,45 @@ module scenes
 
         private fn_ButtonClick():void
         {
-            objects.Game.currentScene = config.Scene.INGAME;
+            if (objects.Game.skip) {
+                objects.Game.currentScene = config.Scene.INGAME;
+            } else {
+                objects.Game.currentScene = config.Scene.PROLOGUE;
+            }
         }
+
+        private fn_ControlsButton():void
+        {
+            console.log(this.isPaused);
+            //objects.Game.controlsImage.visible = true;
+            if(objects.Game.controlsImage.visible)
+            {
+                console.log("reached");
+                objects.Game.controlsImage.visible = false;
+            }
+            else
+            {
+                console.log('gone');
+                objects.Game.controlsImage.visible = true;
+            }
+            
+        }
+       
 
         public Start():void
         {
-            console.log("Main Menu/Start Menu...");        
+            console.log("Main Menu/Start Menu...");      
+            
+            
         
             this.background = new objects.Background(this.assetManager, "background");
-           
+            
+            this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff",0,0, true); 
+            this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, this.txtStartButton, true);
+            this.txtControlsButton = new objects.Label("CONTROLS", "20px", "Cambay", "#f7fffd", this.controlsButton.x, this.controlsButton.y, true);
+            objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
+            objects.Game.controlsImage.visible = false;
+            
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff",0,0, true);     
             this.startButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, this.txtStartButton, true);
             this.startButton.scaleX = 0.75;
@@ -66,12 +101,17 @@ module scenes
                     this.startButton.text.scaleY = 1;
                 }
                 this.zoomInOut = !this.zoomInOut;
+               
             }
         }
 
+        
         public Main():void
         {
             this.addChild(this.background);
+            this.addChild(this.controlsButton);
+            this.addChild(this.txtControlsButton);
+            this.addChild(objects.Game.controlsImage);
             this.addChild(this.gameTitleShadow);
             this.addChild(this.gameTitle);
 
@@ -81,6 +121,9 @@ module scenes
             this.addChild(this.hDivider);
             this.addChild(this.hDivider2);
             this.startButton.on("click", this.fn_ButtonClick);
+            this.controlsButton.on("click", this.fn_ControlsButton);
+
+            
         }
     }
 }

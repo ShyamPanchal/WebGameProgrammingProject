@@ -1,5 +1,5 @@
 module objects
-{
+{    
     export class Button extends createjs.Bitmap
     {
         public text: objects.Label;
@@ -35,6 +35,49 @@ module objects
             this.alpha = 1.0;
             this.text.alpha = 1.0;
         }
+        
+        public Update():void {
+            this.text.x = this.x;
+            this.text.y = this.y;
+        }
        
+    }
+
+    export class Dialog {
+        txtLabel:objects.Label;
+        dialogObj:objects.Button;
+        isShown: boolean;
+
+        constructor(assetManager: createjs.LoadQueue, text:string)
+        {
+            this.txtLabel = new objects.Label(text, "20px bold", "Cambay", "#ffffff",0,0, true);     
+            this.dialogObj = new objects.Button(assetManager, "speech_ballom", 0, 0, this.txtLabel, true);
+            this.dialogObj.on("mouseover", ()=>{});
+            this.dialogObj.on("mouseout",  ()=>{});
+            this.dialogObj.scaleX = 0.75;
+            this.isShown = false;
+        }
+
+        public Update(x: number, y:number):void {
+            this.dialogObj.x = x;
+            this.dialogObj.y = y;
+            this.dialogObj.Update()
+        }
+
+        public showDialog(scene:objects.Scene):void {
+            if (!this.isShown) {
+                this.isShown = true;
+                scene.addChild(this.dialogObj);
+                scene.addChild(this.txtLabel);
+            }
+
+        }
+        public hideDialog(scene:objects.Scene):void{
+            if (this.isShown) {
+                this.isShown = false;
+                scene.removeChild(this.dialogObj);
+                scene.removeChild(this.txtLabel);
+            }
+        }
     }
 }

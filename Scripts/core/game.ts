@@ -215,7 +215,8 @@ console.log('code ran');
         { id: "p2", src: "../Assets/Sprites/Objects/p2.png" },
         { id: "p1_big", src: "../Assets/Sprites/Objects/p1_big.png" },
         { id: "p2_big", src: "../Assets/Sprites/Objects/p2_big.png" },
-        {id: "play_music", src:"./Assets/Sound/spook.mp3"}
+        {id: "play_music", src:"./Assets/Sound/spook.mp3"},
+        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" }
     ];
     function Init():void {
         console.log("Initialization start");

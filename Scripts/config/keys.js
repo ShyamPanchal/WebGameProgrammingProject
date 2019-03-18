@@ -7,7 +7,7 @@ var config;
         Keys.LEFT_ARROW = 37;
         Keys.RIGHT_ARROW = 39;
         Keys.UP_ARROW = 38;
-        Keys.RIGHT_SHIFT = 16;
+        Keys.RIGHT_CTRL = 17;
         // WASD keys
         Keys.W = 87;
         Keys.A = 65;

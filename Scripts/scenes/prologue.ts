@@ -60,7 +60,8 @@ module scenes {
             objects.Game.currentScene = config.Scene.INGAME;
         }
 
-        public Update(): void{
+        public Update(): void {
+
             if(this.storyLabel1.y > 150){
                 this.storyLabel1.y -= 0.5;
                 this.storyLabel2.y -= 0.5;
@@ -71,7 +72,7 @@ module scenes {
             }
             else{
                 this.nextButton.visible = true;
-            this.nextButton.text.visible = true;
+                this.nextButton.text.visible = true;
             }
         }
 

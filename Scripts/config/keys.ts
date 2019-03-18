@@ -4,7 +4,7 @@ module config {
         public static LEFT_ARROW: number = 37;
         public static RIGHT_ARROW: number = 39;
         public static UP_ARROW: number = 38;
-        public static RIGHT_SHIFT: number = 16;
+        public static RIGHT_CTRL: number = 17;
         // WASD keys
         public static W: number = 87;
         public static A: number = 65;

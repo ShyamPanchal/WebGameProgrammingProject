@@ -18,6 +18,7 @@ var scenes;
         function EndScene(assetManager) {
             var _this = _super.call(this, assetManager) || this;
             _this.Start();
+            objects.Game.skip = true;
             return _this;
         }
         EndScene.prototype.fn_ButtonClick = function () {

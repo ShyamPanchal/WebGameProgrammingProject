@@ -44,7 +44,12 @@ var scenes;
             }
         };
         StageOne.prototype.Start = function () {
-            this.firstPlayerReachEnd = false;
+            // this.backgroundMusic = createjs.Sound.play("play_music");
+            //this.backgroundMusic.loop = -1; // Looping forever
+            //this.backgroundMusic.volume = 0.3;
+            //config.Gravity.gravityFactor = -1;
+            //objects.Game.isDebug = true;
+            this.firstPlayerReachEnd = true;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array();
             this.gameSceneryDynamicObjects = new Array();
@@ -66,15 +71,22 @@ var scenes;
             this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 50, 65, true);
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
-            this.menuButton = new objects.Button(this.assetManager, "startButton", -10, 500);
-            this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff", this.menuButton.x + 80, this.menuButton.y + 10);
+            //pause button: controls button
+            this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff", 70, 510);
+            this.menuButton = new objects.Button(this.assetManager, "startButton", this.menuTxtButton.x - 10, this.menuTxtButton.y, this.menuTxtButton);
             this.menuButton.visible = false;
             this.menuTxtButton.visible = false;
             objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
             objects.Game.controlsImage.visible = false;
-            //pause button controls: button end
-            this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550);
-            this.title = new objects.Label("Tutorial!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
+            //#region pause button
+            this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff", 0, 0, true);
+            this.resumeText = new objects.Label("Resume", "20px", "Cambay", "#ffffff", 0, 0, true);
+            this.pauseButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.088, 600 * 0.95, this.pauseTxtButton, true);
+            this.pauseButton.scaleX = 0.75;
+            this.gamePausedText = new objects.Label("Game Paused", "bold 48px", "Cambay", "#ffffff", 1066 / 2, 600 / 4, true);
+            this.gamePausedText.visible = false;
+            //#endregion
+            this.title = new objects.Label("Corridors!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
             //this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
             this.titleShadow = new objects.Label("Corridors!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
@@ -182,21 +194,32 @@ var scenes;
         StageOne.prototype.Update = function () {
             var _this = this;
             this.CheckPaused();
+            this.CheckNextLevel();
+            this.pauseBackground.visible = this.isPaused;
+            this.gamePausedText.visible = this.isPaused;
             if (this.isPaused) {
-                //attempt to change 'pause' text to 'resume' text on pause button
-                /*
-                objects.Game.stage.removeChild(this.pauseTxtButton);
-                this.pauseTxtButton = new objects.Label("Resume", "20px", "Cambay", "#ffffff", this.pauseButton.x + 80, this.pauseButton.y + 10)
-                objects.Game.stage.addChild(this.pauseTxtButton);
-                */
+                this.pauseButton.text = this.resumeText;
+                this.addChild(this.resumeText);
+                this.removeChild(this.pauseTxtButton);
+                this.pauseButton.x = 1066 / 2;
+                this.pauseButton.y = 600 * 0.75;
+                this.pauseButton.text.x = 1066 / 2;
+                this.pauseButton.text.y = 600 * 0.75;
                 this.menuButton.visible = true;
                 this.menuTxtButton.visible = true;
                 return;
             }
             else {
+                this.pauseButton.text = this.pauseTxtButton;
+                this.addChild(this.pauseTxtButton);
+                this.removeChild(this.resumeText);
+                this.pauseButton.x = 1066 * 0.088;
+                this.pauseButton.y = 600 * 0.95;
+                this.pauseButton.text.x = 1066 * 0.088;
+                this.pauseButton.text.y = 600 * 0.95;
                 this.menuButton.visible = false;
-                this.menuTxtButton.visible = false;
             }
+            this.menuButton.visible = false;
             this.timerCounter++;
             //double the speed of the timer in the case the first player reach the end without the second player
             var speedTimer = this.firstPlayerReachEnd ? 1 / 2 : 1;
@@ -271,12 +294,15 @@ var scenes;
             this.overTitle.visible = false;
             this.addChild(this.pauseBackground);
             this.addChild(this.pauseButton);
+            this.addChild(this.pauseButton.text);
+            this.addChild(this.gamePausedText);
+            //this.backButton.on("click", this.fn_ButtonClick);
+            this.pauseButton.on("click", this.fn_pauseButtonClick);
             this.addChild(this.pauseTxtButton);
             this.addChild(this.menuButton);
             this.addChild(this.menuTxtButton);
             this.addChild(objects.Game.controlsImage);
-            this.backButton.on("click", this.fn_ButtonClick);
-            this.pauseButton.on("click", this.fn_pauseButtonClick);
+            //this.backButton.on("click", this.fn_ButtonClick);
             this.menuButton.on("click", this.fn_controlsButtonClick);
         };
         StageOne.prototype.CreateScenery = function () {

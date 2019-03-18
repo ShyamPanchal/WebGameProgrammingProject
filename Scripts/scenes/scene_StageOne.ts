@@ -10,6 +10,8 @@ module scenes {
         //private backButton: objects.Button;
         private pauseButton: objects.Button;
 
+        private enemies: objects.Enemy[];
+
         private menuButton: objects.Button;
         private menuTxtButton: objects.Label;
 
@@ -89,7 +91,7 @@ module scenes {
 
             //config.Gravity.gravityFactor = -1;
             //objects.Game.isDebug = true;
-            this.firstPlayerReachEnd = false;
+            this.firstPlayerReachEnd = true;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
             this.gameSceneryDynamicObjects = new Array<objects.DynamicObject>();
@@ -120,8 +122,8 @@ module scenes {
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
 
             //pause button: controls button
-            this.menuButton = new objects.Button(this.assetManager, "startButton", -10, 500);
-            this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff", this.menuButton.x + 80, this.menuButton.y + 10);
+            this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff",  70,  510);
+            this.menuButton = new objects.Button(this.assetManager, "startButton", this.menuTxtButton.x - 10, this.menuTxtButton.y, this.menuTxtButton);
             this.menuButton.visible = false;
             this.menuTxtButton.visible = false;
 
@@ -400,7 +402,7 @@ module scenes {
             this.addChild(this.menuTxtButton);
             this.addChild(objects.Game.controlsImage);
             
-            this.backButton.on("click", this.fn_ButtonClick);
+            //this.backButton.on("click", this.fn_ButtonClick);
             
             this.menuButton.on("click", this.fn_controlsButtonClick);
 

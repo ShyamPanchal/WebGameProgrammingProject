@@ -19,13 +19,18 @@ var scenes;
             var _this = _super.call(this, assetManager) || this;
             _this.animtimer = 0;
             _this.zoomInOut = false;
-            // private controlsImage: objects.UIHelper;
+            //private controlsImage: objects.UIHelper;
             _this.clicked = false;
             _this.Start();
             return _this;
         }
         StartScene.prototype.fn_ButtonClick = function () {
-            objects.Game.currentScene = config.Scene.PROLOGUE;
+            if (objects.Game.skip) {
+                objects.Game.currentScene = config.Scene.INGAME;
+            }
+            else {
+                objects.Game.currentScene = config.Scene.PROLOGUE;
+            }
         };
         StartScene.prototype.fn_ControlsButton = function () {
             console.log(this.isPaused);
@@ -42,11 +47,13 @@ var scenes;
         StartScene.prototype.Start = function () {
             console.log("Main Menu/Start Menu...");
             this.background = new objects.Background(this.assetManager, "background");
-            this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, true);
+            this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff", 0, 0, true);
+            this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, this.txtStartButton, true);
             this.txtControlsButton = new objects.Label("CONTROLS", "20px", "Cambay", "#f7fffd", this.controlsButton.x, this.controlsButton.y, true);
             objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
             objects.Game.controlsImage.visible = false;
-            this.startButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, true);
+            this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff", 0, 0, true);
+            this.startButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, this.txtStartButton, true);
             this.startButton.scaleX = 0.75;
             this.gameTitle = new objects.Label("Help us Escape!", "bold 48px", "Cambay", "#ffffff", 1066 / 2, 600 / 4, true);
             this.gameTitle.alpha = 1;
@@ -66,7 +73,7 @@ var scenes;
                     this.startButton.scaleX = 0.85;
                     this.startButton.text.scaleX = 1.25;
                     this.startButton.scaleY = 1;
-                    this.txtStartButton.scaleY = 1.3;
+                    this.startButton.text.scaleY = 1.3;
                 }
                 else {
                     this.startButton.scaleX = 0.75;

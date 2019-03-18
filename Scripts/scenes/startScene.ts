@@ -15,7 +15,7 @@ module scenes
 
         private controlsButton: objects.Button;
         private txtControlsButton: objects.Label;
-        // private controlsImage: objects.UIHelper;
+        //private controlsImage: objects.UIHelper;
         private clicked: boolean = false;
 
         constructor(assetManager: createjs.LoadQueue)
@@ -26,7 +26,11 @@ module scenes
 
         private fn_ButtonClick():void
         {
-            objects.Game.currentScene = config.Scene.PROLOGUE;
+            if (objects.Game.skip) {
+                objects.Game.currentScene = config.Scene.INGAME;
+            } else {
+                objects.Game.currentScene = config.Scene.PROLOGUE;
+            }
         }
 
         private fn_ControlsButton():void
@@ -53,12 +57,13 @@ module scenes
             
             
         
-            this.background = new objects.Background(this.assetManager, "background
+            this.background = new objects.Background(this.assetManager, "background");
             
-            this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, true);
+            this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff",0,0, true); 
+            this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, this.txtStartButton, true);
             this.txtControlsButton = new objects.Label("CONTROLS", "20px", "Cambay", "#f7fffd", this.controlsButton.x, this.controlsButton.y, true);
-            objects.Game.controlsImage.visible = false;
             objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
+            objects.Game.controlsImage.visible = false;
             
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff",0,0, true);     
             this.startButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, this.txtStartButton, true);

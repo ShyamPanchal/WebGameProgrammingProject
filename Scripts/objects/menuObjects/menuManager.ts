@@ -18,6 +18,8 @@ module objects
         public static scoreP1: number = 0;
         public static scoreP2: number = 0;
 
+        public static skip:boolean = true;
+
         public static isPlayingMusic: boolean = false;
 
         public static scoreManagerP1: managers.Score;

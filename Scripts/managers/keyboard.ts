@@ -37,7 +37,7 @@ module managers {
                 case config.Keys.E:
                     this.player1Action = true;
                     break;
-                case config.Keys.RIGHT_SHIFT:
+                case config.Keys.RIGHT_CTRL:
                     this.player2Action = true;
                     break;
                 case config.Keys.D:
@@ -69,7 +69,7 @@ module managers {
                 case config.Keys.E:
                     this.player1Action = false;
                     break;
-                case config.Keys.RIGHT_SHIFT:
+                case config.Keys.RIGHT_CTRL:
                     this.player2Action = false;
                     break;
                 case config.Keys.D:

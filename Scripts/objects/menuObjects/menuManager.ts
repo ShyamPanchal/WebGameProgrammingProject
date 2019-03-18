@@ -12,10 +12,13 @@ module objects
         public static currentSceneObject: objects.Scene;
         public static player1TextureAtlas: createjs.SpriteSheet;
         public static player2TextureAtlas: createjs.SpriteSheet;
+        public static controlsImage: objects.UIHelper;
 
         public static stageTimer: number = 180; // in seconds || 3 minutes
         public static scoreP1: number = 0;
         public static scoreP2: number = 0;
+
+        public static skip:boolean = true;
 
         public static isPlayingMusic: boolean = false;
 

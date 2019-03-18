@@ -12,6 +12,9 @@ module scenes {
 
         private enemies: objects.Enemy[];
 
+        private menuButton: objects.Button;
+        private menuTxtButton: objects.Label;
+
         //private ghost: objects.Enemy;
         private player1: objects.Player;
         private player2: objects.Player;
@@ -52,9 +55,32 @@ module scenes {
             objects.Game.currentScene = config.Scene.FINISH;
         }
 
-        private fn_pauseButtonClick(): void {
-           // this.backgroundMusic.stop();
-            objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
+        private fn_pauseButtonClick():void
+        {
+            console.log("called");     
+                  
+            objects.Game.keyboard.pause = !objects.Game.keyboard.pause;    
+            
+            if(objects.Game.controlsImage.visible)
+            {
+                objects.Game.controlsImage.visible = false;
+            }
+            
+        }
+
+        private fn_controlsButtonClick():void
+        {
+            console.log('show controls');
+            objects.Game.controlsImage.visible = true;
+
+            if(objects.Game.controlsImage.visible)
+            {
+                
+            }
+            else
+            {
+                objects.Game.controlsImage.visible = false;
+            }
         }
 
         public Start(): void {
@@ -65,7 +91,7 @@ module scenes {
 
             //config.Gravity.gravityFactor = -1;
             //objects.Game.isDebug = true;
-            this.firstPlayerReachEnd = false;
+            this.firstPlayerReachEnd = true;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
             this.gameSceneryDynamicObjects = new Array<objects.DynamicObject>();
@@ -74,12 +100,18 @@ module scenes {
 
             objects.Game.keyboard = new managers.Keyboard();
             var ghost = new objects.Enemy(this.assetManager, "ghost", 550, 245);
-            //ghost.boxCollider = new objects.BoxCollider(ghost.x/4, ghost.x/4, ghost.x, ghost.y, ghost.halfW, ghost.halfH);
             ghost.alpha = 0.8;
             ghost.y = ghost.y - ghost.height;
             ghost.scaleX = 0.7;
             ghost.scaleY = 0.7;
-            this.enemies[0] = ghost;
+            this.enemies.push(ghost);
+
+            var ghost2 = new objects.Enemy(this.assetManager, "ghost", 550, 480);
+            ghost2.alpha = 0.8;
+            ghost2.y = ghost2.y - ghost2.height;
+            ghost2.scaleX = 0.7;
+            ghost2.scaleY = 0.7;
+            this.enemies.push(ghost2);
                     
 
             console.log("GAME SCENE(S)...");
@@ -88,6 +120,16 @@ module scenes {
 
             this.background_main = new objects.Background(this.assetManager, "level_01_house");
             this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
+
+            //pause button: controls button
+            this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff",  70,  510);
+            this.menuButton = new objects.Button(this.assetManager, "startButton", this.menuTxtButton.x - 10, this.menuTxtButton.y, this.menuTxtButton);
+            this.menuButton.visible = false;
+            this.menuTxtButton.visible = false;
+
+            objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
+            objects.Game.controlsImage.visible = false ;
+
 
             //#region pause button
             this.pauseTxtButton = new objects.Label("Pause", "20px", "Cambay", "#ffffff", 0, 0, true);
@@ -119,7 +161,7 @@ module scenes {
             let inventory2 = new objects.Inventory(this.assetManager);
             inventory2.x = this.positionInventoryP2.x;
             inventory2.y = this.positionInventoryP2.y;
-            this.player2 = new objects.Player(this.assetManager, 2, inventory2, 400, 350);            
+            this.player2 = new objects.Player(this.assetManager, 2, inventory2, 400, 280);            
             //for using bitmap
             //this.player2.boxCollider = new objects.BoxCollider(18, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 20);
             this.player2.boxCollider = new objects.BoxCollider(0, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 29);            
@@ -231,6 +273,9 @@ module scenes {
                 this.pauseButton.y = 600 * 0.75;
                 this.pauseButton.text.x = 1066 / 2;
                 this.pauseButton.text.y = 600 * 0.75;
+                this.menuButton.visible = true;
+                this.menuTxtButton.visible = true;
+
                 return;
             }
             else {
@@ -241,8 +286,11 @@ module scenes {
                 this.pauseButton.y = 600 * 0.95;
                 this.pauseButton.text.x = 1066 * 0.088;
                 this.pauseButton.text.y = 600 * 0.95;
+                this.menuButton.visible = false;
+
             }
 
+                this.menuButton.visible = false;
             this.timerCounter++;
             //double the speed of the timer in the case the first player reach the end without the second player
             let speedTimer = this.firstPlayerReachEnd?1/2:1;
@@ -347,6 +395,17 @@ module scenes {
 
             //this.backButton.on("click", this.fn_ButtonClick);
             this.pauseButton.on("click", this.fn_pauseButtonClick);
+                        
+            this.addChild(this.pauseTxtButton);
+
+            this.addChild(this.menuButton);
+            this.addChild(this.menuTxtButton);
+            this.addChild(objects.Game.controlsImage);
+            
+            //this.backButton.on("click", this.fn_ButtonClick);
+            
+            this.menuButton.on("click", this.fn_controlsButtonClick);
+
 
         }
 

@@ -14,6 +14,7 @@ module scenes
         {
             super(assetManager);
             this.Start();
+            objects.Game.skip = true;
         }
 
         private fn_ButtonClick():void

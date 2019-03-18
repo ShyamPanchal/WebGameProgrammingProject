@@ -50,17 +50,18 @@ module objects{
             //TODO the key must be the last item to be catched (making the use hard to the player)
             let hasKey = false;
             let p = -1;
-            this.
-            objects.forEach(item => {
+            let position = -1;
+            this.objects.forEach(item => {
                 p++;
-                if(item.name == "key") {
+                if(item instanceof Key) {
+                    position = p;
                     hasKey = true;
                     return;
                 }
             });
-            if (p > -1) {
-                this.objects[p].x = 1500;
-                this.objects[p] = null;
+            if (hasKey) {
+                this.objects[position].x = 1500;
+                this.objects[position] = null;
             }
             return hasKey;
         }

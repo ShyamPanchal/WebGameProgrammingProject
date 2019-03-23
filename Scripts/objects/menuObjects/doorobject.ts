@@ -18,7 +18,11 @@ module objects{
         
         }
 
-        public EnterDoorAction(player:Player) {
+        public AddEnterDoorAction(getTimer: ()=>number, goNextLevel: ()=>void) {
+            this.EnterDoorAction = new EnterFinalDoorAction(getTimer, goNextLevel).action;
+        }
+
+        private EnterDoorAction(player:Player) {
             console.log("Going to the next level!!!!");
         }
 
@@ -31,5 +35,33 @@ module objects{
                 console.log('enter door action');
             }            
         }
+    }
+
+    export class EnterFinalDoorAction {
+
+        action: (player:Player) => void; 
+
+        constructor(getTimer: ()=>number, goNextLevel: ()=>void) {
+            this.action = (player:objects.Player)=>{
+
+                if (!Player.onePlayerGone) {
+                    Player.onePlayerGone = true
+                } else {
+                    //this.firstPlayerReachEnd = true;
+                    goNextLevel();
+                }
+
+                player.x = 1500;
+                if (player.playerNum == 2 ) {
+                    objects.Game.scoreManagerP2 = new managers.Score(player.inventory.GetItems(), getTimer());
+                    console.log('p2 finished ' + getTimer());
+                } else {
+                    objects.Game.scoreManagerP1 = new managers.Score(player.inventory.GetItems(), getTimer());
+                    console.log('p1 finished '  + getTimer());
+                }
+            }
+        }
+
+
     }
 }

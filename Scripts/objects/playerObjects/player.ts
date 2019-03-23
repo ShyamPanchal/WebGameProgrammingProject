@@ -26,6 +26,8 @@ module objects{
       public fixed_flipOffsetX:number = 27;
       public flipOffsetX:number = 0;
 
+      public static onePlayerGone:boolean;
+       
       // Constructor
       constructor(assetManager:createjs.LoadQueue, playerNum:number, inventory:Inventory, x:number = 0, y:number = 0){
          super(assetManager, playerNum ==1?"player":"player");

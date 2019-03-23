@@ -25,6 +25,9 @@ var objects;
             _this.foregroundImage = assetManager.getResult(foregroundImage);
             return _this;
         }
+        Door.prototype.AddEnterDoorAction = function (getTimer, goNextLevel) {
+            this.EnterDoorAction = new EnterFinalDoorAction(getTimer, goNextLevel).action;
+        };
         Door.prototype.EnterDoorAction = function (player) {
             console.log("Going to the next level!!!!");
         };
@@ -41,5 +44,29 @@ var objects;
         return Door;
     }(objects.OpenableObject));
     objects.Door = Door;
+    var EnterFinalDoorAction = /** @class */ (function () {
+        function EnterFinalDoorAction(getTimer, goNextLevel) {
+            this.action = function (player) {
+                if (!objects.Player.onePlayerGone) {
+                    objects.Player.onePlayerGone = true;
+                }
+                else {
+                    //this.firstPlayerReachEnd = true;
+                    goNextLevel();
+                }
+                player.x = 1500;
+                if (player.playerNum == 2) {
+                    objects.Game.scoreManagerP2 = new managers.Score(player.inventory.GetItems(), getTimer());
+                    console.log('p2 finished ' + getTimer());
+                }
+                else {
+                    objects.Game.scoreManagerP1 = new managers.Score(player.inventory.GetItems(), getTimer());
+                    console.log('p1 finished ' + getTimer());
+                }
+            };
+        }
+        return EnterFinalDoorAction;
+    }());
+    objects.EnterFinalDoorAction = EnterFinalDoorAction;
 })(objects || (objects = {}));
 //# sourceMappingURL=doorobject.js.map

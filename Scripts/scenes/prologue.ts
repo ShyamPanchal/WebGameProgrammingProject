@@ -1,9 +1,5 @@
 module scenes {
     export class Prologue extends objects.Scene {
-        //Audio
-        private backgroundMusic:createjs.AbstractSoundInstance;
-        private isPlaying: boolean=false;
-
 
         private storyLabel1: objects.Label;
         private storyLabel2: objects.Label;

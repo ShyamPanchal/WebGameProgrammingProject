@@ -17,7 +17,6 @@ var scenes;
         __extends(Prologue, _super);
         function Prologue(assetManager) {
             var _this = _super.call(this, assetManager) || this;
-            _this.isPlaying = false;
             _this.storyText1 = "Alice and Alisha, the world's greatest treasure-hunting twins";
             _this.storyText2 = "sought out the mansion in the mountains after hearing tales of its great lost treasures.";
             _this.storyText3 = "Little did they know, the ghosts of the slaughtered family who previously";

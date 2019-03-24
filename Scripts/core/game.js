@@ -186,9 +186,6 @@
         { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
         { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
         { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" },
-<<<<<<< HEAD
-        { id: "pauseBackground", src: "../Assets/Background/pause.png" }
-=======
         { id: "pauseBackground", src: "../Assets/Background/pause.png" },
         { id: "closed_door", src: "../Assets/Sprites/Objects/closed_door.png" },
         { id: "open_door", src: "../Assets/Sprites/Objects/open_door.png" },
@@ -208,7 +205,6 @@
         { id: "p2_big", src: "../Assets/Sprites/Objects/p2_big.png" },
         { id: "play_music", src: "./Assets/Sound/spook.mp3" },
         { id: "controls", src: "../Assets/Images/Controls-preFinal.png" }
->>>>>>> master
     ];
     function Init() {
         console.log("Initialization start");

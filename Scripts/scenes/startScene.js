@@ -48,14 +48,11 @@ var scenes;
             console.log("Main Menu/Start Menu...");
             this.background = new objects.Background(this.assetManager, "background");
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff", 0, 0, true);
-<<<<<<< HEAD
-=======
             this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, this.txtStartButton, true);
             this.txtControlsButton = new objects.Label("CONTROLS", "20px", "Cambay", "#f7fffd", this.controlsButton.x, this.controlsButton.y, true);
             objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
             objects.Game.controlsImage.visible = false;
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff", 0, 0, true);
->>>>>>> master
             this.startButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75, this.txtStartButton, true);
             this.startButton.scaleX = 0.75;
             this.gameTitle = new objects.Label("Help us Escape!", "bold 48px", "Cambay", "#ffffff", 1066 / 2, 600 / 4, true);

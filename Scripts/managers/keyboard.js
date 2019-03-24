@@ -10,22 +10,6 @@ var managers;
         Keyboard.prototype.onKeyDown = function (event) {
             switch (event.keyCode) {
                 case config.Keys.W:
-<<<<<<< HEAD
-                case config.Keys.UP_ARROW:
-                    this.moveUp = true;
-                    break;
-                case config.Keys.A:
-                case config.Keys.LEFT_ARROW:
-                    this.moveLeft = true;
-                    break;
-                case config.Keys.E:
-                case config.Keys.RIGHT_SHIFT:
-                    this.action = true;
-                    break;
-                case config.Keys.D:
-                case config.Keys.RIGHT_ARROW:
-                    this.moveRight = true;
-=======
                     this.player1MoveUp = true;
                     break;
                 case config.Keys.UP_ARROW:
@@ -48,7 +32,6 @@ var managers;
                     break;
                 case config.Keys.RIGHT_ARROW:
                     this.player2MoveRight = true;
->>>>>>> master
                     break;
                 case config.Keys.ESCAPE:
                     //console.log("Pause!!");
@@ -58,22 +41,6 @@ var managers;
         Keyboard.prototype.onKeyUp = function (event) {
             switch (event.keyCode) {
                 case config.Keys.W:
-<<<<<<< HEAD
-                case config.Keys.UP_ARROW:
-                    this.moveUp = false;
-                    break;
-                case config.Keys.A:
-                case config.Keys.LEFT_ARROW:
-                    this.moveLeft = false;
-                    break;
-                case config.Keys.E:
-                case config.Keys.RIGHT_SHIFT:
-                    this.action = false;
-                    break;
-                case config.Keys.D:
-                case config.Keys.RIGHT_ARROW:
-                    this.moveRight = false;
-=======
                     this.player1MoveUp = false;
                     break;
                 case config.Keys.UP_ARROW:
@@ -96,7 +63,6 @@ var managers;
                     break;
                 case config.Keys.RIGHT_ARROW:
                     this.player2MoveRight = false;
->>>>>>> master
                     break;
                 case config.Keys.ESCAPE:
                     //  this.pause = false;

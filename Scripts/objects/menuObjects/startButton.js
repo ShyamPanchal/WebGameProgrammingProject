@@ -40,13 +40,10 @@ var objects;
         Button.prototype.mouseOut = function () {
             this.alpha = 1.0;
             this.text.alpha = 1.0;
-<<<<<<< HEAD
-=======
         };
         Button.prototype.Update = function () {
             this.text.x = this.x;
             this.text.y = this.y;
->>>>>>> master
         };
         return Button;
     }(createjs.Bitmap));

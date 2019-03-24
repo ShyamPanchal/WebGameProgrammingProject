@@ -294,7 +294,7 @@ console.log('code ran');
 
             case config.Scene.FINISH:
             stage.removeAllChildren();
-            currentScene = new scenes.EndScene(assetManager);            
+            currentScene = new scenes.EndScene(assetManager);
             stage.addChild(currentScene);
             break;
         }

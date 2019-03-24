@@ -20,29 +20,12 @@ var objects;
             _this.openedImage = assetManager.getResult(imageStringOpened);
             _this.closedImage = assetManager.getResult(imageStringClosed);
             _this.isClosed = true;
-<<<<<<< HEAD
-=======
             _this.isLocked = false;
             _this.objectInside = new Array();
->>>>>>> master
             _this.isGravityAffected = true;
             return _this;
         }
         OpenableObject.prototype.Action = function () {
-<<<<<<< HEAD
-            _super.prototype.Action.call(this);
-            if (this.aabbResultPlayer !== null) {
-                this.Open();
-            }
-        };
-        OpenableObject.prototype.Open = function () {
-            this.isClosed = !this.isClosed;
-            if (this.isClosed) {
-                this.image = this.closedImage;
-            }
-            else {
-                this.image = this.openedImage;
-=======
             if (this.isLocked) {
                 if (this.player.inventory.UseKey()) {
                     this.isLocked = false;
@@ -74,7 +57,6 @@ var objects;
                     object.x = this.x + object.width + 10;
                     object.isGravityAffected = true;
                 }
->>>>>>> master
             }
         };
         return OpenableObject;

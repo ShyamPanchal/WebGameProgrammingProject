@@ -142,7 +142,6 @@ module scenes {
 
             this.title = new objects.Label("Corridors!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
-            this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
 
             //this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
 

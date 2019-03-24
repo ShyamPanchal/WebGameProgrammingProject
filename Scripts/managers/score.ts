@@ -13,12 +13,12 @@ module managers {
         private timer: number = 0;
         private item:number = -1;
 
-        constructor(items:objects.HandableObject[], time:number){
+        constructor(items:objects.HandableObject[], time:number, previousScore:number = 0){
+            this.score = previousScore;
             this.items = items;
             this.itemsScore = new Array<objects.Label>();
             this.time = time;
-            this.timer = time;
-            
+            this.timer = time;            
         }
 
         public Calculate() {
@@ -94,6 +94,7 @@ module managers {
                     scene.addChild(this.itemsScore[i]);
                     lastYPosition+= 50;
                 }
+                i++;
             });
             scene.addChild(new objects.Label("Total:", "bold 28px", "Cambay", "#ffffff", x, lastYPosition, false));
             this.totalScore = new objects.Label("0", "bold 28px", "Cambay", "#ffffff", x+ 200, lastYPosition, false);

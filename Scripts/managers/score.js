@@ -1,11 +1,13 @@
 var managers;
 (function (managers) {
     var Score = /** @class */ (function () {
-        function Score(items, time) {
+        function Score(items, time, previousScore) {
+            if (previousScore === void 0) { previousScore = 0; }
             this.score = 0;
             this.timerCounter = 0;
             this.timer = 0;
             this.item = -1;
+            this.score = previousScore;
             this.items = items;
             this.itemsScore = new Array();
             this.time = time;
@@ -83,6 +85,7 @@ var managers;
                     scene.addChild(_this.itemsScore[i]);
                     lastYPosition += 50;
                 }
+                i++;
             });
             scene.addChild(new objects.Label("Total:", "bold 28px", "Cambay", "#ffffff", x, lastYPosition, false));
             this.totalScore = new objects.Label("0", "bold 28px", "Cambay", "#ffffff", x + 200, lastYPosition, false);

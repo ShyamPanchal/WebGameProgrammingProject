@@ -26,6 +26,11 @@ module objects{
       public fixed_flipOffsetX:number = 27;
       public flipOffsetX:number = 0;
 
+      public fixed_flipOffsetY:number = 27;
+      public flipOffsetY:number = 0;
+
+      public static onePlayerGone:boolean;
+       
       // Constructor
       constructor(assetManager:createjs.LoadQueue, playerNum:number, inventory:Inventory, x:number = 0, y:number = 0){
          super(assetManager, playerNum ==1?"player":"player");
@@ -70,7 +75,7 @@ module objects{
   
       protected Update():void {
         this.spriteRenderer.x = this.flipOffsetX + this.x;
-        this.spriteRenderer.y = this.y;
+        this.spriteRenderer.y = this.flipOffsetY +this.y;
         super.Update();
         
         this.CheckGrounded(this.CheckCollision);
@@ -84,6 +89,7 @@ module objects{
         
         
         this.Jump();
+        this.Down();
         this.Move();
         
         this.Action();      
@@ -113,6 +119,18 @@ module objects{
         this.spriteRenderer.stop();
         this.spriteRenderer.off("animationend", this.listener);
         this.animationState = "Waiting";
+      }
+
+      private CheckKeyboardPlayerDown() {
+        return (objects.Game.keyboard.player1MoveDown && this.playerNum == 1) || (objects.Game.keyboard.player2MoveDown && this.playerNum == 2);
+      }
+
+      public Down() : void {
+        if (this.isGrounded && this.CheckKeyboardPlayerDown()){
+          if (this.CheckDownStairs( this.CheckCollision,false, config.Gravity.gravityForce*this.GetGravityFactor()*this.halfH)) {
+            //this.y += config.Gravity.gravityForce*this.GetGravityFactor()*this.height;
+          }
+        }          
       }
 
       private CheckKeyboardPlayerJump() {
@@ -174,7 +192,14 @@ module objects{
             this.animationState = "Action";
             this.listener =  this.on("animationend", this.cancelStopEvent);
 
-          if (this.actionObject == null) {
+          if (this.actionObject instanceof InformativePoint) {
+            this.actionObject.Action();
+            if (!this.inventory.DropItem()) {
+              this.actionObject.alreadyHandled = false;
+            }
+            
+            this.deltaTime+=1/60;
+          } else if (this.actionObject == null || !managers.Collision.CheckDistanceDoubled(this, this.actionObject)) {
             this.inventory.DropItem();
             this.deltaTime+=1/60;
           } else {
@@ -234,30 +259,54 @@ module objects{
       public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
         let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());      
   
-        if (md.isCollided && (md.objectCollided instanceof Door || md.objectCollided instanceof HandableObject)) {
+        if (
+          (md.isCollided && (md.objectCollided instanceof Door 
+            || md.objectCollided instanceof HandableObject 
+            || md.objectCollided instanceof ActionableObject
+            || md.objectCollided instanceof InformativePoint 
+            || md.objectCollided instanceof Hatch))
+          ) {
           this.isGrounded = false;
           return;
         }
         //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
-        this.isGrounded = md.isCollided && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y*this.GetGravityFactor() > 0);
+        this.isGrounded = md.isCollided;// && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y*this.GetGravityFactor() > 0);
   
       }
   
       public CheckMovement(Check: (x:number, y:number) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
         let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y);
-  
-        if (md.objectCollided instanceof OpenableObject || md.objectCollided instanceof HandableObject) {
+        if (md.objectCollided instanceof OpenableObject 
+            || md.objectCollided instanceof HandableObject
+            || md.objectCollided instanceof ActionableObject
+            || md.objectCollided instanceof Hatch
+            || md.objectCollided instanceof InformativePoint
+            || md.objectCollided instanceof Stair) {
           return true;
         }
   
         return !md.isCollided;// && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
       }
   
+      public CheckDownStairs(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
+        let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
+        if (md.isCollided && md.objectCollided instanceof Stair) {
+          return true;
+        }
+        return false;
+      }
+
       public CheckVerticalMovement(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
         let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
         //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
         
-        if (md.isCollided && (md.objectCollided instanceof Door || this.actionObject instanceof HandableObject)) {
+        if (md.isCollided && (md.objectCollided instanceof Door 
+            || md.objectCollided instanceof OpenableObject 
+            || md.objectCollided instanceof HandableObject
+            || md.objectCollided instanceof ActionableObject
+            || md.objectCollided instanceof Hatch
+            || md.objectCollided instanceof InformativePoint
+            || md.objectCollided instanceof Stair)) {
           return true;
         }
         this.isJumping = !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;

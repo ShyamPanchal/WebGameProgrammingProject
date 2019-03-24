@@ -17,6 +17,7 @@ var objects;
         __extends(OpenableObject, _super);
         function OpenableObject(assetManager, imageStringClosed, imageStringOpened) {
             var _this = _super.call(this, assetManager, imageStringClosed) || this;
+            _this.keyCode = 0;
             _this.openedImage = assetManager.getResult(imageStringOpened);
             _this.closedImage = assetManager.getResult(imageStringClosed);
             _this.isClosed = true;
@@ -27,7 +28,7 @@ var objects;
         }
         OpenableObject.prototype.Action = function () {
             if (this.isLocked) {
-                if (this.player.inventory.UseKey()) {
+                if (this.player.inventory.CheckKey(this.keyCode) && this.player.inventory.UseKey()) {
                     this.isLocked = false;
                     console.log('key used');
                 }
@@ -46,10 +47,8 @@ var objects;
             this.isClosed = !this.isClosed;
             if (this.isClosed) {
                 this.image = this.closedImage;
-                console.log('close');
             }
             else {
-                console.log('open');
                 this.image = this.openedImage;
                 if (this.objectInside.length > 0) {
                     var object = this.objectInside.pop();

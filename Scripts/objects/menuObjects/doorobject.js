@@ -19,12 +19,15 @@ var objects;
             if (isOut === void 0) { isOut = false; }
             if (backgroundImage === void 0) { backgroundImage = "open_door"; }
             if (foregroundImage === void 0) { foregroundImage = "open_door"; }
-            var _this = _super.call(this, assetManager, "closed_door", "open_door_dark") || this;
+            var _this = _super.call(this, assetManager, "closed_door", isOut ? "open_door_light" : "open_door_dark") || this;
             _this.isOut = isOut;
             _this.backgroundImage = assetManager.getResult(backgroundImage);
             _this.foregroundImage = assetManager.getResult(foregroundImage);
             return _this;
         }
+        Door.prototype.AddEnterDoorAction = function (getTimer, goNextLevel, removePlayer) {
+            this.EnterDoorAction = new EnterFinalDoorAction(getTimer, goNextLevel, removePlayer).action;
+        };
         Door.prototype.EnterDoorAction = function (player) {
             console.log("Going to the next level!!!!");
         };
@@ -41,5 +44,36 @@ var objects;
         return Door;
     }(objects.OpenableObject));
     objects.Door = Door;
+    var EnterFinalDoorAction = /** @class */ (function () {
+        function EnterFinalDoorAction(getTimer, goNextLevel, removePlayer) {
+            this.action = function (player) {
+                removePlayer(player);
+                if (player.playerNum == 2) {
+                    var score = 0;
+                    if (objects.Game.scoreManagerP2 != null) {
+                        score = objects.Game.scoreManagerP2.score;
+                    }
+                    objects.Game.scoreManagerP2 = new managers.Score(player.inventory.GetItems(), getTimer(), score);
+                    console.log('p2 finished ' + getTimer());
+                }
+                else {
+                    var score = 0;
+                    if (objects.Game.scoreManagerP1 != null) {
+                        score = objects.Game.scoreManagerP1.score;
+                    }
+                    objects.Game.scoreManagerP1 = new managers.Score(player.inventory.GetItems(), getTimer(), score);
+                    console.log('p1 finished ' + getTimer());
+                }
+                if (!objects.Player.onePlayerGone) {
+                    objects.Player.onePlayerGone = true;
+                }
+                else {
+                    goNextLevel();
+                }
+            };
+        }
+        return EnterFinalDoorAction;
+    }());
+    objects.EnterFinalDoorAction = EnterFinalDoorAction;
 })(objects || (objects = {}));
 //# sourceMappingURL=doorobject.js.map

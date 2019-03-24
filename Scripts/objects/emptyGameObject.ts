@@ -23,5 +23,10 @@ module objects{
         super.Update();
       }
     }
+    export class Stair extends EmptyGameObject {
+      constructor(assetManager: createjs.LoadQueue, imageString: string, width:number = 1, height:number = 1) {
+        super(assetManager, imageString, width, height);        
+      }
+    }
   }
   

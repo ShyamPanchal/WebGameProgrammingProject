@@ -1,11 +1,13 @@
 module managers {
     export class Keyboard {
         public player1MoveUp: boolean;
+        public player1MoveDown: boolean;
         public player1MoveLeft: boolean;
         public player1MoveRight: boolean;
         public player1Action: boolean;
 
         public player2MoveUp: boolean;
+        public player2MoveDown: boolean;
         public player2MoveLeft: boolean;
         public player2MoveRight: boolean;
         public player2Action: boolean;
@@ -22,6 +24,12 @@ module managers {
         // Methods
         public onKeyDown(event:KeyboardEvent):void {
             switch(event.keyCode) {
+                case config.Keys.S:
+                    this.player1MoveDown = true;
+                    break;
+                case config.Keys.DOWN_ARROW:
+                    this.player2MoveDown = true;
+                    break;
                 case config.Keys.W:
                     this.player1MoveUp = true;
                     break;
@@ -54,6 +62,12 @@ module managers {
 
         public onKeyUp(event:KeyboardEvent):void {
             switch(event.keyCode) {
+                case config.Keys.S:
+                    this.player1MoveDown = false;
+                    break;
+                case config.Keys.DOWN_ARROW:
+                    this.player2MoveDown = false;
+                    break;
                 case config.Keys.W:
                     this.player1MoveUp = false;
                     break;

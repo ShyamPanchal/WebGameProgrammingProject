@@ -79,7 +79,8 @@ module objects{
         //this.DoGravityEffect();
       }
 
-      if (this.GetGravityFactor() == -1 && !(this.isInverted)) {
+      if ((this.GetGravityFactor() == -1 && !this.isInverted)
+        || (this.GetGravityFactor() == 1 && this.isInverted) ) {
         this.FlipVertically();
       }
     }
@@ -119,12 +120,12 @@ module objects{
       
       if (this instanceof objects.Player) {
         this.isLeft = !this.isLeft;
-        (<objects.Player>this).spriteRenderer.scaleX = (<objects.Player>this).spriteRenderer.scaleX*-1;
+        this.spriteRenderer.scaleX = this.spriteRenderer.scaleX*-1;
         if (this.isLeft) {
-          (<objects.Player>this).flipOffsetX = (<objects.Player>this).fixed_flipOffsetX;
+          this.flipOffsetX = this.fixed_flipOffsetX;
           this.regX = this.width;
         } else {
-          (<objects.Player>this).flipOffsetX = 0;
+          this.flipOffsetX = 0;
           this.regX = 0;
         }
       } else {
@@ -142,7 +143,18 @@ module objects{
 
     protected FlipVertically() : void
     {
-        this.isInverted = !this.isInverted;
+      this.isInverted = !this.isInverted;
+      if (this instanceof objects.Player) { 
+        this.spriteRenderer.scaleY = this.spriteRenderer.scaleY*-1;
+        if (this.isInverted) {
+          this.regY = this.height;
+          this.flipOffsetY = this.height;//this.fixed_flipOffsetY;
+        } else {
+          this.regY = 0;
+          this.flipOffsetY = 0;
+        }
+        this.boxCollider.offset_y = this.height - this.boxCollider.height - this.boxCollider.offset_y;
+      } else {
         this.scaleY = this.scaleY*-1;
         if (this.isInverted) {
           this.regY = this.height;
@@ -150,6 +162,7 @@ module objects{
           this.regY = 0;
         }
         this.boxCollider.offset_y = this.height - this.boxCollider.height - this.boxCollider.offset_y;
+      }
     }
 
     private cached :createjs.Shape;

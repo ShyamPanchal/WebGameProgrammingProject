@@ -14,6 +14,7 @@ module scenes
         constructor(assetManager: createjs.LoadQueue)
         {
             super(assetManager);
+            console.log('Reward current Level: ' + objects.Game.previousScene);
             this.Start();
         }
         private fn_ButtonClick():void
@@ -22,7 +23,15 @@ module scenes
             switch(objects.Game.previousScene)
             {
                 case config.Scene.INGAME:
-                console.log("NEXT... ");
+                    console.log("NEXT... Level 2");
+                    objects.Game.currentScene = config.Scene.INGAME_2;
+                break;
+                case config.Scene.INGAME_2:
+                    console.log("NEXT... Level 3");
+                    objects.Game.currentScene = config.Scene.INGAME_3;
+                break;
+                case config.Scene.INGAME_3:
+                    console.log("NEXT... Finish");
                     objects.Game.currentScene = config.Scene.FINISH;
                 break;
 

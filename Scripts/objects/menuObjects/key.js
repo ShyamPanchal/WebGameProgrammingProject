@@ -15,9 +15,12 @@ var objects;
 (function (objects) {
     var Key = /** @class */ (function (_super) {
         __extends(Key, _super);
-        function Key(assetManager) {
-            var _this = _super.call(this, assetManager, "key") || this;
+        function Key(assetManager, imageString) {
+            if (imageString === void 0) { imageString = "key"; }
+            var _this = _super.call(this, assetManager, imageString) || this;
+            _this.keyCode = 0;
             _this.isGravityAffected = true;
+            _this.boxCollider = new objects.BoxCollider(_this.halfW / 3, 0, _this.halfW, _this.y, _this.width / 3, _this.height);
             return _this;
         }
         return Key;

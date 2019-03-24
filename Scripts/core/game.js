@@ -181,6 +181,12 @@
         { id: "ghost", src: "../Assets/Sprites/Ghost.png" },
         { id: "level_01_house", src: "../Assets/Background/level_01_house.png" },
         { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
+        { id: "level_02_house", src: "../Assets/Background/level_02_house.png" },
+        { id: "level_02_shadow", src: "../Assets/Background/level_02_shadow.png" },
+        { id: "level_02_shadow_1", src: "../Assets/Background/level_02_shadow_1.png" },
+        { id: "level_02_efects", src: "../Assets/Background/level_02_efects.png" },
+        { id: "level_03_house", src: "../Assets/Background/level_03_house.png" },
+        { id: "level_03_shadow", src: "../Assets/Background/level_03_shadow.png" },
         { id: "empty", src: "../Assets/Background/empty.png" },
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
         { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
@@ -191,18 +197,30 @@
         { id: "open_door", src: "../Assets/Sprites/Objects/open_door.png" },
         { id: "open_door_out", src: "../Assets/Sprites/Objects/open_door_out.png" },
         { id: "open_door_dark", src: "../Assets/Sprites/Objects/open_door_dark.png" },
+        { id: "open_door_light", src: "../Assets/Sprites/Objects/open_door_light.png" },
         { id: "bkc_door", src: "../Assets/Sprites/Objects/bck_door.png" },
         { id: "speech_ballom", src: "../Assets/Sprites/Objects/speech_ballom_alpha.png" },
         { id: "globet", src: "../Assets/Sprites/Objects/Items/loot01goblet.png" },
         { id: "crystal", src: "../Assets/Sprites/Objects/Items/loot02crystal.png" },
         { id: "coins", src: "../Assets/Sprites/Objects/Items/loot04coins.png" },
         { id: "key", src: "../Assets/Sprites/Objects/Items/loot05key.png" },
+        { id: "key_blue", src: "../Assets/Sprites/Objects/Items/key_blue.png" },
+        { id: "key_red", src: "../Assets/Sprites/Objects/Items/key_red.png" },
         { id: "sack", src: "../Assets/Sprites/Objects/Items/loot07treasuresack.png" },
         { id: "inventory", src: "../Assets/Sprites/Objects/inventory.png" },
         { id: "p1", src: "../Assets/Sprites/Objects/p1.png" },
         { id: "p2", src: "../Assets/Sprites/Objects/p2.png" },
         { id: "p1_big", src: "../Assets/Sprites/Objects/p1_big.png" },
         { id: "p2_big", src: "../Assets/Sprites/Objects/p2_big.png" },
+        { id: "hatch", src: "../Assets/Sprites/Objects/hatch.png" },
+        { id: "lever_on", src: "../Assets/Sprites/Objects/operating_lever_on.png" },
+        { id: "lever_off", src: "../Assets/Sprites/Objects/operating_lever_off.png" },
+        { id: "key_hole_on", src: "../Assets/Sprites/Objects/key_hole_on.png" },
+        { id: "key_hole_off", src: "../Assets/Sprites/Objects/key_hole_off.png" },
+        { id: "key_hole_blue_on", src: "../Assets/Sprites/Objects/key_hole_blue_on.png" },
+        { id: "key_hole_blue_off", src: "../Assets/Sprites/Objects/key_hole_blue.png" },
+        { id: "key_hole_red_on", src: "../Assets/Sprites/Objects/key_hole_red_on.png" },
+        { id: "key_hole_red_off", src: "../Assets/Sprites/Objects/key_hole_red.png" },
         { id: "play_music", src: "./Assets/Sound/spook.mp3" },
         { id: "controls", src: "../Assets/Images/Controls-preFinal.png" }
     ];
@@ -226,8 +244,8 @@
         createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.START;
-        currentState = config.Scene.START;
+        objects.Game.currentScene = config.Scene.INGAME;
+        currentState = config.Scene.INGAME;
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;
         console.log(objects.Game.currentScene);
@@ -257,6 +275,19 @@
             case config.Scene.INGAME:
                 stage.removeAllChildren();
                 currentScene = new scenes.StageOne(assetManager);
+                objects.Game.previousScene = config.Scene.INGAME;
+                stage.addChild(currentScene);
+                break;
+            case config.Scene.INGAME_2:
+                stage.removeAllChildren();
+                currentScene = new scenes.StageTwo(assetManager);
+                objects.Game.previousScene = config.Scene.INGAME_2;
+                stage.addChild(currentScene);
+                break;
+            case config.Scene.INGAME_3:
+                stage.removeAllChildren();
+                currentScene = new scenes.StageThree(assetManager);
+                objects.Game.previousScene = config.Scene.INGAME_3;
                 stage.addChild(currentScene);
                 break;
             case config.Scene.REWARD:

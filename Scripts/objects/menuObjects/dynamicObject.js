@@ -56,6 +56,9 @@ var objects;
         };
         DynamicObject.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
             var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
+            if (md.isCollided && md.objectCollided instanceof objects.InformativePoint) {
+                return true;
+            }
             return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
         };
         return DynamicObject;

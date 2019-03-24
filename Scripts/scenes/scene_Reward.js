@@ -17,6 +17,7 @@ var scenes;
         __extends(SceneReward, _super);
         function SceneReward(assetManager) {
             var _this = _super.call(this, assetManager) || this;
+            console.log('Reward current Level: ' + objects.Game.previousScene);
             _this.Start();
             return _this;
         }
@@ -24,7 +25,15 @@ var scenes;
             console.log("PREVIOUS... " + objects.Game.previousScene);
             switch (objects.Game.previousScene) {
                 case config.Scene.INGAME:
-                    console.log("NEXT... ");
+                    console.log("NEXT... Level 2");
+                    objects.Game.currentScene = config.Scene.INGAME_2;
+                    break;
+                case config.Scene.INGAME_2:
+                    console.log("NEXT... Level 3");
+                    objects.Game.currentScene = config.Scene.INGAME_3;
+                    break;
+                case config.Scene.INGAME_3:
+                    console.log("NEXT... Finish");
                     objects.Game.currentScene = config.Scene.FINISH;
                     break;
             }

@@ -53,6 +53,9 @@ module objects{
       
         public CheckVerticalMovement(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
             let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
+            if (md.isCollided && md.objectCollided instanceof InformativePoint){
+              return true;              
+            }
             return !md.isCollided || md.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0;
         }
     }

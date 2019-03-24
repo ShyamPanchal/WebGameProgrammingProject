@@ -9,6 +9,8 @@ module scenes
         private backButton: objects.Button;
         private txtButton: objects.Label;
 
+        private keepButton: objects.Button;
+        private txtkeepButton: objects.Label;
 
         constructor(assetManager: createjs.LoadQueue)
         {
@@ -22,6 +24,11 @@ module scenes
             objects.Game.currentScene = config.Scene.START;
         }
 
+        private fn_ButtonKeepClick():void
+        {
+            objects.Game.currentScene = objects.Game.previousScene;
+        }
+
         public Start():void
         {
             console.log("END MENU...");        
@@ -30,12 +37,16 @@ module scenes
            
             this.txtButton = new objects.Label("Exit", "20px", "Cambay", "#ffffff", 0, 0, true);
             this.backButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75,this.txtButton, true);
-
             this.backButton.scaleX = 0.75;
+
+            this.txtkeepButton = new objects.Label("Continue", "20px", "Cambay", "#ffffff", 0, 0, true);
+            this.keepButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.75  - 70,this.txtkeepButton, true);
+
+            this.keepButton.scaleX = 0.75;
             
             this.label = new objects.Label("Game End!", "bold 80px", "Cambay", "#ffffff", 1066 * 0.5, 600 * 0.25, true);
             this.label1 = new objects.Label("Thank you for Helping Us Escape!", "bold 50px", "Cambay", "#ffffff", 1066 * 0.5, this.label.y + 100, true);
-            
+
             this.Main();
         }
         
@@ -53,7 +64,12 @@ module scenes
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
             
+            this.addChild(this.keepButton);
+            this.addChild(this.txtkeepButton);
+
             this.backButton.on("click", this.fn_ButtonClick);
+            
+            this.keepButton.on("click", this.fn_ButtonKeepClick);
         
         }
       

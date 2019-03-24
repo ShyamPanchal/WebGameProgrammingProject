@@ -37,11 +37,12 @@ var objects;
                 var item = this.objects.pop();
                 if (item != null) { //if has one item at least
                     this.Drop(item);
+                    return item;
                 }
             }
         };
         Inventory.prototype.DropItem = function () {
-            this.RemoveItem();
+            return this.RemoveItem();
         };
         Inventory.prototype.Drop = function (item) {
             item.x = this.player.x;
@@ -51,6 +52,39 @@ var objects;
             this.player.actionObject = item;
             item.isGravityAffected = true;
             console.log('inventory.drop: ' + item.name);
+        };
+        Inventory.prototype.CheckKey = function (code) {
+            var hasKey = false;
+            this.objects.forEach(function (item) {
+                if (item instanceof objects.Key) {
+                    if (code == item.keyCode) {
+                        hasKey = true;
+                        return;
+                    }
+                }
+            });
+            return hasKey;
+        };
+        Inventory.prototype.UseKeyTemporary = function () {
+            //TODO the key must be the last item to be catched (making the use hard to the player)
+            var hasKey = false;
+            var p = -1;
+            var position = -1;
+            this.objects.forEach(function (item) {
+                p++;
+                if (item instanceof objects.Key) {
+                    position = p;
+                    hasKey = true;
+                    return;
+                }
+            });
+            if (hasKey) {
+                this.objects[position].x = 1500;
+                var key = this.objects[position];
+                this.objects[position] = null;
+                return key;
+            }
+            return null;
         };
         Inventory.prototype.UseKey = function () {
             //TODO the key must be the last item to be catched (making the use hard to the player)

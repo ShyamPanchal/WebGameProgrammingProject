@@ -23,6 +23,26 @@ var managers;
                 return false;
             }
         };
+        Collision.CheckDistanceDoubled = function (obj1, obj2) {
+            // Create 2 temporary Vec2 objects used for collision detections
+            var p1 = new math.Vec2(obj1.x, obj1.y);
+            var p2 = new math.Vec2(obj2.x, obj2.y);
+            if (math.Vec2.Distance(p1, p2) < (obj1.boxCollider.width + obj2.boxCollider.width)) {
+                if (!obj2.isColliding) {
+                    // console.log("Colliding with " + obj2.name);
+                    switch (obj2.name) {
+                        case "enemy":
+                            break;
+                    }
+                    obj2.isColliding = true;
+                }
+                return true;
+            }
+            else {
+                obj2.isColliding = false;
+                return false;
+            }
+        };
         Collision.CheckAABB = function (obj1, obj2) {
             var aabb1 = obj1.boxCollider.aabb;
             var aabb2 = obj2.boxCollider.aabb;

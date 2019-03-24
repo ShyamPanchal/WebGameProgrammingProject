@@ -42,14 +42,17 @@ var objects;
                 var collided = false;
                 var aabbCollider = boxCollider.GetAABB(x, y);
                 var result;
+                //let col = false;
                 for (var i = 0; i < _this.gameSceneryStaticObjects.length; i++) {
                     var platform = _this.gameSceneryStaticObjects[i];
                     result = managers.Collision.CheckAABBCollision(aabbCollider, platform.boxCollider.aabb);
                     if (result.CheckCollided()) {
+                        result.objectCollided = platform;
                         collided = true;
                         break;
                     }
                 }
+                //collided = col;
                 if (!collided) {
                     for (var i = 0; i < _this.gameSceneryDynamicObjects.length; i++) {
                         var object = _this.gameSceneryDynamicObjects[i];
@@ -69,7 +72,11 @@ var objects;
                                         }
                                     }
                                 }
-                                break;
+                                if (object instanceof objects.InformativePoint) {
+                                }
+                                else {
+                                    break;
+                                }
                             }
                         }
                     }
@@ -82,15 +89,6 @@ var objects;
                 }
                 return result;
             };
-        };
-        Scene.prototype.GoToNextLevel = function () {
-            objects.Game.previousScene = config.Scene.INGAME;
-            objects.Game.currentScene = config.Scene.REWARD;
-            /*
-              var nextLevel = (): void => {
-              }
-              this.StartCount(1, nextLevel);
-            */
         };
         Scene.prototype.fn_pauseButtonClick = function () {
             console.log("called");
@@ -108,9 +106,24 @@ var objects;
                 objects.Game.controlsImage.visible = false;
             }
         };
+        Scene.prototype.GetPositionP1 = function () {
+            return null;
+        };
+        Scene.prototype.GetPositionP2 = function () {
+            return null;
+        };
+        Scene.prototype.GetLevelName = function () {
+            return null;
+        };
+        Scene.prototype.GetBackgroundAsset = function () {
+            return null;
+        };
+        Scene.prototype.GetBackgroundShadowAsset = function () {
+            return null;
+        };
         Scene.prototype.Start = function () {
             objects.Game.keyboard = new managers.Keyboard();
-            objects.Player.onePlayerGone = true;
+            objects.Player.onePlayerGone = false;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array();
             this.gameSceneryDynamicObjects = new Array();
@@ -118,8 +131,8 @@ var objects;
             this.CreateEnemies();
             console.log("GAME SCENE(S)...");
             this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 50, 65, true);
-            this.background_main = new objects.Background(this.assetManager, "level_01_house");
-            this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
+            this.background_main = new objects.Background(this.assetManager, this.GetBackgroundAsset());
+            this.background_shadow = new objects.Background(this.assetManager, this.GetBackgroundShadowAsset());
             //pause button: controls button
             this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff", 70, 510);
             this.menuButton = new objects.Button(this.assetManager, "startButton", this.menuTxtButton.x - 10, this.menuTxtButton.y, this.menuTxtButton);
@@ -135,27 +148,29 @@ var objects;
             this.gamePausedText = new objects.Label("Game Paused", "bold 48px", "Cambay", "#ffffff", 1066 / 2, 600 / 4, true);
             this.gamePausedText.visible = false;
             //#endregion
-            this.title = new objects.Label("Corridors!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
+            this.title = new objects.Label(this.GetLevelName(), "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
             this.title.alpha = 1;
             //this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
-            this.titleShadow = new objects.Label("Corridors!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
+            this.titleShadow = new objects.Label(this.GetLevelName(), "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
             this.titleShadow.alpha = 0.5;
             //#region Player Init
             var inventory = new objects.Inventory(this.assetManager);
             inventory.x = this.positionInventoryP1.x;
             inventory.y = this.positionInventoryP1.y;
-            this.player1 = new objects.Player(this.assetManager, 1, inventory, 400, 60);
+            var pp1 = this.GetPositionP1();
+            this.player1 = new objects.Player(this.assetManager, 1, inventory, pp1.x, pp1.y);
             //for using bitmap
             //this.player1.boxCollider = new objects.BoxCollider(18, 16, this.player1.x, this.player1.y, this.player1.width - 45, this.player1.height - 20);
-            this.player1.boxCollider = new objects.BoxCollider(0, 16, this.player1.x, this.player1.y, this.player1.width - 45, this.player1.height - 29);
+            this.player1.boxCollider = new objects.BoxCollider(0, 16, this.player1.x, this.player1.y, this.player1.width - 40, this.player1.height - 29);
             this.player1.dialog = this.createDialog(this, "...");
             var inventory2 = new objects.Inventory(this.assetManager);
             inventory2.x = this.positionInventoryP2.x;
             inventory2.y = this.positionInventoryP2.y;
-            this.player2 = new objects.Player(this.assetManager, 2, inventory2, 400, 280);
+            var pp2 = this.GetPositionP2();
+            this.player2 = new objects.Player(this.assetManager, 2, inventory2, pp2.x, pp2.y);
             //for using bitmap
             //this.player2.boxCollider = new objects.BoxCollider(18, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 20);
-            this.player2.boxCollider = new objects.BoxCollider(0, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 29);
+            this.player2.boxCollider = new objects.BoxCollider(0, 16, this.player2.x, this.player2.y, this.player2.width - 40, this.player2.height - 29);
             this.player2.dialog = this.createDialog(this, "...");
             //#endregion
             //#region PauseMenu
@@ -219,18 +234,8 @@ var objects;
                 _this.player1.isDead = managers.Collision.CheckDistance(_this.player1, enemy);
                 _this.player2.isDead = managers.Collision.CheckDistance(_this.player2, enemy);
                 if (_this.player1.isDead || _this.player2.isDead) {
-                    var overNote = function () {
-                        objects.Game.currentScene = config.Scene.FINISH;
-                    };
-                    _this.StartCount(2, overNote);
-                    _this.overTitle.visible = true;
-                    if (_this.player1.isDead) {
-                        _this.player1.x = 1500; //sending player and ghost to out of screen 
-                    }
-                    if (_this.player2.isDead) {
-                        _this.player2.x = 1500; //sending player and ghost to out of screen 
-                    }
-                    enemy.x = 1500;
+                    _this.GoDie();
+                    _this.removeChild(enemy);
                 }
             });
             for (var i = 0; i < this.gameSceneryStaticObjects.length; i++) {
@@ -242,6 +247,23 @@ var objects;
                 object.UpdateIfPossible(this.CreateFunctionCheck(object));
             }
         };
+        Scene.prototype.GoToNextLevel = function () {
+            objects.Game.currentScene = config.Scene.REWARD;
+        };
+        Scene.prototype.RemovePlayer = function (player) {
+            player.isGravityAffected = false;
+            player.isDead = false;
+            player.x = 1500;
+        };
+        Scene.prototype.GoDie = function () {
+            var overNote = function () {
+                objects.Game.currentScene = config.Scene.FINISH;
+            };
+            this.StartCount(2, overNote);
+            this.overTitle.visible = true;
+        };
+        Scene.prototype.CreateBackgroundEffects = function () { };
+        ;
         Scene.prototype.Main = function () {
             var _this = this;
             this.timer = objects.Game.stageTimer;
@@ -261,6 +283,7 @@ var objects;
             this.enemies.forEach(function (ghost) {
                 _this.addChild(ghost);
             });
+            this.CreateBackgroundEffects();
             this.addChild(this.background_shadow);
             //create the empties gameobjects to be the stage boundaries
             //this.backButton.on("click", this.fn_ButtonClick);

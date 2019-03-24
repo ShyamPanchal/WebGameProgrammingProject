@@ -3,7 +3,6 @@ module objects {
     //Audio
     protected backgroundMusic:createjs.AbstractSoundInstance;
     protected isPlaying: boolean=false;
-
     public assetManager;
     public isPaused: boolean;
     public timer:number;
@@ -41,6 +40,7 @@ module objects {
 
     protected background_main: objects.Background;
     protected background_shadow: objects.Background;
+    protected background_shadow_1: objects.Background;
 
     protected gameSceneryStaticObjects: objects.EmptyGameObject[];
     protected gameSceneryDynamicObjects: objects.DynamicObject[];
@@ -71,14 +71,18 @@ module objects {
           let aabbCollider = boxCollider.GetAABB(x, y);
           let result: managers.AABB;
 
+          //let col = false;
           for (let i = 0; i < this.gameSceneryStaticObjects.length; i++) {
               var platform = this.gameSceneryStaticObjects[i];
               result = managers.Collision.CheckAABBCollision(aabbCollider, platform.boxCollider.aabb);
               if (result.CheckCollided()) {
-                  collided = true;
-                  break;
+                result.objectCollided = platform;
+                collided = true;
+                
+                break;
               }
           }
+          //collided = col;
           if (!collided) {
               for (let i = 0; i < this.gameSceneryDynamicObjects.length; i++) {
                   var object = this.gameSceneryDynamicObjects[i];
@@ -97,8 +101,12 @@ module objects {
                                       gameObject.dialog.showDialog();
                                   }
                               }
-                          }
-                          break;
+                          }       
+                          if (object instanceof InformativePoint) {
+
+                          } else {
+                            break;
+                          }                
                       }
                   }
               }
@@ -112,16 +120,6 @@ module objects {
           }
           return result;
       };
-  }
-
-  public GoToNextLevel (): void {            
-    objects.Game.previousScene = config.Scene.INGAME;
-    objects.Game.currentScene = config.Scene.REWARD;                    
-      /*    
-        var nextLevel = (): void => {                
-        }
-        this.StartCount(1, nextLevel);
-      */
   }
 
   protected fn_pauseButtonClick():void
@@ -152,9 +150,29 @@ module objects {
       }
   }
 
+    protected GetPositionP1():math.Vec2 {
+      return null;
+    }
+
+    protected GetPositionP2():math.Vec2 {
+      return null;
+    }
+
+    protected GetLevelName():string {
+      return null;
+    }
+
+    protected GetBackgroundAsset():string {
+      return null;
+    }
+
+    protected GetBackgroundShadowAsset():string {
+      return null;
+    }
+
     public Start(): void {
       objects.Game.keyboard = new managers.Keyboard();
-      objects.Player.onePlayerGone = true;
+      objects.Player.onePlayerGone = false;
       this.isPaused = false;
       this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
       this.gameSceneryDynamicObjects = new Array<objects.DynamicObject>();
@@ -167,8 +185,8 @@ module objects {
 
       this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 50, 65, true);
 
-      this.background_main = new objects.Background(this.assetManager, "level_01_house");
-      this.background_shadow = new objects.Background(this.assetManager, "level_01_shadow");
+      this.background_main = new objects.Background(this.assetManager, this.GetBackgroundAsset());
+      this.background_shadow = new objects.Background(this.assetManager, this.GetBackgroundShadowAsset());
 
       //pause button: controls button
       this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff",  70,  510);
@@ -189,31 +207,33 @@ module objects {
       this.gamePausedText.visible = false;
       //#endregion
 
-      this.title = new objects.Label("Corridors!", "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
+      this.title = new objects.Label(this.GetLevelName(), "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
       this.title.alpha = 1;
 
       //this.backButton = new objects.Button(this.assetManager, "startButton", 870, 550, this.title);
 
-      this.titleShadow = new objects.Label("Corridors!", "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
+      this.titleShadow = new objects.Label(this.GetLevelName(), "bold 48px", "Cambay", "#843e3e", (1066 / 2) + 2, 600 / 8 + 2, true);
       this.titleShadow.alpha = 0.5;
 
       //#region Player Init
       let inventory = new objects.Inventory(this.assetManager);
       inventory.x = this.positionInventoryP1.x;
       inventory.y = this.positionInventoryP1.y;
-      this.player1 = new objects.Player(this.assetManager, 1, inventory, 400, 60);            
+      let pp1 = this.GetPositionP1();
+      this.player1 = new objects.Player(this.assetManager, 1, inventory, pp1.x, pp1.y);            
       //for using bitmap
       //this.player1.boxCollider = new objects.BoxCollider(18, 16, this.player1.x, this.player1.y, this.player1.width - 45, this.player1.height - 20);
-      this.player1.boxCollider = new objects.BoxCollider(0, 16, this.player1.x, this.player1.y, this.player1.width - 45, this.player1.height - 29);
+      this.player1.boxCollider = new objects.BoxCollider(0, 16, this.player1.x, this.player1.y, this.player1.width - 40, this.player1.height - 29);
       this.player1.dialog = this.createDialog(this, "...");
 
       let inventory2 = new objects.Inventory(this.assetManager);
       inventory2.x = this.positionInventoryP2.x;
       inventory2.y = this.positionInventoryP2.y;
-      this.player2 = new objects.Player(this.assetManager, 2, inventory2, 400, 280);            
+      let pp2 = this.GetPositionP2();
+      this.player2 = new objects.Player(this.assetManager, 2, inventory2, pp2.x, pp2.y);            
       //for using bitmap
       //this.player2.boxCollider = new objects.BoxCollider(18, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 20);
-      this.player2.boxCollider = new objects.BoxCollider(0, 16, this.player2.x, this.player2.y, this.player2.width - 45, this.player2.height - 29);            
+      this.player2.boxCollider = new objects.BoxCollider(0, 16, this.player2.x, this.player2.y, this.player2.width - 40, this.player2.height - 29);            
       this.player2.dialog = this.createDialog(this, "...");
       //#endregion
 
@@ -288,21 +308,9 @@ module objects {
 
           this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
           this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
-          if(this.player1.isDead || this.player2.isDead){
-             
-             var overNote = (): void => {
-                  objects.Game.currentScene = config.Scene.FINISH;
-              }
-              this.StartCount(2, overNote);
-              this.overTitle.visible = true;
-              if (this.player1.isDead) {
-                  this.player1.x = 1500; //sending player and ghost to out of screen 
-              }
-              if (this.player2.isDead) {
-                  this.player2.x = 1500; //sending player and ghost to out of screen 
-              }
-              enemy.x = 1500;
-              
+          if(this.player1.isDead || this.player2.isDead){             
+             this.GoDie();      
+             this.removeChild(enemy);    
           }
       });
 
@@ -317,8 +325,30 @@ module objects {
       }
     }
 
-    CreateScenery: () => void;
-    CreateEnemies:() =>void;
+    
+    protected GoToNextLevel (): void {      
+      objects.Game.currentScene = config.Scene.REWARD;
+    }
+
+    protected RemovePlayer (player:Player): void {      
+      player.isGravityAffected = false;
+      player.isDead = false;
+      player.x = 1500;
+    }
+
+    protected GoDie():void {
+      var overNote = (): void => {
+        objects.Game.currentScene = config.Scene.FINISH;
+      }
+
+      this.StartCount(2, overNote);
+      this.overTitle.visible = true;            
+    }
+    
+    protected CreateScenery: () => void;
+    protected CreateEnemies: () => void;
+    protected CreateBackgroundEffects ():void { };
+    protected ChangeBackground : () => void;
 
     public Main(): void {
       this.timer = objects.Game.stageTimer;
@@ -347,7 +377,9 @@ module objects {
           this.addChild(ghost);
       });
 
+      this.CreateBackgroundEffects();            
       this.addChild(this.background_shadow);
+
 
       //create the empties gameobjects to be the stage boundaries
 
@@ -382,7 +414,7 @@ module objects {
       this.menuButton.on("click", this.fn_controlsButtonClick);
     }
 
-    public CheckPaused(): void {
+    public CheckPaused(): void {      
       this.isPaused = objects.Game.keyboard.pause;
     }
 

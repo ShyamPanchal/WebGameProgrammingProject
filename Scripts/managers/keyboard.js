@@ -9,6 +9,12 @@ var managers;
         // Methods
         Keyboard.prototype.onKeyDown = function (event) {
             switch (event.keyCode) {
+                case config.Keys.S:
+                    this.player1MoveDown = true;
+                    break;
+                case config.Keys.DOWN_ARROW:
+                    this.player2MoveDown = true;
+                    break;
                 case config.Keys.W:
                     this.player1MoveUp = true;
                     break;
@@ -40,6 +46,12 @@ var managers;
         };
         Keyboard.prototype.onKeyUp = function (event) {
             switch (event.keyCode) {
+                case config.Keys.S:
+                    this.player1MoveDown = false;
+                    break;
+                case config.Keys.DOWN_ARROW:
+                    this.player2MoveDown = false;
+                    break;
                 case config.Keys.W:
                     this.player1MoveUp = false;
                     break;

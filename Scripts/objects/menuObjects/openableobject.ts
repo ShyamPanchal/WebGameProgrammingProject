@@ -5,7 +5,8 @@ module objects{
         private openedImage: any;
         private closedImage: any;
         public isClosed: boolean;
-        public isLocked:boolean;
+        public isLocked: boolean;
+        keyCode:number = 0;
 
         public objectInside:GameObject[];
 
@@ -23,7 +24,7 @@ module objects{
 
         public Action(): void {
             if (this.isLocked) {
-                if(this.player.inventory.UseKey()) {
+                if(this.player.inventory.CheckKey(this.keyCode) && this.player.inventory.UseKey()) {
                     this.isLocked = false;
                     console.log('key used');
                 } else {
@@ -41,9 +42,7 @@ module objects{
             this.isClosed = !this.isClosed;
             if (this.isClosed) {
                 this.image = this.closedImage;
-                console.log('close');
             } else {
-                console.log('open');
                 this.image = this.openedImage;
                 if (this.objectInside.length > 0) {
                     let object = this.objectInside.pop();

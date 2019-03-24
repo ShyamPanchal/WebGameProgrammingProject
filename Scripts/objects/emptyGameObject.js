@@ -39,5 +39,15 @@ var objects;
         return EmptyGameObject;
     }(objects.GameObject));
     objects.EmptyGameObject = EmptyGameObject;
+    var Stair = /** @class */ (function (_super) {
+        __extends(Stair, _super);
+        function Stair(assetManager, imageString, width, height) {
+            if (width === void 0) { width = 1; }
+            if (height === void 0) { height = 1; }
+            return _super.call(this, assetManager, imageString, width, height) || this;
+        }
+        return Stair;
+    }(EmptyGameObject));
+    objects.Stair = Stair;
 })(objects || (objects = {}));
 //# sourceMappingURL=emptyGameObject.js.map

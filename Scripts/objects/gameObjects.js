@@ -60,7 +60,8 @@ var objects;
             if (this.isGravityAffected) {
                 //this.DoGravityEffect();
             }
-            if (this.GetGravityFactor() == -1 && !(this.isInverted)) {
+            if ((this.GetGravityFactor() == -1 && !this.isInverted)
+                || (this.GetGravityFactor() == 1 && this.isInverted)) {
                 this.FlipVertically();
             }
         };
@@ -109,14 +110,28 @@ var objects;
         };
         GameObject.prototype.FlipVertically = function () {
             this.isInverted = !this.isInverted;
-            this.scaleY = this.scaleY * -1;
-            if (this.isInverted) {
-                this.regY = this.height;
+            if (this instanceof objects.Player) {
+                this.spriteRenderer.scaleY = this.spriteRenderer.scaleY * -1;
+                if (this.isInverted) {
+                    this.regY = this.height;
+                    this.flipOffsetY = this.height; //this.fixed_flipOffsetY;
+                }
+                else {
+                    this.regY = 0;
+                    this.flipOffsetY = 0;
+                }
+                this.boxCollider.offset_y = this.height - this.boxCollider.height - this.boxCollider.offset_y;
             }
             else {
-                this.regY = 0;
+                this.scaleY = this.scaleY * -1;
+                if (this.isInverted) {
+                    this.regY = this.height;
+                }
+                else {
+                    this.regY = 0;
+                }
+                this.boxCollider.offset_y = this.height - this.boxCollider.height - this.boxCollider.offset_y;
             }
-            this.boxCollider.offset_y = this.height - this.boxCollider.height - this.boxCollider.offset_y;
         };
         GameObject.prototype.DrawDebugLine = function () {
             if (this.boxCollider != null) {

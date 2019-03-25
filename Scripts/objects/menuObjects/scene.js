@@ -106,6 +106,12 @@ var objects;
                 objects.Game.controlsImage.visible = false;
             }
         };
+        Scene.prototype.GetPositionE1 = function () {
+            return null;
+        };
+        Scene.prototype.GetPositionE2 = function () {
+            return null;
+        };
         Scene.prototype.GetPositionP1 = function () {
             return null;
         };
@@ -127,8 +133,14 @@ var objects;
             this.isPaused = false;
             this.gameSceneryStaticObjects = new Array();
             this.gameSceneryDynamicObjects = new Array();
-            this.enemies = new Array();
-            this.CreateEnemies();
+            var ee1 = this.GetPositionE1();
+            var ee2 = this.GetPositionE2();
+            this.ghost = new objects.Enemy(this.assetManager, "ghost", ee1.x, ee1.y);
+            this.ghost.alpha = 0.9;
+            this.ghost.y = this.ghost.y - this.ghost.height;
+            this.ghost2 = new objects.Enemy(this.assetManager, "ghost2", ee2.x, ee2.y);
+            this.ghost2.alpha = 0.9;
+            this.ghost2.y = this.ghost2.y - this.ghost2.height;
             console.log("GAME SCENE(S)...");
             this.timeRemaining = new objects.Label(objects.Game.stageTimer.toString(), "bold 32px", "Cambay", "#000000", 50, 65, true);
             this.background_main = new objects.Background(this.assetManager, this.GetBackgroundAsset());
@@ -187,7 +199,6 @@ var objects;
             this.overTitle = new objects.Label("Player dead...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 * 0.35, true);
         };
         Scene.prototype.Update = function () {
-            var _this = this;
             this.CheckPaused();
             this.pauseBackground.visible = this.isPaused;
             this.gamePausedText.visible = this.isPaused;
@@ -229,15 +240,15 @@ var objects;
             var CheckMovementP2 = this.CreateFunctionCheck(this.player2);
             this.player1.UpdateIfPossible(CheckMovementP1);
             this.player2.UpdateIfPossible(CheckMovementP2);
-            this.enemies.forEach(function (enemy) {
-                enemy.Update();
-                _this.player1.isDead = managers.Collision.CheckDistance(_this.player1, enemy);
-                _this.player2.isDead = managers.Collision.CheckDistance(_this.player2, enemy);
-                if (_this.player1.isDead || _this.player2.isDead) {
-                    _this.GoDie();
-                    _this.removeChild(enemy);
-                }
-            });
+            this.ghost.Update();
+            this.ghost2.Update2();
+            this.player1.isDead = managers.Collision.CheckDistance(this.player1, this.ghost);
+            this.player2.isDead = managers.Collision.CheckDistance(this.player2, this.ghost2);
+            if (this.player1.isDead || this.player2.isDead) {
+                this.GoDie();
+                this.removeChild(this.player1);
+                this.removeChild(this.player2);
+            }
             for (var i = 0; i < this.gameSceneryStaticObjects.length; i++) {
                 var platform = this.gameSceneryStaticObjects[i];
                 platform.Update();
@@ -277,12 +288,11 @@ var objects;
             this.addChild(this.player1.picture);
             this.addChild(this.player2.inventory);
             this.addChild(this.player2.picture);
+            this.addChild(this.ghost);
+            this.addChild(this.ghost2);
             this.CreateScenery();
             this.addChild(this.player1.spriteRenderer);
             this.addChild(this.player2.spriteRenderer);
-            this.enemies.forEach(function (ghost) {
-                _this.addChild(ghost);
-            });
             this.CreateBackgroundEffects();
             this.addChild(this.background_shadow);
             //create the empties gameobjects to be the stage boundaries

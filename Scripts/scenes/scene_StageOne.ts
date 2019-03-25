@@ -20,20 +20,6 @@ module scenes {
 
         CreateEnemies = () => {
             return;
-
-            var ghost = new objects.Enemy(this.assetManager, "ghost", 550, 245);
-            ghost.alpha = 0.8;
-            ghost.y = ghost.y - ghost.height;
-            ghost.scaleX = 0.7;
-            ghost.scaleY = 0.7;
-            this.enemies.push(ghost);
-    
-            var ghost2 = new objects.Enemy(this.assetManager, "ghost", 550, 480);
-            ghost2.alpha = 0.8;
-            ghost2.y = ghost2.y - ghost2.height;
-            ghost2.scaleX = 0.7;
-            ghost2.scaleY = 0.7;
-            this.enemies.push(ghost2);
         }
         public Start(): void {
             super.Start();
@@ -55,7 +41,16 @@ module scenes {
             super.Main();
         }
 
+        //Ghost
+        GetPositionE1 = ():math.Vec2 => {
+            return new math.Vec2(800, 250);
+        }
+    
+        GetPositionE2 = ():math.Vec2 => {
+            return new math.Vec2(800, 485);
+        }
 
+        //Player
         GetPositionP1 = ():math.Vec2 => {
             return new math.Vec2(400, 60);
         }

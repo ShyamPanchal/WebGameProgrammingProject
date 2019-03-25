@@ -23,19 +23,15 @@ var scenes;
             var _this = _super.call(this, assetManager) || this;
             _this.CreateEnemies = function () {
                 return;
-                var ghost = new objects.Enemy(_this.assetManager, "ghost", 550, 245);
-                ghost.alpha = 0.8;
-                ghost.y = ghost.y - ghost.height;
-                ghost.scaleX = 0.7;
-                ghost.scaleY = 0.7;
-                _this.enemies.push(ghost);
-                var ghost2 = new objects.Enemy(_this.assetManager, "ghost", 550, 480);
-                ghost2.alpha = 0.8;
-                ghost2.y = ghost2.y - ghost2.height;
-                ghost2.scaleX = 0.7;
-                ghost2.scaleY = 0.7;
-                _this.enemies.push(ghost2);
             };
+            //Ghost
+            _this.GetPositionE1 = function () {
+                return new math.Vec2(800, 250);
+            };
+            _this.GetPositionE2 = function () {
+                return new math.Vec2(800, 485);
+            };
+            //Player
             _this.GetPositionP1 = function () {
                 return new math.Vec2(400, 60);
             };

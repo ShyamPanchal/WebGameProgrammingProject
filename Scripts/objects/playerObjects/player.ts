@@ -6,6 +6,7 @@ module objects{
       private static speed:number = 5;
       private static maxHightRate:number = 0.9 ; //the player can jump at highest 90% of the height
       public isDead:boolean;
+      public hasPassed:boolean;
       public maxJumpHeight: number;
       public isJumping: boolean;
   
@@ -35,6 +36,7 @@ module objects{
       constructor(assetManager:createjs.LoadQueue, playerNum:number, inventory:Inventory, x:number = 0, y:number = 0){
          super(assetManager, playerNum ==1?"player":"player");
          this.playerNum = playerNum;
+         this.hasPassed = false;
         if (playerNum == 1) {          
             this.spriteRenderer = new createjs.Sprite(objects.Game.player1TextureAtlas, "Idle");
             this.picture = new GameObject(assetManager, "p1");
@@ -74,6 +76,9 @@ module objects{
       }
   
       protected Update():void {
+        if (this.hasPassed) {
+          return;
+        }
         this.spriteRenderer.x = this.flipOffsetX + this.x;
         this.spriteRenderer.y = this.flipOffsetY +this.y;
         super.Update();

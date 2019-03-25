@@ -26,6 +26,11 @@ var objects;
             _this.isGravityAffected = true;
             return _this;
         }
+        OpenableObject.prototype.AddObjectInside = function (object) {
+            this.objectInside.push(object);
+            object.isGravityAffected = false;
+            object.x = 1500;
+        };
         OpenableObject.prototype.Action = function () {
             if (this.isLocked) {
                 if (this.player.inventory.CheckKey(this.keyCode) && this.player.inventory.UseKey()) {

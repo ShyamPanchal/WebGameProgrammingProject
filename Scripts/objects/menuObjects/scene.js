@@ -128,9 +128,12 @@ var objects;
             return null;
         };
         Scene.prototype.Start = function () {
+            objects.Game.isDebug = true;
+            objects.Game.playerDead = false;
             objects.Game.keyboard = new managers.Keyboard();
             objects.Player.onePlayerGone = false;
             this.isPaused = false;
+            this.gameBoundaries = new Array();
             this.gameSceneryStaticObjects = new Array();
             this.gameSceneryDynamicObjects = new Array();
             this.enemies = new Array();
@@ -191,9 +194,11 @@ var objects;
             this.pauseBackground.visible = false;
             //#endregion
             this.overTitle = new objects.Label("Player dead...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 * 0.35, true);
+            this.timesUp = new objects.Label("Time is up...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 * 0.35, true);
         };
         Scene.prototype.Update = function () {
             var _this = this;
+            this.CheckBoundaries();
             this.CheckPaused();
             this.pauseBackground.visible = this.isPaused;
             this.gamePausedText.visible = this.isPaused;
@@ -228,7 +233,7 @@ var objects;
                 this.timerCounter = 0;
             }
             if (this.timer <= 0) {
-                objects.Game.currentScene = config.Scene.FINISH;
+                this.GoDie();
             }
             this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
             var CheckMovementP1 = this.CreateFunctionCheck(this.player1);
@@ -256,18 +261,40 @@ var objects;
         Scene.prototype.GoToNextLevel = function () {
             objects.Game.currentScene = config.Scene.REWARD;
         };
-        Scene.prototype.RemovePlayer = function (player) {
-            player.isGravityAffected = false;
-            player.isDead = false;
-            player.x = 1500;
-        };
         Scene.prototype.GoDie = function () {
+            this.player1.visible = false;
+            this.player2.visible = false;
+            this.player1.spriteRenderer.visible = false;
+            this.player2.spriteRenderer.visible = false;
             var overNote = function () {
+                objects.Game.playerDead = true;
                 objects.Game.currentScene = config.Scene.FINISH;
             };
             this.StartCount(2, overNote);
-            this.overTitle.visible = true;
+            if (this.timer <= 0) {
+            }
+            else {
+                this.overTitle.visible = true;
+            }
         };
+        Scene.prototype.CreateBoundaries = function () {
+            var boundary_1 = new objects.EmptyGameObject(this.assetManager, "wall_l", 1066, 1);
+            boundary_1.x = 0;
+            boundary_1.y = 0;
+            this.addChild(boundary_1);
+            var boundary_2 = new objects.EmptyGameObject(this.assetManager, "wall_r", 1, 650);
+            boundary_2.x = 1050;
+            boundary_2.y = 0;
+            this.addChild(boundary_2);
+            var boundary_3 = new objects.EmptyGameObject(this.assetManager, "wall_l", 210, 1);
+            boundary_3.x = 840;
+            boundary_3.y = 510;
+            this.addChild(boundary_3);
+            this.gameBoundaries.push(boundary_1);
+            this.gameBoundaries.push(boundary_2);
+            this.gameBoundaries.push(boundary_3);
+        };
+        ;
         Scene.prototype.CreateBackgroundEffects = function () { };
         ;
         Scene.prototype.Main = function () {
@@ -284,6 +311,7 @@ var objects;
             this.addChild(this.player2.inventory);
             this.addChild(this.player2.picture);
             this.CreateScenery();
+            this.CreateBoundaries();
             this.addChild(this.player1.spriteRenderer);
             this.addChild(this.player2.spriteRenderer);
             this.enemies.forEach(function (ghost) {
@@ -300,6 +328,8 @@ var objects;
             this.StartCountdown(3, callback);
             this.addChild(this.overTitle);
             this.overTitle.visible = false;
+            this.addChild(this.timesUp);
+            this.timesUp.visible = false;
             this.addChild(this.pauseBackground);
             this.addChild(this.pauseButton);
             this.addChild(this.pauseButton.text);
@@ -344,6 +374,19 @@ var objects;
             }, 1000);
         };
         ;
+        Scene.prototype.CheckBoundaries = function () {
+            var _this = this;
+            this.gameBoundaries.forEach(function (deadEnd) {
+                deadEnd.Update();
+                var result_1 = managers.Collision.CheckAABBCollision(_this.player1.boxCollider.aabb, deadEnd.boxCollider.aabb);
+                var result_2 = managers.Collision.CheckAABBCollision(_this.player2.boxCollider.aabb, deadEnd.boxCollider.aabb);
+                _this.player1.isDead = result_1.CheckCollided();
+                _this.player2.isDead = result_2.CheckCollided();
+                if (_this.player1.isDead || _this.player2.isDead) {
+                    _this.GoDie();
+                }
+            });
+        };
         return Scene;
     }(createjs.Container));
     objects.Scene = Scene;

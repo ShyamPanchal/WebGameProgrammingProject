@@ -103,20 +103,6 @@ var scenes;
         StageThree.prototype.fn_ButtonClick = function () {
             objects.Game.currentScene = config.Scene.FINISH;
         };
-        StageThree.prototype.CheckDead = function () {
-            if (!this.player1.isDead && !this.player2.isDead) {
-                if (this.player1.y < 0 || this.player1.y > 520) {
-                    this.removeChild(this.player1);
-                    this.player1.isDead = true;
-                    this.GoDie();
-                }
-                if (this.player2.y < 0 || this.player2.y > 520) {
-                    this.removeChild(this.player2);
-                    this.player2.isDead = true;
-                    this.GoDie();
-                }
-            }
-        };
         StageThree.prototype.Start = function () {
             //objects.Game.isDebug = true;
             _super.prototype.Start.call(this);
@@ -130,7 +116,6 @@ var scenes;
         };
         StageThree.prototype.Update = function () {
             _super.prototype.Update.call(this);
-            this.CheckDead();
         };
         StageThree.prototype.Main = function () {
             _super.prototype.Main.call(this);
@@ -188,7 +173,7 @@ var scenes;
             floor_3_Desk.y = 280;
             this.gameSceneryDynamicObjects.push(floor_3_Desk);
             floor_1_Key.isGravityAffected = false;
-            floor_3_Desk.objectInside.push(floor_1_Key);
+            floor_3_Desk.AddObjectInside(floor_1_Key);
             objectsFloorOneAndTwo.push(floor_3_Desk);
             var floor_4_Desk = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
             floor_4_Desk.boxCollider = new objects.BoxCollider(0, 0, floor_4_Desk.x, floor_4_Desk.y, floor_4_Desk.width, floor_4_Desk.height);
@@ -197,12 +182,12 @@ var scenes;
             floor_4_Desk.y = 280;
             this.gameSceneryDynamicObjects.push(floor_4_Desk);
             floor_1_Key.isGravityAffected = false;
-            floor_4_Desk.objectInside.push(floor_1_Treasure);
+            floor_4_Desk.AddObjectInside(floor_1_Treasure);
             objectsFloorOneAndTwo.push(floor_4_Desk);
             var floor_2_Door = new objects.Door(this.assetManager, true);
             floor_2_Door.isLocked = true;
             floor_2_Door.boxCollider = new objects.BoxCollider(0, 0, floor_2_Door.x, floor_2_Door.y, floor_2_Door.width, floor_2_Door.height);
-            floor_2_Door.AddEnterDoorAction(function () { return _this.timer; }, this.GoToNextLevel, this.RemovePlayer);
+            floor_2_Door.AddEnterDoorAction(function () { return _this.timer; }, this.GoToNextLevel);
             this.addChild(floor_2_Door);
             floor_2_Door.gravityFactor = -1;
             floor_2_Door.x = 280;
@@ -285,7 +270,7 @@ var scenes;
             floor_3_Desk_3.y = 190;
             this.gameSceneryDynamicObjects.push(floor_3_Desk_3);
             floor_3_Key.isGravityAffected = false;
-            floor_3_Desk_3.objectInside.push(floor_3_Key);
+            floor_3_Desk_3.AddObjectInside(floor_3_Key);
             objectsFloorThreeAndFour.push(floor_3_Desk_3);
             var floor_3_Desk_1 = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
             floor_3_Desk_1.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk_1.x, floor_3_Desk_1.y, floor_3_Desk_1.width, floor_3_Desk_1.height);
@@ -294,12 +279,12 @@ var scenes;
             floor_3_Desk_1.y = 140;
             this.gameSceneryDynamicObjects.push(floor_3_Desk_1);
             floor_3_Treasure.isGravityAffected = false;
-            floor_3_Desk_1.objectInside.push(floor_3_Treasure);
+            floor_3_Desk_1.AddObjectInside(floor_3_Treasure);
             objectsFloorThreeAndFour.push(floor_3_Desk_1);
             var floor_4_Door = new objects.Door(this.assetManager, true);
             floor_4_Door.isLocked = true;
             floor_4_Door.boxCollider = new objects.BoxCollider(0, 0, floor_4_Door.x, floor_4_Door.y, floor_4_Door.width, floor_4_Door.height + 5);
-            floor_4_Door.AddEnterDoorAction(function () { return _this.timer; }, this.GoToNextLevel, this.RemovePlayer);
+            floor_4_Door.AddEnterDoorAction(function () { return _this.timer; }, this.GoToNextLevel);
             this.addChild(floor_4_Door);
             floor_4_Door.x = 770;
             floor_4_Door.y = 190;

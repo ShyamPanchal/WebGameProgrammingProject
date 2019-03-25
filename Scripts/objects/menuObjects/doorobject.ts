@@ -17,8 +17,8 @@ module objects{
             
         }
 
-        public AddEnterDoorAction(getTimer: ()=>number, goNextLevel: ()=>void, removePlayer: (player:Player)=>void) {
-            this.EnterDoorAction = new EnterFinalDoorAction(getTimer, goNextLevel, removePlayer).action;
+        public AddEnterDoorAction(getTimer: ()=>number, goNextLevel: ()=>void) {
+            this.EnterDoorAction = new EnterFinalDoorAction(getTimer, goNextLevel).action;
         }
 
         private EnterDoorAction(player:Player) {
@@ -40,9 +40,11 @@ module objects{
 
         action: (player:Player) => void; 
 
-        constructor(getTimer: ()=>number, goNextLevel: ()=>void, removePlayer: (player:Player)=>void) {
+        constructor(getTimer: ()=>number, goNextLevel: ()=>void) {
             this.action = (player:objects.Player)=>{
-                removePlayer(player);
+                player.spriteRenderer.visible = false;
+                player.visible = false;
+                player.hasPassed = true;
                 if (player.playerNum == 2 ) {
                     let score = 0;
                     if (objects.Game.scoreManagerP2 != null) {

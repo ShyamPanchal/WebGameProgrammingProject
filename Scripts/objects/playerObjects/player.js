@@ -27,6 +27,7 @@ var objects;
             _this.fixed_flipOffsetY = 27;
             _this.flipOffsetY = 0;
             _this.playerNum = playerNum;
+            _this.hasPassed = false;
             if (playerNum == 1) {
                 _this.spriteRenderer = new createjs.Sprite(objects.Game.player1TextureAtlas, "Idle");
                 _this.picture = new objects.GameObject(assetManager, "p1");
@@ -59,6 +60,9 @@ var objects;
             this.Update();
         };
         Player.prototype.Update = function () {
+            if (this.hasPassed) {
+                return;
+            }
             this.spriteRenderer.x = this.flipOffsetX + this.x;
             this.spriteRenderer.y = this.flipOffsetY + this.y;
             _super.prototype.Update.call(this);

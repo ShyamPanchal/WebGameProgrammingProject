@@ -22,6 +22,12 @@ module objects{
             this.isGravityAffected = true;
         }
 
+        public AddObjectInside(object: GameObject):void {
+            this.objectInside.push(object);
+            object.isGravityAffected = false;
+            object.x = 1500;
+        }
+
         public Action(): void {
             if (this.isLocked) {
                 if(this.player.inventory.CheckKey(this.keyCode) && this.player.inventory.UseKey()) {

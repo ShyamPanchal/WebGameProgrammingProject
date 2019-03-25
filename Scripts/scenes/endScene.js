@@ -48,8 +48,10 @@ var scenes;
             this.addChild(this.label1);
             this.addChild(this.backButton);
             this.addChild(this.txtButton);
-            this.addChild(this.keepButton);
-            this.addChild(this.txtkeepButton);
+            if (objects.Game.playerDead) {
+                this.addChild(this.keepButton);
+                this.addChild(this.txtkeepButton);
+            }
             this.backButton.on("click", this.fn_ButtonClick);
             this.keepButton.on("click", this.fn_ButtonKeepClick);
         };

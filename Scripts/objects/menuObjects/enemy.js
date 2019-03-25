@@ -32,12 +32,37 @@ var objects;
         };
         Enemy.prototype.Update = function () {
             _super.prototype.Update.call(this);
-            this.Move();
+            if (this.x != 0 && this.y != 0) {
+                this.Move();
+            }
         };
         Enemy.prototype.Reset = function () { };
         Enemy.prototype.Move = function () {
+            this.x -= 1.5;
+            if ((this.x > 200 && this.x < 350) || (this.x > 500 && this.x < 650)) {
+                this.y = 145;
+            }
+            else if ((this.x > 350 && this.x < 500) || (this.x > 650)) {
+                this.y = 200;
+            }
+            else if (this.x < 200)
+                this.x = 800;
+        };
+        Enemy.prototype.Update2 = function () {
+            _super.prototype.Update.call(this);
+            if (this.x != 0 && this.y != 0) {
+                this.Move2();
+            }
+        };
+        Enemy.prototype.Move2 = function () {
             this.x -= 2;
-            if (this.x < 200)
+            if ((this.x > 200 && this.x < 350) || (this.x > 500 && this.x < 650)) {
+                this.y += 1;
+            }
+            else if ((this.x > 350 && this.x < 500) || (this.x > 650)) {
+                this.y -= 1;
+            }
+            else if (this.x < 200)
                 this.x = 800;
         };
         return Enemy;

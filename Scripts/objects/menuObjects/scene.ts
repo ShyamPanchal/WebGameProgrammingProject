@@ -13,7 +13,8 @@ module objects {
     //private backButton: objects.Button;
     protected pauseButton: objects.Button;
 
-    protected enemies: objects.Enemy[];
+    private ghost: objects.Enemy;
+    private ghost2: objects.Enemy;
 
     protected menuButton: objects.Button;
     protected menuTxtButton: objects.Label;
@@ -150,6 +151,14 @@ module objects {
       }
   }
 
+  protected GetPositionE1():math.Vec2 {
+    return null;
+  }
+
+  protected GetPositionE2():math.Vec2 {
+    return null;
+  }
+
     protected GetPositionP1():math.Vec2 {
       return null;
     }
@@ -177,9 +186,16 @@ module objects {
       this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
       this.gameSceneryDynamicObjects = new Array<objects.DynamicObject>();
 
-      this.enemies = new Array<objects.Enemy>();
+      var ee1 = this.GetPositionE1();
+      var ee2 = this.GetPositionE2();
 
-      this.CreateEnemies();
+      this.ghost = new objects.Enemy(this.assetManager, "ghost", ee1.x, ee1.y);
+      this.ghost.alpha = 0.9;
+       this.ghost.y = this.ghost.y - this.ghost.height;
+  
+       this.ghost2 = new objects.Enemy(this.assetManager, "ghost2", ee2.x, ee2.y);
+      this.ghost2.alpha = 0.9;
+       this.ghost2.y = this.ghost2.y - this.ghost2.height;
       
       console.log("GAME SCENE(S)...");
 
@@ -303,17 +319,17 @@ module objects {
       this.player1.UpdateIfPossible(CheckMovementP1);
       this.player2.UpdateIfPossible(CheckMovementP2);
 
-      this.enemies.forEach(enemy => {
-          enemy.Update();
+      this.ghost.Update();
+      this.ghost2.Update2();
 
-          this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
-          this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
+          this.player1.isDead = managers.Collision.CheckDistance(this.player1, this.ghost);
+          this.player2.isDead = managers.Collision.CheckDistance(this.player2, this.ghost2);
           if(this.player1.isDead || this.player2.isDead){             
              this.GoDie();      
-             this.removeChild(enemy);    
+             this.removeChild(this.player1);
+             this.removeChild(this.player2);    
           }
-      });
-
+      
       for (let i = 0; i < this.gameSceneryStaticObjects.length; i++) {
           var platform = this.gameSceneryStaticObjects[i];
           platform.Update();
@@ -368,14 +384,15 @@ module objects {
       this.addChild(this.player2.inventory);
       this.addChild(this.player2.picture);
 
+      this.addChild(this.ghost);
+      this.addChild(this.ghost2);
+
       this.CreateScenery();
 
       this.addChild(this.player1.spriteRenderer);
       this.addChild(this.player2.spriteRenderer);
 
-      this.enemies.forEach(ghost => {
-          this.addChild(ghost);
-      });
+     
 
       this.CreateBackgroundEffects();            
       this.addChild(this.background_shadow);

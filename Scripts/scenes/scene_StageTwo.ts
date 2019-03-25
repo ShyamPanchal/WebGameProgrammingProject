@@ -47,6 +47,16 @@ module scenes {
             
         }
 
+         //Ghost
+         GetPositionE1 = ():math.Vec2 => {
+            return new math.Vec2(0, 0);//Put (800,250) if yellow ghost needed
+        }
+    
+        GetPositionE2 = ():math.Vec2 => {
+            return new math.Vec2(0, 0);//Put (800,485) if red ghost needed
+        }
+
+        //Player
         GetPositionP1 = () => {
             return new math.Vec2(400, 60);
         }

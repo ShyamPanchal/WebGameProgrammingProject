@@ -19,6 +19,14 @@ var scenes;
             var _this = _super.call(this, assetManager) || this;
             _this.CreateEnemies = function () {
             };
+            //Ghost
+            _this.GetPositionE1 = function () {
+                return new math.Vec2(0, 0); //Put (800,250) if yellow ghost needed
+            };
+            _this.GetPositionE2 = function () {
+                return new math.Vec2(0, 0); //Put (800,485) if red ghost needed
+            };
+            //Player
             _this.GetPositionP1 = function () {
                 return new math.Vec2(400, 60);
             };

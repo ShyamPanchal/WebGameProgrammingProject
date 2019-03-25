@@ -179,6 +179,7 @@
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" },
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
         { id: "ghost", src: "../Assets/Sprites/Ghost.png" },
+        { id: "ghost2", src: "../Assets/Sprites/Ghost2.png" },
         { id: "level_01_house", src: "../Assets/Background/level_01_house.png" },
         { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
         { id: "level_02_house", src: "../Assets/Background/level_02_house.png" },
@@ -244,8 +245,8 @@
         createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.INGAME;
-        currentState = config.Scene.INGAME;
+        objects.Game.currentScene = config.Scene.INGAME_3;
+        currentState = config.Scene.INGAME_3;
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;
         console.log(objects.Game.currentScene);

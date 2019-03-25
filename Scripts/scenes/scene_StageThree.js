@@ -22,13 +22,29 @@ var scenes;
         function StageThree(assetManager) {
             var _this = _super.call(this, assetManager) || this;
             _this.CreateEnemies = function () {
-            };
-            //Ghost
-            _this.GetPositionE1 = function () {
-                return new math.Vec2(1, 0); //Put (800,250) if yellow ghost needed
-            };
-            _this.GetPositionE2 = function () {
-                return new math.Vec2(0, 0); //Put (800,485) if red ghost needed
+                return;
+                var ghost = new objects.Enemy(_this.assetManager, "ghost", 550, 245);
+                ghost.alpha = 0.8;
+                ghost.y = ghost.y - ghost.height;
+                ghost.scaleX = 0.7;
+                ghost.scaleY = 0.7;
+                _this.enemies.push(ghost);
+                var ghost2 = new objects.Enemy(_this.assetManager, "ghost2", 550, 480);
+                ghost2.alpha = 0.8;
+                ghost2.y = ghost2.y - ghost2.height;
+                ghost2.scaleX = 0.7;
+                ghost2.scaleY = 0.7;
+                _this.enemies.push(ghost2);
+                /*
+                //Ghost
+                    GetPositionE1 = ():math.Vec2 => {
+                        return new math.Vec2(1, 0);//Put (800,250) if yellow ghost needed
+                    }
+                
+                    GetPositionE2 = ():math.Vec2 => {
+                        return new math.Vec2(0, 0);//Put (800,485) if red ghost needed
+                    }
+                */
             };
             _this.GetPositionP1 = function () {
                 return new math.Vec2(700, 60);

@@ -1,6 +1,10 @@
 module objects{
     export class HandableObject extends objects.DynamicObject {
         private powerup:createjs.AbstractSoundInstance;
+        public time: number;
+        private timeToAction:number = 0.5;
+        public deltaTime: number;
+
         scorePoints: number;
         constructor(assetManager: createjs.LoadQueue, imageString: string, scorePoints:number = 0){
             super(assetManager, imageString);
@@ -16,6 +20,24 @@ module objects{
             } else {
                 this.Catch();
             }
+        }
+
+        //addforce
+        public UpdateIfPossible(Check: (x:number, y:number) => managers.AABB): void {
+            this.CheckCollision = Check;
+            //this.AddForce();
+            this.Update();
+        }
+
+        public AddForce(){
+            this.Move_Vertically(false, 1);
+            this.Move_Horizontally(false, 1);
+
+            if (this.deltaTime != 0 && (this.timeToAction > this.deltaTime)) {
+                this.deltaTime+=1/60;
+                return;
+              }        
+              this.deltaTime=0;
         }
 
         private Drop():void {

@@ -46,6 +46,18 @@ module objects{
             }
         }
 
+        public Move_Horizontally(right:boolean, speed:number) :void {
+          if (right) {
+            if (this.CheckMovement(this.CheckCollision, false, speed)) {
+              this.x += speed;
+            }
+          } else {
+            if (this.CheckMovement(this.CheckCollision, true, speed)) {
+              this.x -= speed;
+            }          
+          }
+      }
+
         public CheckMovement(Check: (x:number, y:number) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
             let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y);
             return !md.isCollided;

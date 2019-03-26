@@ -6,6 +6,7 @@ module objects {
     public assetManager;
     public isPaused: boolean;
     public timer:number;
+    private dead_sound:createjs.AbstractSoundInstance;
 
     protected title: objects.Label;
     protected titleShadow: objects.Label;
@@ -326,7 +327,8 @@ module objects {
 
         this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
         this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
-        if(this.player1.isDead || this.player2.isDead){             
+        if(this.player1.isDead || this.player2.isDead){ 
+                    
            this.GoDie();      
            this.removeChild(enemy);    
         }
@@ -349,13 +351,14 @@ module objects {
     }
 
     protected GoDie():void {
-            
+      this.dead_sound = createjs.Sound.play("dying");  
       this.player1.visible = false;
       this.player2.visible = false;
       this.player1.spriteRenderer.visible = false;
       this.player2.spriteRenderer.visible = false;
       
       var overNote = (): void => {
+        this.dead_sound = createjs.Sound.play("haha"); 
         objects.Game.playerDead = true;
         objects.Game.currentScene = config.Scene.FINISH;
       }

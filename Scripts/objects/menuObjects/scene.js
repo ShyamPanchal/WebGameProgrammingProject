@@ -262,11 +262,14 @@ var objects;
             objects.Game.currentScene = config.Scene.REWARD;
         };
         Scene.prototype.GoDie = function () {
+            var _this = this;
+            this.dead_sound = createjs.Sound.play("dying");
             this.player1.visible = false;
             this.player2.visible = false;
             this.player1.spriteRenderer.visible = false;
             this.player2.spriteRenderer.visible = false;
             var overNote = function () {
+                _this.dead_sound = createjs.Sound.play("haha");
                 objects.Game.playerDead = true;
                 objects.Game.currentScene = config.Scene.FINISH;
             };

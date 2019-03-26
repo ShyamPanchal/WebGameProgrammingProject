@@ -26,6 +26,7 @@ var objects;
                 var isLeft = this.aabbResultPlayer.closestPointOnBoundsToPoint(math.Vec2.zero).x < 0;
                 console.log('isLeft: ' + isLeft);
                 if (this.aabbResultPlayer.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0) {
+                    this.push_sound = createjs.Sound.play("push");
                     this.Push(10, isLeft);
                 }
             }

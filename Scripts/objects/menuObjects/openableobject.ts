@@ -1,7 +1,8 @@
 module objects{
     export class OpenableObject extends objects.DynamicObject {
 
-
+        private open_sound:createjs.AbstractSoundInstance;
+       
         private openedImage: any;
         private closedImage: any;
         public isClosed: boolean;
@@ -47,8 +48,11 @@ module objects{
         private OpenClose() :void {
             this.isClosed = !this.isClosed;
             if (this.isClosed) {
+                this.open_sound = createjs.Sound.play("open_drawer");
                 this.image = this.closedImage;
             } else {
+                
+                this.open_sound = createjs.Sound.play("open_drawer");
                 this.image = this.openedImage;
                 if (this.objectInside.length > 0) {
                     let object = this.objectInside.pop();

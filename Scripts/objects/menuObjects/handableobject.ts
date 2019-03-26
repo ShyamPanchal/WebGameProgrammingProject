@@ -1,6 +1,6 @@
 module objects{
     export class HandableObject extends objects.DynamicObject {
-        
+        private powerup:createjs.AbstractSoundInstance;
         scorePoints: number;
         constructor(assetManager: createjs.LoadQueue, imageString: string, scorePoints:number = 0){
             super(assetManager, imageString);
@@ -24,7 +24,8 @@ module objects{
         }
 
         private Catch():void {
-            this.player.inventory.AddItem(this);            
+            this.player.inventory.AddItem(this);  
+            this.powerup = createjs.Sound.play("powerup");          
             //console.log('Get Object');
         }
     

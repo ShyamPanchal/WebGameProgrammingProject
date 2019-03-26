@@ -50,6 +50,7 @@ var objects;
                 else {
                     this.image = this.deactivatedImage;
                 }
+                this.on_sound = createjs.Sound.play("switch_light");
                 this.DoAction(this.activated);
             }
         };

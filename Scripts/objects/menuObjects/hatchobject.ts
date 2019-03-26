@@ -80,9 +80,11 @@ module objects{
             super.Action();
             this.hatch.Action();
             if (this.activated) {
+                
                 this.image = this.activatedImage;
                 this.final = this.initial + 50;                
             } else {
+
                 this.image = this.deactivatedImage;
                 this.final = this.initial;
             }

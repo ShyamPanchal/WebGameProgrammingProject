@@ -120,6 +120,7 @@ var objects;
                     this.listener = this.on("animationend", this.cancelStopEvent);
                     //this.y += config.Gravity.gravityForce*this.height;
                     this.Move_Vertically(true, config.Gravity.gravityForce * this.GetGravityFactor() * this.height);
+                    //this.jump_sound = createjs.Sound.play("ghost_wind");
                 }
             }
             else if (this.isJumping) {

@@ -9,7 +9,8 @@ module objects{
       public hasPassed:boolean;
       public maxJumpHeight: number;
       public isJumping: boolean;
-  
+      private jump_sound:createjs.AbstractSoundInstance;
+
       public actionObject:DynamicObject;
       public time: number;
       private timeToAction:number = 0.5;
@@ -152,6 +153,7 @@ module objects{
             this.listener =  this.on("animationend", this.cancelStopEvent);
             //this.y += config.Gravity.gravityForce*this.height;
             this.Move_Vertically(true, config.Gravity.gravityForce*this.GetGravityFactor()*this.height);
+            //this.jump_sound = createjs.Sound.play("ghost_wind");
           }
         } else if(this.isJumping) {
           if (this.maxJumpHeight*this.GetGravityFactor() <= this.y*this.GetGravityFactor()){

@@ -1,6 +1,8 @@
 module objects{
     export class PushableObject extends objects.DynamicObject {
 
+      private push_sound:createjs.AbstractSoundInstance;
+       
         constructor(assetManager: createjs.LoadQueue, imageString: string){
             super(assetManager, imageString);
             this.isGravityAffected = true;
@@ -12,6 +14,7 @@ module objects{
                 let isLeft = this.aabbResultPlayer.closestPointOnBoundsToPoint(math.Vec2.zero).x < 0;
                 console.log('isLeft: ' + isLeft);
                 if (this.aabbResultPlayer.closestPointOnBoundsToPoint(math.Vec2.zero).y == 0) {
+                  this.push_sound = createjs.Sound.play("push");
                     this.Push(10, isLeft);
                 }
             }

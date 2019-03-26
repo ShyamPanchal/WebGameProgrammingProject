@@ -51,9 +51,11 @@ var objects;
         OpenableObject.prototype.OpenClose = function () {
             this.isClosed = !this.isClosed;
             if (this.isClosed) {
+                this.open_sound = createjs.Sound.play("open_drawer");
                 this.image = this.closedImage;
             }
             else {
+                this.open_sound = createjs.Sound.play("open_drawer");
                 this.image = this.openedImage;
                 if (this.objectInside.length > 0) {
                     var object = this.objectInside.pop();

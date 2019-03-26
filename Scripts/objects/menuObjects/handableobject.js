@@ -38,6 +38,7 @@ var objects;
         };
         HandableObject.prototype.Catch = function () {
             this.player.inventory.AddItem(this);
+            this.powerup = createjs.Sound.play("powerup");
             //console.log('Get Object');
         };
         return HandableObject;

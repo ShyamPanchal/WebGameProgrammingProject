@@ -19,6 +19,7 @@ var objects;
         function HandableObject(assetManager, imageString, scorePoints) {
             if (scorePoints === void 0) { scorePoints = 0; }
             var _this = _super.call(this, assetManager, imageString) || this;
+            _this.timeToAction = 0.5;
             _this.isGravityAffected = true;
             _this.scorePoints = scorePoints;
             return _this;
@@ -32,6 +33,21 @@ var objects;
             else {
                 this.Catch();
             }
+        };
+        //addforce
+        HandableObject.prototype.UpdateIfPossible = function (Check) {
+            this.CheckCollision = Check;
+            //this.AddForce();
+            this.Update();
+        };
+        HandableObject.prototype.AddForce = function () {
+            this.Move_Vertically(false, 1);
+            this.Move_Horizontally(false, 1);
+            if (this.deltaTime != 0 && (this.timeToAction > this.deltaTime)) {
+                this.deltaTime += 1 / 60;
+                return;
+            }
+            this.deltaTime = 0;
         };
         HandableObject.prototype.Drop = function () {
             this.player.inventory.DropItem();

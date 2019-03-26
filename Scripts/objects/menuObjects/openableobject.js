@@ -60,7 +60,7 @@ var objects;
                 this.image = this.openedImage;
                 if (this.objectInside.length > 0) {
                     var object = this.objectInside.pop();
-                    object.y = this.y;
+                    object.y = this.y - object.height * this.gravityFactor;
                     object.x = this.x + object.width + 10;
                     object.isGravityAffected = true;
                 }

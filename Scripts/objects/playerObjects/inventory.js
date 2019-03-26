@@ -46,7 +46,7 @@ var objects;
             return this.RemoveItem();
         };
         Inventory.prototype.Drop = function (item) {
-            item.x = this.player.x;
+            item.x = this.player.x + (this.player.isLeft ? -30 : 30);
             //place it above the player
             item.y = this.player.y - (this.player.halfH) * this.player.GetGravityFactor();
             //make sure that the x is next to the player;

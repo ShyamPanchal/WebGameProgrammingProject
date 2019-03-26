@@ -51,6 +51,18 @@ var objects;
                 }
             }
         };
+        DynamicObject.prototype.Move_Horizontally = function (right, speed) {
+            if (right) {
+                if (this.CheckMovement(this.CheckCollision, false, speed)) {
+                    this.x += speed;
+                }
+            }
+            else {
+                if (this.CheckMovement(this.CheckCollision, true, speed)) {
+                    this.x -= speed;
+                }
+            }
+        };
         DynamicObject.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
             var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
             return !md.isCollided;

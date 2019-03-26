@@ -49,6 +49,7 @@ var objects;
             }
             this.deltaTime = 0;
         };
+<<<<<<< Updated upstream
         HandableObject.prototype.Drop = function () {
             this.player.inventory.DropItem();
             //console.log('Drop Object');
@@ -113,6 +114,8 @@ var objects;
             }
             this.deltaTime = 0;
         };
+=======
+>>>>>>> Stashed changes
         HandableObject.prototype.Drop = function () {
             this.player.inventory.DropItem();
             //console.log('Drop Object');

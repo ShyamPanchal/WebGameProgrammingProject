@@ -63,6 +63,7 @@ var objects;
                 }
             }
         };
+<<<<<<< Updated upstream
         DynamicObject.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
             var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
             return !md.isCollided;
@@ -143,6 +144,8 @@ var objects;
                 }
             }
         };
+=======
+>>>>>>> Stashed changes
         DynamicObject.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
             var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
             return !md.isCollided;

@@ -1,8 +1,6 @@
 module objects{
     export class OpenableObject extends objects.DynamicObject {
 
-        private open_sound:createjs.AbstractSoundInstance;
-       
         private openedImage: any;
         private closedImage: any;
         public isClosed: boolean;
@@ -33,12 +31,14 @@ module objects{
             if (this.isLocked) {
                 if(this.player.inventory.CheckKey(this.keyCode) && this.player.inventory.UseKey()) {
                     this.isLocked = false;
+                    createjs.Sound.play("casset").volume = 0.3;
                     console.log('key used');
                 } else {
+                    createjs.Sound.play("open_drawer").volume = 0.5;
                     console.log('has not the key');
                 }
             } else {
-                super.Action();
+                super.Action();                
                 if (this.aabbResultPlayer !== null) {                
                     this.OpenClose();
                 }
@@ -48,11 +48,14 @@ module objects{
         private OpenClose() :void {
             this.isClosed = !this.isClosed;
             if (this.isClosed) {
-                this.open_sound = createjs.Sound.play("open_drawer");
+                if (this instanceof Door) {
+                    createjs.Sound.play("door").volume = 0.3;
+                } else {
+                    createjs.Sound.play("open_drawer").volume = 0.5;
+                }
                 this.image = this.closedImage;
-            } else {
-                
-                this.open_sound = createjs.Sound.play("open_drawer");
+            } else {                
+                createjs.Sound.play("close_door").volume = 0.3;
                 this.image = this.openedImage;
                 if (this.objectInside.length > 0) {
                     let object = this.objectInside.pop();

@@ -2,7 +2,6 @@ module objects{
     export class Door extends objects.OpenableObject {
         private backgroundImage: any;
         private foregroundImage: any;
-        private doorSound:createjs.AbstractSoundInstance;
 
         public isOut:boolean;
         
@@ -27,13 +26,12 @@ module objects{
         }
 
         public Action(): void {
-            if (!this.isOut || (this.isClosed && this.isOut)) {
-                this.doorSound = createjs.Sound.play("door");
+            if (!this.isOut || (this.isClosed && this.isOut)) {                
                 super.Action();
                 this.alreadyHandled = false;
             } else {
                 this.EnterDoorAction(this.player);
-                this.doorSound = createjs.Sound.play("TaDa");
+                createjs.Sound.play("TaDa").volume = 0.3;
                 console.log('enter door action');
             }            
         }

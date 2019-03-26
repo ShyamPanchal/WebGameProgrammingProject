@@ -33,13 +33,12 @@ var objects;
         };
         Door.prototype.Action = function () {
             if (!this.isOut || (this.isClosed && this.isOut)) {
-                this.doorSound = createjs.Sound.play("door");
                 _super.prototype.Action.call(this);
                 this.alreadyHandled = false;
             }
             else {
                 this.EnterDoorAction(this.player);
-                this.doorSound = createjs.Sound.play("TaDa");
+                createjs.Sound.play("TaDa").volume = 0.3;
                 console.log('enter door action');
             }
         };

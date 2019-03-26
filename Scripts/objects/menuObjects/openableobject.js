@@ -35,9 +35,11 @@ var objects;
             if (this.isLocked) {
                 if (this.player.inventory.CheckKey(this.keyCode) && this.player.inventory.UseKey()) {
                     this.isLocked = false;
+                    createjs.Sound.play("casset").volume = 0.3;
                     console.log('key used');
                 }
                 else {
+                    createjs.Sound.play("open_drawer").volume = 0.5;
                     console.log('has not the key');
                 }
             }
@@ -51,11 +53,16 @@ var objects;
         OpenableObject.prototype.OpenClose = function () {
             this.isClosed = !this.isClosed;
             if (this.isClosed) {
-                this.open_sound = createjs.Sound.play("open_drawer");
+                if (this instanceof objects.Door) {
+                    createjs.Sound.play("door").volume = 0.3;
+                }
+                else {
+                    createjs.Sound.play("open_drawer").volume = 0.5;
+                }
                 this.image = this.closedImage;
             }
             else {
-                this.open_sound = createjs.Sound.play("open_drawer");
+                createjs.Sound.play("close_door").volume = 0.3;
                 this.image = this.openedImage;
                 if (this.objectInside.length > 0) {
                     var object = this.objectInside.pop();

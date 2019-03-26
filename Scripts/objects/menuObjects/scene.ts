@@ -101,7 +101,7 @@ module objects {
                               object.player = <objects.Player>gameObject;//informing which player did the action
                               object.aabbResultPlayer = result;
                               gameObject.actionObject = object;
-                              if (!object.alreadyHandled) {
+                              if (!object.alreadyHandled && !gameObject.hasPassed) {
                                   //show Dialog
                                   if (gameObject.dialog != null) {
                                       gameObject.dialog.showDialog();
@@ -119,7 +119,7 @@ module objects {
           }
 
           if (!collided && gameObject instanceof objects.Player) {
-              if (gameObject.dialog != null) {
+              if (gameObject.dialog != null || gameObject.hasPassed) {
                   gameObject.dialog.disposeDialog();
               }
               gameObject.actionObject = null;
@@ -351,14 +351,16 @@ module objects {
     }
 
     protected GoDie():void {
-      this.dead_sound = createjs.Sound.play("dying");  
+      if (!this.dead_sound) {
+        this.dead_sound = createjs.Sound.play("dying");  
+        this.dead_sound.volume = 0.3
+      }
       this.player1.visible = false;
       this.player2.visible = false;
       this.player1.spriteRenderer.visible = false;
       this.player2.spriteRenderer.visible = false;
       
-      var overNote = (): void => {
-        this.dead_sound = createjs.Sound.play("haha"); 
+      var overNote = (): void => {        
         objects.Game.playerDead = true;
         objects.Game.currentScene = config.Scene.FINISH;
       }

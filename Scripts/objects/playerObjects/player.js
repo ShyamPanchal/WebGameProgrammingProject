@@ -61,6 +61,9 @@ var objects;
         };
         Player.prototype.Update = function () {
             if (this.hasPassed) {
+                if (this.dialog != null) {
+                    this.dialog.disposeDialog();
+                }
                 return;
             }
             this.spriteRenderer.x = this.flipOffsetX + this.x;
@@ -174,6 +177,7 @@ var objects;
                 }
                 else if (this.actionObject == null || !managers.Collision.CheckDistanceDoubled(this, this.actionObject)) {
                     this.inventory.DropItem();
+                    createjs.Sound.play("wrench_drop").volume = 0.3;
                     this.deltaTime += 1 / 60;
                 }
                 else {

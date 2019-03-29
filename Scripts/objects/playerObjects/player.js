@@ -28,6 +28,7 @@ var objects;
             _this.flipOffsetY = 0;
             _this.playerNum = playerNum;
             _this.hasPassed = false;
+            _this.actionObjects = new Array();
             if (playerNum == 1) {
                 _this.spriteRenderer = new createjs.Sprite(objects.Game.player1TextureAtlas, "Idle");
                 _this.picture = new objects.GameObject(assetManager, "p1");
@@ -168,20 +169,22 @@ var objects;
                 this.spriteRenderer.gotoAndPlay("Action");
                 this.animationState = "Action";
                 this.listener = this.on("animationend", this.cancelStopEvent);
-                if (this.actionObject instanceof objects.InformativePoint) {
-                    this.actionObject.Action();
+                var objectAction = this.actionObjects.pop();
+                if (objectAction instanceof objects.InformativePoint) {
+                    objectAction.Action();
                     if (!this.inventory.DropItem()) {
-                        this.actionObject.alreadyHandled = false;
+                        objectAction.alreadyHandled = false;
                     }
                     this.deltaTime += 1 / 60;
                 }
-                else if (this.actionObject == null || !managers.Collision.CheckDistanceDoubled(this, this.actionObject)) {
-                    this.inventory.DropItem();
-                    createjs.Sound.play("wrench_drop").volume = 0.3;
+                else if (objectAction == null || objectAction == undefined || !managers.Collision.CheckDistanceDoubled(this, objectAction)) {
+                    if (this.inventory.DropItem()) {
+                        createjs.Sound.play("wrench_drop").volume = 0.3;
+                    }
                     this.deltaTime += 1 / 60;
                 }
                 else {
-                    this.actionObject.Action();
+                    objectAction.Action();
                     this.deltaTime += 1 / 60;
                 }
             }

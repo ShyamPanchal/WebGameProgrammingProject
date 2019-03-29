@@ -11,7 +11,7 @@ module objects{
       public isJumping: boolean;
       private jump_sound:createjs.AbstractSoundInstance;
 
-      public actionObject:DynamicObject;
+      public actionObjects:DynamicObject[];
       public time: number;
       private timeToAction:number = 0.5;
       public deltaTime: number;
@@ -38,6 +38,7 @@ module objects{
          super(assetManager, playerNum ==1?"player":"player");
          this.playerNum = playerNum;
          this.hasPassed = false;
+         this.actionObjects = new Array<DynamicObject>();
         if (playerNum == 1) {          
             this.spriteRenderer = new createjs.Sprite(objects.Game.player1TextureAtlas, "Idle");
             this.picture = new GameObject(assetManager, "p1");
@@ -201,20 +202,24 @@ module objects{
             this.spriteRenderer.gotoAndPlay("Action");
             this.animationState = "Action";
             this.listener =  this.on("animationend", this.cancelStopEvent);
+          
+          let objectAction = this.actionObjects.pop();
 
-          if (this.actionObject instanceof InformativePoint) {
-            this.actionObject.Action();
+          if (objectAction instanceof InformativePoint) {
+            objectAction.Action();
             if (!this.inventory.DropItem()) {
-              this.actionObject.alreadyHandled = false;
+              objectAction.alreadyHandled = false;
             }
             
             this.deltaTime+=1/60;
-          } else if (this.actionObject == null || !managers.Collision.CheckDistanceDoubled(this, this.actionObject)) {
-            this.inventory.DropItem();
-            createjs.Sound.play("wrench_drop").volume = 0.3;
+          } else if (objectAction == null || objectAction == undefined || !managers.Collision.CheckDistanceDoubled(this, objectAction)) {
+            
+            if (this.inventory.DropItem()) {
+              createjs.Sound.play("wrench_drop").volume = 0.3;
+            }
             this.deltaTime+=1/60;
           } else {
-            this.actionObject.Action();                    
+            objectAction.Action();
             this.deltaTime+=1/60;
           }
         }            

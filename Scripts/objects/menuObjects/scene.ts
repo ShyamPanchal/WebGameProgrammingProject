@@ -72,7 +72,7 @@ module objects {
 
   public CreateFunctionCheck(gameObject: objects.GameObject) {
       let boxCollider: objects.BoxCollider = gameObject.boxCollider;
-      return (x: number, y: number): managers.AABB => {
+      return (x:number, y:number, g:boolean): managers.AABB => {
           let collided = false;
           let aabbCollider = boxCollider.GetAABB(x, y);
           let result: managers.AABB;
@@ -111,8 +111,10 @@ module objects {
                                       gameObject.dialog.showDialog();
                                   }
                               }
-                          }       
-                          if (object instanceof InformativePoint) {
+                              if (g && (object instanceof PushableObject || object instanceof OpenableObject || object instanceof HatchPlatform)) {
+                                break;
+                              }
+                          } else if (object instanceof InformativePoint) {
 
                           } else {
                             break;
@@ -357,9 +359,11 @@ module objects {
 
     protected GoDie():void {
       if (!this.dead_sound) {
-        if (objects.Game.isPlayingMusic==true) {
-          this.backgroundMusic.stop();
-          objects.Game.isPlayingMusic=false;
+        if (objects.Game.isPlayingMusic == true) {
+          if (this.backgroundMusic) {
+            this.backgroundMusic.stop();
+            objects.Game.isPlayingMusic=false;
+          }
         }
         this.dead_sound = createjs.Sound.play("dying");  
         this.dead_sound.volume = 0.3

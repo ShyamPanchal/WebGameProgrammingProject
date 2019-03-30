@@ -38,7 +38,7 @@ var objects;
         Scene.prototype.CreateFunctionCheck = function (gameObject) {
             var _this = this;
             var boxCollider = gameObject.boxCollider;
-            return function (x, y) {
+            return function (x, y, g) {
                 var collided = false;
                 var aabbCollider = boxCollider.GetAABB(x, y);
                 var result;
@@ -71,8 +71,11 @@ var objects;
                                             gameObject.dialog.showDialog();
                                         }
                                     }
+                                    if (g && (object instanceof objects.PushableObject || object instanceof objects.OpenableObject || object instanceof objects.HatchPlatform)) {
+                                        break;
+                                    }
                                 }
-                                if (object instanceof objects.InformativePoint) {
+                                else if (object instanceof objects.InformativePoint) {
                                 }
                                 else {
                                     break;
@@ -265,8 +268,10 @@ var objects;
         Scene.prototype.GoDie = function () {
             if (!this.dead_sound) {
                 if (objects.Game.isPlayingMusic == true) {
-                    this.backgroundMusic.stop();
-                    objects.Game.isPlayingMusic = false;
+                    if (this.backgroundMusic) {
+                        this.backgroundMusic.stop();
+                        objects.Game.isPlayingMusic = false;
+                    }
                 }
                 this.dead_sound = createjs.Sound.play("dying");
                 this.dead_sound.volume = 0.3;

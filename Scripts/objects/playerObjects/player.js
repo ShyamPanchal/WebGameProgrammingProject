@@ -169,7 +169,7 @@ var objects;
                 this.spriteRenderer.gotoAndPlay("Action");
                 this.animationState = "Action";
                 this.listener = this.on("animationend", this.cancelStopEvent);
-                var objectAction = this.actionObjects.pop();
+                var objectAction = this.getCloserObject();
                 if (objectAction instanceof objects.InformativePoint) {
                     objectAction.Action();
                     if (!this.inventory.DropItem()) {
@@ -188,6 +188,20 @@ var objects;
                     this.deltaTime += 1 / 60;
                 }
             }
+        };
+        Player.prototype.getCloserObject = function () {
+            var item = this.actionObjects.pop();
+            var closest = 100;
+            var closest_item = item;
+            while (item) {
+                var d = managers.Collision.GetDistance(this, item);
+                if (d < closest) {
+                    closest = d;
+                    closest_item = item;
+                }
+                item = this.actionObjects.pop();
+            }
+            return closest_item;
         };
         Player.prototype.CheckKeyboardPlayerMoveLeft = function () {
             return (objects.Game.keyboard.player1MoveLeft && this.playerNum == 1) ||
@@ -235,7 +249,7 @@ var objects;
             }
         };
         Player.prototype.CheckGrounded = function (Check) {
-            var md = Check(this.x, this.y - config.Gravity.gravitySpeed * this.GetGravityFactor());
+            var md = Check(this.x, this.y - config.Gravity.gravitySpeed * this.GetGravityFactor(), true);
             if ((md.isCollided && (md.objectCollided instanceof objects.Door
                 || md.objectCollided instanceof objects.HandableObject
                 || md.objectCollided instanceof objects.ActionableObject
@@ -248,7 +262,7 @@ var objects;
             this.isGrounded = md.isCollided; // && (md.closestPointOnBoundsToPoint(math.Vec2.zero).y*this.GetGravityFactor() > 0);
         };
         Player.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
-            var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
+            var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y, true);
             if (md.objectCollided instanceof objects.OpenableObject
                 || md.objectCollided instanceof objects.HandableObject
                 || md.objectCollided instanceof objects.ActionableObject
@@ -260,14 +274,14 @@ var objects;
             return !md.isCollided; // && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
         };
         Player.prototype.CheckDownStairs = function (Check, isUp, speed) {
-            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
+            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed), true);
             if (md.isCollided && md.objectCollided instanceof objects.Stair) {
                 return true;
             }
             return false;
         };
         Player.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
-            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
+            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed), true);
             //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
             if (md.isCollided && (md.objectCollided instanceof objects.Door
                 || md.objectCollided instanceof objects.OpenableObject

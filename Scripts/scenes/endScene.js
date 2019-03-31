@@ -28,6 +28,12 @@ var scenes;
             objects.Game.currentScene = objects.Game.previousScene;
         };
         EndScene.prototype.Start = function () {
+            if (objects.Game.isPlayingMusic == false) {
+                this.backgroundMusic = createjs.Sound.play("play_music");
+                this.backgroundMusic.loop = -1; // Looping forever
+                this.backgroundMusic.volume = 0.3;
+                objects.Game.isPlayingMusic = true;
+            }
             console.log("END MENU...");
             this.background = new objects.Background(this.assetManager, "background");
             this.txtButton = new objects.Label("Exit", "20px", "Cambay", "#ffffff", 0, 0, true);

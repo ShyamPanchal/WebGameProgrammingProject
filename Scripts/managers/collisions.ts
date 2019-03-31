@@ -48,6 +48,12 @@ module managers {
             }
         }
 
+        public static GetDistance(obj1: objects.GameObject, obj2: objects.GameObject): number {
+            let p1: math.Vec2 = new math.Vec2(obj1.x, obj1.y);
+            let p2: math.Vec2 = new math.Vec2(obj2.x, obj2.y);            
+            return math.Vec2.Distance(p1, p2);
+        }
+
         public static CheckAABB(obj1: objects.GameObject, obj2: objects.GameObject):boolean {
             let aabb1 = obj1.boxCollider.aabb;
             let aabb2 = obj2.boxCollider.aabb;

@@ -72,7 +72,7 @@ module objects {
 
   public CreateFunctionCheck(gameObject: objects.GameObject) {
       let boxCollider: objects.BoxCollider = gameObject.boxCollider;
-      return (x: number, y: number): managers.AABB => {
+      return (x:number, y:number, g:boolean): managers.AABB => {
           let collided = false;
           let aabbCollider = boxCollider.GetAABB(x, y);
           let result: managers.AABB;
@@ -93,22 +93,28 @@ module objects {
               for (let i = 0; i < this.gameSceneryDynamicObjects.length; i++) {
                   var object = this.gameSceneryDynamicObjects[i];
                   if (object.name !== gameObject.name) {
+
                       result = managers.Collision.CheckAABBCollision(aabbCollider, object.boxCollider.aabb);
+
                       if (result.CheckCollided()) {
                           collided = true;
                           result.objectCollided = object;
                           if (gameObject instanceof objects.Player) {
                               object.player = <objects.Player>gameObject;//informing which player did the action
+
                               object.aabbResultPlayer = result;
-                              gameObject.actionObject = object;
+                              
+                              gameObject.actionObjects.push(object);
                               if (!object.alreadyHandled && !gameObject.hasPassed) {
                                   //show Dialog
                                   if (gameObject.dialog != null) {
                                       gameObject.dialog.showDialog();
                                   }
                               }
-                          }       
-                          if (object instanceof InformativePoint) {
+                              if (g && (object instanceof PushableObject || object instanceof OpenableObject || object instanceof HatchPlatform)) {
+                                break;
+                              }
+                          } else if (object instanceof InformativePoint) {
 
                           } else {
                             break;
@@ -122,7 +128,7 @@ module objects {
               if (gameObject.dialog != null || gameObject.hasPassed) {
                   gameObject.dialog.disposeDialog();
               }
-              gameObject.actionObject = null;
+              gameObject.actionObjects.pop();
           }
           return result;
       };
@@ -305,12 +311,13 @@ module objects {
       this.timerCounter++;
       //double the speed of the timer in the case the first player reach the end without the second player
       let speedTimer = Player.onePlayerGone?1/2:1;
-      if (this.timerCounter == objects.Game.frameRate*speedTimer) {
-          this.timer--;
-          this.timerCounter = 0;
-      }
-
+      if (this.timerCounter >= objects.Game.frameRate*speedTimer) {
+        this.timer--;
+        this.timerCounter = 0;
+      }      
+      
       if (this.timer <= 0) {
+          this.timer = 0;
           this.GoDie();
       }
 
@@ -352,6 +359,12 @@ module objects {
 
     protected GoDie():void {
       if (!this.dead_sound) {
+        if (objects.Game.isPlayingMusic == true) {
+          if (this.backgroundMusic) {
+            this.backgroundMusic.stop();
+            objects.Game.isPlayingMusic=false;
+          }
+        }
         this.dead_sound = createjs.Sound.play("dying");  
         this.dead_sound.volume = 0.3
       }

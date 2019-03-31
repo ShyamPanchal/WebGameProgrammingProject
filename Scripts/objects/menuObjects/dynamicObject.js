@@ -63,11 +63,11 @@ var objects;
             }
         };
         DynamicObject.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
-            var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
+            var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y, true);
             return !md.isCollided;
         };
         DynamicObject.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
-            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
+            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed), true);
             if (md.isCollided && md.objectCollided instanceof objects.InformativePoint) {
                 return true;
             }

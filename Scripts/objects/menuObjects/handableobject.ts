@@ -23,7 +23,7 @@ module objects{
         }
 
         //addforce
-        public UpdateIfPossible(Check: (x:number, y:number) => managers.AABB): void {
+        public UpdateIfPossible(Check: (x:number, y:number, g:boolean) => managers.AABB): void {
             this.CheckCollision = Check;
             //this.AddForce();
             this.Update();

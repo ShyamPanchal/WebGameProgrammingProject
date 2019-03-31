@@ -16,7 +16,6 @@ var scenes;
     var StageThree = /** @class */ (function (_super) {
         __extends(StageThree, _super);
         //Audio
-        // private backgroundMusic:createjs.AbstractSoundInstance;
         //#region Stage Variables
         //#endregion
         function StageThree(assetManager) {

@@ -20,7 +20,7 @@ module objects{
             item.y = this.y + this.halfH;
             item.isGravityAffected = false;
             //no more item to be actioned 
-            this.player.actionObject = null;
+            this.player.actionObjects.pop();
 
         }
 
@@ -42,7 +42,7 @@ module objects{
             //place it above the player
             item.y = this.player.y - (this.player.halfH)*this.player.GetGravityFactor();
             //make sure that the x is next to the player;
-            this.player.actionObject = item;
+            this.player.actionObjects.push(item);
             item.isGravityAffected = true;
             console.log('inventory.drop: ' + item.name);
         }

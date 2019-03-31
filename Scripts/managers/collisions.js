@@ -43,6 +43,11 @@ var managers;
                 return false;
             }
         };
+        Collision.GetDistance = function (obj1, obj2) {
+            var p1 = new math.Vec2(obj1.x, obj1.y);
+            var p2 = new math.Vec2(obj2.x, obj2.y);
+            return math.Vec2.Distance(p1, p2);
+        };
         Collision.CheckAABB = function (obj1, obj2) {
             var aabb1 = obj1.boxCollider.aabb;
             var aabb2 = obj2.boxCollider.aabb;

@@ -1,7 +1,6 @@
 module scenes {
     export class StageOne extends objects.Scene {
         //Audio
-       // private backgroundMusic:createjs.AbstractSoundInstance;
 
         //#region Stage Variables
  

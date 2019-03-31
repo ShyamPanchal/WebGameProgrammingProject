@@ -11,7 +11,7 @@ module objects{
       public isJumping: boolean;
       private jump_sound:createjs.AbstractSoundInstance;
 
-      public actionObject:DynamicObject;
+      public actionObjects:DynamicObject[];
       public time: number;
       private timeToAction:number = 0.5;
       public deltaTime: number;
@@ -38,6 +38,7 @@ module objects{
          super(assetManager, playerNum ==1?"player":"player");
          this.playerNum = playerNum;
          this.hasPassed = false;
+         this.actionObjects = new Array<DynamicObject>();
         if (playerNum == 1) {          
             this.spriteRenderer = new createjs.Sprite(objects.Game.player1TextureAtlas, "Idle");
             this.picture = new GameObject(assetManager, "p1");
@@ -69,9 +70,9 @@ module objects{
         this.isJumping = false;      
       }
   
-      private CheckCollision: (x:number, y:number) => managers.AABB;
+      private CheckCollision: (x:number, y:number, g:boolean) => managers.AABB;
   
-      public UpdateIfPossible(Check: (x:number, y:number) => managers.AABB): void {
+      public UpdateIfPossible(Check: (x:number, y:number, g:boolean) => managers.AABB): void {
         this.CheckCollision = Check;
         this.Update();
       }
@@ -201,23 +202,43 @@ module objects{
             this.spriteRenderer.gotoAndPlay("Action");
             this.animationState = "Action";
             this.listener =  this.on("animationend", this.cancelStopEvent);
+          
+          let objectAction = this.getCloserObject();
 
-          if (this.actionObject instanceof InformativePoint) {
-            this.actionObject.Action();
+          if (objectAction instanceof InformativePoint) {
+            objectAction.Action();
             if (!this.inventory.DropItem()) {
-              this.actionObject.alreadyHandled = false;
+              objectAction.alreadyHandled = false;
             }
             
             this.deltaTime+=1/60;
-          } else if (this.actionObject == null || !managers.Collision.CheckDistanceDoubled(this, this.actionObject)) {
-            this.inventory.DropItem();
-            createjs.Sound.play("wrench_drop").volume = 0.3;
+          } else if (objectAction == null || objectAction == undefined || !managers.Collision.CheckDistanceDoubled(this, objectAction)) {
+            
+            if (this.inventory.DropItem()) {
+              createjs.Sound.play("wrench_drop").volume = 0.3;
+            }
             this.deltaTime+=1/60;
           } else {
-            this.actionObject.Action();                    
+            objectAction.Action();
             this.deltaTime+=1/60;
           }
         }            
+      }
+
+      private getCloserObject() : DynamicObject {
+        
+        let item = this.actionObjects.pop();
+        let closest = 100;
+        let closest_item = item;
+        while(item) {
+          let d = managers.Collision.GetDistance(this, item);
+          if(d < closest) {
+              closest = d;
+              closest_item = item
+          }
+          item = this.actionObjects.pop();
+        }                  
+        return closest_item;
       }
   
       private CheckKeyboardPlayerMoveLeft() {
@@ -267,8 +288,8 @@ module objects{
         } 
       }
   
-      public CheckGrounded(Check: (x:number, y:number) => managers.AABB): void {
-        let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor());      
+      public CheckGrounded(Check: (x:number, y:number, g:boolean) => managers.AABB): void {
+        let md:managers.AABB = Check(this.x, this.y - config.Gravity.gravitySpeed*this.GetGravityFactor(), true);      
   
         if (
           (md.isCollided && (md.objectCollided instanceof Door 
@@ -285,8 +306,8 @@ module objects{
   
       }
   
-      public CheckMovement(Check: (x:number, y:number) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
-        let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y);
+      public CheckMovement(Check: (x:number, y:number, g:boolean) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
+        let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y, true);
         if (md.objectCollided instanceof OpenableObject 
             || md.objectCollided instanceof HandableObject
             || md.objectCollided instanceof ActionableObject
@@ -299,16 +320,16 @@ module objects{
         return !md.isCollided;// && md.closestPointOnBoundsToPoint(math.Vec2.zero).x != 0;
       }
   
-      public CheckDownStairs(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
-        let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
+      public CheckDownStairs(Check: (x:number, y:number, g:boolean) => managers.AABB, isUp: boolean, speed:number): boolean {
+        let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed), true);
         if (md.isCollided && md.objectCollided instanceof Stair) {
           return true;
         }
         return false;
       }
 
-      public CheckVerticalMovement(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
-        let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
+      public CheckVerticalMovement(Check: (x:number, y:number, g:boolean) => managers.AABB, isUp: boolean, speed:number): boolean {
+        let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed), true);
         //console.log(md.closestPointOnBoundsToPoint(math.Vec2.zero).y);
         
         if (md.isCollided && (md.objectCollided instanceof Door 

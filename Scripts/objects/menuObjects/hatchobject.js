@@ -13,6 +13,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var objects;
 (function (objects) {
+    var HatchPlatform = /** @class */ (function (_super) {
+        __extends(HatchPlatform, _super);
+        function HatchPlatform(assetManager, imageString) {
+            return _super.call(this, assetManager, imageString) || this;
+        }
+        return HatchPlatform;
+    }(objects.DynamicObject));
+    objects.HatchPlatform = HatchPlatform;
     var Hatch = /** @class */ (function (_super) {
         __extends(Hatch, _super);
         function Hatch(assetManager) {
@@ -23,7 +31,7 @@ var objects;
             _this.activated = false;
             _this.activatedImage = assetManager.getResult("lever_on");
             _this.deactivatedImage = assetManager.getResult("lever_off");
-            _this.hatch = new objects.DynamicObject(assetManager, "hatch");
+            _this.hatch = new HatchPlatform(assetManager, "hatch");
             _this.hatch.Move = function () {
                 if (_this.hatch.y != _this.final) {
                     if (_this.activated) {
@@ -82,6 +90,8 @@ var objects;
                 this.image = this.deactivatedImage;
                 this.final = this.initial;
             }
+            createjs.Sound.play("switch_light").volume = 0.3;
+            createjs.Sound.play("casset").volume = 0.3;
             this.secondaryAction();
         };
         return Hatch;

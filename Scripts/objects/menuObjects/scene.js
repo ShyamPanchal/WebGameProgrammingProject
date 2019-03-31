@@ -38,7 +38,7 @@ var objects;
         Scene.prototype.CreateFunctionCheck = function (gameObject) {
             var _this = this;
             var boxCollider = gameObject.boxCollider;
-            return function (x, y) {
+            return function (x, y, g) {
                 var collided = false;
                 var aabbCollider = boxCollider.GetAABB(x, y);
                 var result;
@@ -64,15 +64,18 @@ var objects;
                                 if (gameObject instanceof objects.Player) {
                                     object.player = gameObject; //informing which player did the action
                                     object.aabbResultPlayer = result;
-                                    gameObject.actionObject = object;
+                                    gameObject.actionObjects.push(object);
                                     if (!object.alreadyHandled && !gameObject.hasPassed) {
                                         //show Dialog
                                         if (gameObject.dialog != null) {
                                             gameObject.dialog.showDialog();
                                         }
                                     }
+                                    if (g && (object instanceof objects.PushableObject || object instanceof objects.OpenableObject || object instanceof objects.HatchPlatform)) {
+                                        break;
+                                    }
                                 }
-                                if (object instanceof objects.InformativePoint) {
+                                else if (object instanceof objects.InformativePoint) {
                                 }
                                 else {
                                     break;
@@ -85,7 +88,7 @@ var objects;
                     if (gameObject.dialog != null || gameObject.hasPassed) {
                         gameObject.dialog.disposeDialog();
                     }
-                    gameObject.actionObject = null;
+                    gameObject.actionObjects.pop();
                 }
                 return result;
             };
@@ -228,11 +231,12 @@ var objects;
             this.timerCounter++;
             //double the speed of the timer in the case the first player reach the end without the second player
             var speedTimer = objects.Player.onePlayerGone ? 1 / 2 : 1;
-            if (this.timerCounter == objects.Game.frameRate * speedTimer) {
+            if (this.timerCounter >= objects.Game.frameRate * speedTimer) {
                 this.timer--;
                 this.timerCounter = 0;
             }
             if (this.timer <= 0) {
+                this.timer = 0;
                 this.GoDie();
             }
             this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
@@ -263,6 +267,12 @@ var objects;
         };
         Scene.prototype.GoDie = function () {
             if (!this.dead_sound) {
+                if (objects.Game.isPlayingMusic == true) {
+                    if (this.backgroundMusic) {
+                        this.backgroundMusic.stop();
+                        objects.Game.isPlayingMusic = false;
+                    }
+                }
                 this.dead_sound = createjs.Sound.play("dying");
                 this.dead_sound.volume = 0.3;
             }

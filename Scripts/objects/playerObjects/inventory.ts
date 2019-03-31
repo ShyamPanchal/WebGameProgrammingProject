@@ -15,6 +15,8 @@ module objects{
         }
 
         public AddItem(item:HandableObject):void {
+            item.AddForceVertically = () => {};
+            item.AddForceHorizontally = () => {};
             this.objects.push(item);
             item.x = this.x + this.halfW;
             item.y = this.y + this.halfH;
@@ -39,8 +41,9 @@ module objects{
 
         private Drop(item:HandableObject):void {
             let force = 1;
+            let yOffset = (this.player.halfH/2);//*this.player.GetGravityFactor();
             item.x = this.player.boxCollider.x; // + (this.player.isLeft?-30:30)
-            item.y = this.player.boxCollider.y + (this.player.halfH/2)*this.player.GetGravityFactor(); // - (this.player.halfH)*this.player.GetGravityFactor()
+            item.y = this.player.boxCollider.y + yOffset; // - (this.player.halfH)*this.player.GetGravityFactor()
             let x0 = item.x;
             let y0 = item.y;
             let d = 30;

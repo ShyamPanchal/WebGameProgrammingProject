@@ -267,8 +267,8 @@
         createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.SPLASH;
-        currentState = config.Scene.SPLASH;
+        objects.Game.currentScene = config.Scene.INGAME_3;
+        currentState = config.Scene.INGAME_3;
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;
         console.log(objects.Game.currentScene);

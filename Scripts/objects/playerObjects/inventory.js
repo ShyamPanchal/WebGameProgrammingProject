@@ -25,6 +25,8 @@ var objects;
             _super.prototype.Update.call(this);
         };
         Inventory.prototype.AddItem = function (item) {
+            item.AddForceVertically = function () { };
+            item.AddForceHorizontally = function () { };
             this.objects.push(item);
             item.x = this.x + this.halfW;
             item.y = this.y + this.halfH;
@@ -46,8 +48,9 @@ var objects;
         };
         Inventory.prototype.Drop = function (item) {
             var force = 1;
+            var yOffset = (this.player.halfH / 2); //*this.player.GetGravityFactor();
             item.x = this.player.boxCollider.x; // + (this.player.isLeft?-30:30)
-            item.y = this.player.boxCollider.y + (this.player.halfH / 2) * this.player.GetGravityFactor(); // - (this.player.halfH)*this.player.GetGravityFactor()
+            item.y = this.player.boxCollider.y + yOffset; // - (this.player.halfH)*this.player.GetGravityFactor()
             var x0 = item.x;
             var y0 = item.y;
             var d = 30;

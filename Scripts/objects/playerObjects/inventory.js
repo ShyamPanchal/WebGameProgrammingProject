@@ -25,12 +25,14 @@ var objects;
             _super.prototype.Update.call(this);
         };
         Inventory.prototype.AddItem = function (item) {
+            item.AddForceVertically = function () { };
+            item.AddForceHorizontally = function () { };
             this.objects.push(item);
             item.x = this.x + this.halfW;
             item.y = this.y + this.halfH;
             item.isGravityAffected = false;
             //no more item to be actioned 
-            this.player.actionObject = null;
+            this.player.actionObjects.pop();
         };
         Inventory.prototype.RemoveItem = function () {
             if (this.player != null) {
@@ -45,11 +47,46 @@ var objects;
             return this.RemoveItem();
         };
         Inventory.prototype.Drop = function (item) {
-            item.x = this.player.x;
+            var force = 1;
+            var yOffset = (this.player.halfH / 2); //*this.player.GetGravityFactor();
+            item.x = this.player.boxCollider.x; // + (this.player.isLeft?-30:30)
+            item.y = this.player.boxCollider.y + yOffset; // - (this.player.halfH)*this.player.GetGravityFactor()
+            var x0 = item.x;
+            var y0 = item.y;
+            var d = 30;
+            var left = this.player.isLeft;
             //place it above the player
-            item.y = this.player.y - (this.player.halfH) * this.player.GetGravityFactor();
+            item.AddForceHorizontally = function () {
+                if (left) {
+                    if (item.x >= x0 - d) {
+                        item.Move_Horizontally(false, force);
+                        //item.x-=force;
+                    }
+                    else {
+                        item.AddForceHorizontally = function () { };
+                    }
+                }
+                else {
+                    if (item.x <= x0 + d) {
+                        item.Move_Horizontally(true, force);
+                        //item.x+=force;
+                    }
+                    else {
+                        item.AddForceHorizontally = function () { };
+                    }
+                }
+            };
+            item.AddForceVertically = function () {
+                if (item.y >= y0 - d) {
+                    item.Move_Vertically(true, force);
+                    //item.y-=force*item.GetGravityFactor();
+                }
+                else {
+                    item.AddForceVertically = function () { };
+                }
+            };
             //make sure that the x is next to the player;
-            this.player.actionObject = item;
+            this.player.actionObjects.push(item);
             item.isGravityAffected = true;
             console.log('inventory.drop: ' + item.name);
         };

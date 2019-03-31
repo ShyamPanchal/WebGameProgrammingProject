@@ -1,10 +1,15 @@
 module objects{
+    export class HatchPlatform extends DynamicObject {
+        constructor(assetManager: createjs.LoadQueue, imageString: string){
+            super(assetManager, imageString);
+        }
+    }
     export class Hatch extends objects.ActionableObject {
 
         private activatedImage: any;
         private deactivatedImage: any;
 
-        public hatch:objects.DynamicObject;
+        public hatch:objects.HatchPlatform;
 
         public final:number = 0;
         public initial:number = 0;
@@ -18,9 +23,9 @@ module objects{
             this.activatedImage = assetManager.getResult("lever_on");
             this.deactivatedImage = assetManager.getResult("lever_off");
 
-            this.hatch = new DynamicObject(assetManager, "hatch");
+            this.hatch = new HatchPlatform(assetManager, "hatch");
             this.hatch.Move = ()=> {
-                if (this.hatch.y != this.final) {
+                if (this.hatch.y != this.final) {                    
                     if (this.activated) {
                         this.hatch.y += this.velocity;
                     } else {
@@ -74,18 +79,21 @@ module objects{
             if(this.blocked){
                 return;
             }
-
             console.log('action');
             this.activated = !this.activated;
             super.Action();
             this.hatch.Action();
             if (this.activated) {
+                
                 this.image = this.activatedImage;
                 this.final = this.initial + 50;                
             } else {
+                
                 this.image = this.deactivatedImage;
                 this.final = this.initial;
             }
+            createjs.Sound.play("switch_light").volume = 0.3;
+            createjs.Sound.play("casset").volume = 0.3;
             this.secondaryAction();
         }
     }    

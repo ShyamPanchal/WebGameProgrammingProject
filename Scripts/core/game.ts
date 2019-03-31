@@ -180,18 +180,16 @@ console.log('code ran');
         },
     };
 
-
-
     assetManifest = [
-        {id: "player1TextureAtlas", src:"./Assets/Sprites/player1Sprites.png"},
-        {id: "player2TextureAtlas", src:"./Assets/Sprites/player2Sprites.png"},
-        {id: "startButton", src:"../Assets/Sprites/buttonWood.png"},
+        { id: "player1TextureAtlas", src:"./Assets/Sprites/player1Sprites.png" },
+        { id: "player2TextureAtlas", src:"./Assets/Sprites/player2Sprites.png" },
+        { id: "startButton", src:"../Assets/Sprites/buttonWood.png" },
         { id: "background", src: "../Assets/Background/mainMenu.jpg" },
         { id: "level_01", src: "../Assets/Background/level_01.png" },
         { id: "hdivider", src: "../Assets/Sprites/horizontalDivider.png" },
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
-        { id: "ghost", src: "../Assets/Sprites/Ghost.png"},
-        { id: "ghost2", src: "../Assets/Sprites/Ghost2.png"},
+        { id: "ghost", src: "../Assets/Sprites/Ghost.png" },
+        { id: "ghost2", src: "../Assets/Sprites/Ghost2.png" },
         { id: "level_01_house", src: "../Assets/Background/level_01_house.png" },
         { id: "level_01_shadow", src: "../Assets/Background/level_01_shadow.png" },
         { id: "level_02_house", src: "../Assets/Background/level_02_house.png" },
@@ -234,9 +232,44 @@ console.log('code ran');
         { id: "key_hole_blue_off", src: "../Assets/Sprites/Objects/key_hole_blue.png" },
         { id: "key_hole_red_on", src: "../Assets/Sprites/Objects/key_hole_red_on.png" },
         { id: "key_hole_red_off", src: "../Assets/Sprites/Objects/key_hole_red.png" },
-        { id: "play_music", src:"./Assets/Sound/spook.mp3"},
-        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" }                
+        { id: "push", src:"./Assets/Sound/push.mp3" },
+        { id: "play_music", src:"./Assets/Sound/spook.mp3" },
+        { id: "close_door", src:"./Assets/Sound/close_door.mp3" },
+        { id: "coin_drop", src:"./Assets/Sound/Coin_Drop.mp3" },
+        { id: "dying", src:"./Assets/Sound/Dying.mp3" },
+        { id: "getting_attacked", src:"./Assets/Sound/getting_attacked.mp3" },
+        { id: "ghost_wind", src:"./Assets/Sound/Ghost_wind.mp3" },
+        { id: "gravity_sound", src:"./Assets/Sound/gravity_sound.mp3" },
+        { id: "houl", src:"./Assets/Sound/houl.mp3" },
+        { id: "metal_drop", src:"./Assets/Sound/Metal_Drop.mp3" },
+        { id: "door", src:"./Assets/Sound/open_door.mp3" },
+        { id: "open_drawer", src:"./Assets/Sound/open_drawer.mp3" },
+        { id: "powerup", src:"./Assets/Sound/power_pickup.mp3" },
+        { id: "casset", src:"./Assets/Sound/casset.mp3" },
+        { id: "shell_fall", src:"./Assets/Sound/shell_fall.mp3" },
+        { id: "stabbing", src:"./Assets/Sound/stabbing.mp3" },
+        { id: "switch_light", src:"./Assets/Sound/switch_light.mp3" },
+        { id: "TaDa", src:"./Assets/Sound/TaDa.mp3" },
+        { id: "wrench_drop", src:"./Assets/Sound/Wrench_Drop.mp3" },
+        { id: "zombie", src:"./Assets/Sound/zombie.mp3" },
+        { id: "devIcon", src: "../Assets/Images/rocket.png" },
+        { id: "tutorial", src: "../Assets/Background/tutorial.png" },
+        { id: "speechBubble", src: "../Assets/Images/speechBubble.png" },
+        { id: "bb_1", src: "../Assets/Images/Bubbles/bb_1.gif" },
+        { id: "bb_2", src: "../Assets/Images/Bubbles/bb_2.gif" },
+        { id: "bb_3", src: "../Assets/Images/Bubbles/bb_3.gif" },
+        { id: "bb_4", src: "../Assets/Images/Bubbles/bb_4.gif" },
+        { id: "bb_5", src: "../Assets/Images/Bubbles/bb_5.gif" },
+        { id: "bb_6", src: "../Assets/Images/Bubbles/bb_6.gif" },
+        { id: "bb_7", src: "../Assets/Images/Bubbles/bb_7.png" },
+        { id: "bb_8", src: "../Assets/Images/Bubbles/bb_8.png" },
+        { id: "nextBtn", src: "../Assets/Images/Bubbles/next.png" },
+        { id: "playBtn", src: "../Assets/Images/Bubbles/play.png" },
+        { id: "controls", src: "../Assets/Images/Controls-preFinal_rev.png" },
+        { id: "uncheck", src: "../Assets/Sprites/uncheck.png" },
+        { id: "check", src: "../Assets/Sprites/check.png" },
     ];
+    
     function Init():void {
         console.log("Initialization start");
 
@@ -264,8 +297,8 @@ console.log('code ran');
         createjs.Ticker.on("tick", Update);
 
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.INGAME_3;
-        currentState = config.Scene.INGAME_3;
+        objects.Game.currentScene = config.Scene.SPLASH;
+        currentState = config.Scene.SPLASH;
 
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;
@@ -276,20 +309,30 @@ console.log('code ran');
 
     function Update():void {
         if(currentState != objects.Game.currentScene) {
-            //console.log(objects.Game.currentScene);
             Main();
         }
         currentScene.Update();
-        //console.log(objects.Game.currentScene);
         stage.update();
     }
 
     function Main():void {
         switch(objects.Game.currentScene)
         {
+            case config.Scene.SPLASH:
+            stage.removeAllChildren();
+            currentScene = new scenes.SplashScreen(assetManager);
+            stage.addChild(currentScene);
+            break;
+
             case config.Scene.START:
             stage.removeAllChildren();            
             currentScene = new scenes.StartScene(assetManager);
+            stage.addChild(currentScene);
+            break;
+
+            case config.Scene.TUTORIAL:
+            stage.removeAllChildren();            
+            currentScene = new scenes.Tutorial(assetManager);
             stage.addChild(currentScene);
             break;
 
@@ -335,7 +378,6 @@ console.log('code ran');
         currentState = objects.Game.currentScene;
         stage.addChild(currentScene);
     }
-
 
     window.onload = Init;
 })();

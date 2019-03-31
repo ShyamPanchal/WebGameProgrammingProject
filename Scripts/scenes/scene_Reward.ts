@@ -40,6 +40,13 @@ module scenes
 
         public Start():void
         {
+            if(objects.Game.isPlayingMusic==false){                
+                this.backgroundMusic = createjs.Sound.play("play_music");
+                this.backgroundMusic.loop = -1; // Looping forever
+                this.backgroundMusic.volume = 0.3;
+                objects.Game.isPlayingMusic=true;
+            }
+            
             console.log("REWARD MENU...");
         
             this.background = new objects.Background(this.assetManager, "background");

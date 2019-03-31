@@ -39,6 +39,7 @@ module objects{
                 } else {
                     this.image = this.deactivatedImage;
                 }
+                createjs.Sound.play("switch_light").volume = 0.3;
                 this.DoAction(this.activated);
             }
         }

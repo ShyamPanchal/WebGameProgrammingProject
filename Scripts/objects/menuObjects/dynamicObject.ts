@@ -15,9 +15,9 @@ module objects{
             //console.log('ACTION');
         }
 
-        protected CheckCollision: (x:number, y:number) => managers.AABB;
+        protected CheckCollision: (x:number, y:number, g:boolean) => managers.AABB;
 
-        public UpdateIfPossible(Check: (x:number, y:number) => managers.AABB): void {
+        public UpdateIfPossible(Check: (x:number, y:number, g:boolean) => managers.AABB): void {
             this.CheckCollision = Check;
             this.Update();
         }
@@ -46,13 +46,25 @@ module objects{
             }
         }
 
-        public CheckMovement(Check: (x:number, y:number) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
-            let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y);
+        public Move_Horizontally(right:boolean, speed:number) :void {
+          if (right) {
+            if (this.CheckMovement(this.CheckCollision, false, speed)) {
+              this.x += speed;
+            }
+          } else {
+            if (this.CheckMovement(this.CheckCollision, true, speed)) {
+              this.x -= speed;
+            }          
+          }
+      }
+
+        public CheckMovement(Check: (x:number, y:number, g:boolean) => managers.AABB, isLeftMovement: boolean, speed:number): boolean {
+            let md:managers.AABB = Check(this.x + (isLeftMovement? 0 - speed:speed), this.y, true);
             return !md.isCollided;
         }
       
-        public CheckVerticalMovement(Check: (x:number, y:number) => managers.AABB, isUp: boolean, speed:number): boolean {
-            let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed));
+        public CheckVerticalMovement(Check: (x:number, y:number, g:boolean) => managers.AABB, isUp: boolean, speed:number): boolean {
+            let md:managers.AABB = Check(this.x, this.y + (isUp?speed:0 - speed), true);
             if (md.isCollided && md.objectCollided instanceof InformativePoint){
               return true;              
             }

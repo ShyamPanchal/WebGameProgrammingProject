@@ -27,23 +27,29 @@ var objects;
             _this.x = x;
             _this.y = y;
             _this.text = textLabel;
-            _this.text.x = _this.x;
-            _this.text.y = _this.y;
+            if (_this.text != null) {
+                _this.text.x = _this.x;
+                _this.text.y = _this.y;
+            }
             _this.on("mouseover", _this.mouseOver);
             _this.on("mouseout", _this.mouseOut);
             return _this;
         }
         Button.prototype.mouseOver = function () {
             this.alpha = 0.7;
-            this.text.alpha = 0.7;
+            if (this.text != null)
+                this.text.alpha = 0.7;
         };
         Button.prototype.mouseOut = function () {
             this.alpha = 1.0;
-            this.text.alpha = 1.0;
+            if (this.text != null)
+                this.text.alpha = 1.0;
         };
         Button.prototype.Update = function () {
-            this.text.x = this.x;
-            this.text.y = this.y;
+            if (this.text != null) {
+                this.text.x = this.x;
+                this.text.y = this.y;
+            }
         };
         return Button;
     }(createjs.Bitmap));

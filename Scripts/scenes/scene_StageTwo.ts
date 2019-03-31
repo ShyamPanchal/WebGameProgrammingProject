@@ -1,7 +1,6 @@
 module scenes {
     export class StageTwo extends objects.Scene {
         //Audio
-       // private backgroundMusic:createjs.AbstractSoundInstance;
 
         //#region Stage Variables
  
@@ -23,7 +22,38 @@ module scenes {
 
         CreateEnemies = () => {
 
+            var ghost = new objects.Enemy(this.assetManager, "ghost", 550, 75);
+            ghost.alpha = 0.8;
+            ghost.y = ghost.y - ghost.height;
+            ghost.scaleX = 0.7;
+            ghost.scaleY = 0.7;
+            this.enemies.push(ghost);
+            
+
+            var ghost2 = new objects.Enemy(this.assetManager, "ghost2", 450, 180);
+            ghost2.alpha = 0.8;
+            ghost2.y = ghost2.y - ghost2.height;
+            ghost2.scaleX = 0.7;
+            ghost2.scaleY = 0.7;
+            this.enemies.push(ghost2);            
+
+
+            var ghost4 = new objects.Enemy(this.assetManager, "ghost2", 350, 420);
+            ghost4.alpha = 0.8;
+            ghost4.y = ghost4.y - ghost4.height;
+            ghost4.scaleX = 0.7;
+            ghost4.scaleY = 0.7;
+            this.enemies.push(ghost4);
+            
+            var ghost5 = new objects.Enemy(this.assetManager, "ghost", 250, 530);
+            ghost5.alpha = 0.8;
+            ghost5.y = ghost5.y - ghost5.height;
+            ghost5.scaleX = 0.7;
+            ghost5.scaleY = 0.7;
+            this.enemies.push(ghost5);
+            
         }
+
         public Start(): void {            
             super.Start();
             if(objects.Game.isPlayingMusic==false){                
@@ -45,15 +75,6 @@ module scenes {
         public Main(): void {
             super.Main();            
             
-        }
-
-         //Ghost
-         GetPositionE1 = ():math.Vec2 => {
-            return new math.Vec2(0, 0);//Put (800,250) if yellow ghost needed
-        }
-    
-        GetPositionE2 = ():math.Vec2 => {
-            return new math.Vec2(0, 0);//Put (800,485) if red ghost needed
         }
 
         //Player
@@ -140,7 +161,7 @@ module scenes {
             floor_2_Desk.y = 490;
             this.gameSceneryDynamicObjects.push(floor_2_Desk);
             
-            floor_2_Desk.objectInside.push(floor_1_Treasure);            
+            floor_2_Desk.AddObjectInside(floor_1_Treasure);            
 
 
         }
@@ -176,7 +197,7 @@ module scenes {
             floor_1_Desk.x = 515;
             floor_1_Desk.y = 450;
             this.gameSceneryDynamicObjects.push(floor_1_Desk);
-            floor_1_Desk.objectInside.push(floor_1_Treasure);
+            floor_1_Desk.AddObjectInside(floor_1_Treasure);
         }
 
         private CreateObjectsFloorTwo(): void { 
@@ -184,7 +205,7 @@ module scenes {
             floor_2_Door.isLocked = true;
             floor_2_Door.boxCollider = new objects.BoxCollider(0, 0, floor_2_Door.x, floor_2_Door.y,
                 floor_2_Door.width, floor_2_Door.height+5);                
-            floor_2_Door.AddEnterDoorAction(()=>{return this.timer},this.GoToNextLevel, this.RemovePlayer);
+            floor_2_Door.AddEnterDoorAction(()=>{return this.timer},this.GoToNextLevel);
             this.addChild(floor_2_Door);
             floor_2_Door.x = 240;
             floor_2_Door.y = 280;
@@ -204,7 +225,7 @@ module scenes {
             floor_2_Desk.y = 280;
             this.gameSceneryDynamicObjects.push(floor_2_Desk);
             floor_2_Treasure.isGravityAffected = false;
-            floor_2_Desk.objectInside.push(floor_2_Treasure);
+            floor_2_Desk.AddObjectInside(floor_2_Treasure);
 
             
         }
@@ -231,7 +252,7 @@ module scenes {
             floor_3_Desk.y = 190;
             this.gameSceneryDynamicObjects.push(floor_3_Desk);
             floor_3_Treasure_1.isGravityAffected = false;
-            floor_3_Desk.objectInside.push(floor_3_Treasure_1);
+            floor_3_Desk.AddObjectInside(floor_3_Treasure_1);
 
             var floor_3_Desk_1 = new objects.OpenableObject(this.assetManager, "closed_desk", "opened_desk");
             floor_3_Desk_1.boxCollider = new objects.BoxCollider(0, 0, floor_3_Desk_1.x, floor_3_Desk_1.y,
@@ -241,7 +262,7 @@ module scenes {
             floor_3_Desk_1.y = 190;
             this.gameSceneryDynamicObjects.push(floor_3_Desk_1);
             floor_3_Treasure_1.isGravityAffected = false;
-            floor_3_Desk_1.objectInside.push(floor_3_Treasure_2);
+            floor_3_Desk_1.AddObjectInside(floor_3_Treasure_2);
     
         }
 
@@ -346,7 +367,7 @@ module scenes {
             floor_3_Desk_2.y = 90;
             this.gameSceneryDynamicObjects.push(floor_3_Desk_2);
             floor_3_Key.isGravityAffected = false;
-            floor_3_Desk_2.objectInside.push(floor_3_Key);
+            floor_3_Desk_2.AddObjectInside(floor_3_Key);
 
 
             var floor_3_Treasure = new objects.HandableObject(this.assetManager,"coins", 500);                
@@ -362,7 +383,7 @@ module scenes {
             floor_3_Desk_1.x = 415;
             floor_3_Desk_1.y = 90;
             this.gameSceneryDynamicObjects.push(floor_3_Desk_1);
-            floor_3_Desk_1.objectInside.push(floor_3_Treasure);
+            floor_3_Desk_1.AddObjectInside(floor_3_Treasure);
 
             var lever_basement = new objects.Lever(this.assetManager);
             lever_basement.x = 415;
@@ -389,9 +410,9 @@ module scenes {
         
         
         private CreateObjects(): void {            
+            this.CreateObjectsFloorTwo();
             this.CreateObjectsBasement();
             this.CreateObjectsFloorOne();
-            this.CreateObjectsFloorTwo();
             this.CreateObjectsFloorThree();
             this.CreateObjectsFloorFour();
         }

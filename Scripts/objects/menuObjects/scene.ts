@@ -6,6 +6,7 @@ module objects {
     public assetManager;
     public isPaused: boolean;
     public timer:number;
+    private dead_sound:createjs.AbstractSoundInstance;
 
     protected title: objects.Label;
     protected titleShadow: objects.Label;
@@ -13,12 +14,14 @@ module objects {
     //private backButton: objects.Button;
     protected pauseButton: objects.Button;
 
-    private ghost: objects.Enemy;
-    private ghost2: objects.Enemy;
+    //it must be a list each level can have the amount of ghost desired
+    // each level must be responsibe to create its own ghosts
+    protected enemies: objects.Enemy[];
 
+    
     protected menuButton: objects.Button;
     protected menuTxtButton: objects.Label;
-
+    
     //private ghost: objects.Enemy;
 
 
@@ -30,6 +33,8 @@ module objects {
     protected gamePausedText: objects.Label;
 
     protected overTitle: objects.Label;
+    protected timesUp: objects.Label;
+
 
     protected positionInventoryP2: math.Vec2 = new math.Vec2(25, 350);
     protected positionInventoryP1: math.Vec2 = new math.Vec2(970, 50);
@@ -43,6 +48,7 @@ module objects {
     protected background_shadow: objects.Background;
     protected background_shadow_1: objects.Background;
 
+    protected gameBoundaries: objects.EmptyGameObject[];
     protected gameSceneryStaticObjects: objects.EmptyGameObject[];
     protected gameSceneryDynamicObjects: objects.DynamicObject[];
 
@@ -67,7 +73,7 @@ module objects {
 
   public CreateFunctionCheck(gameObject: objects.GameObject) {
       let boxCollider: objects.BoxCollider = gameObject.boxCollider;
-      return (x: number, y: number): managers.AABB => {
+      return (x:number, y:number, g:boolean): managers.AABB => {
           let collided = false;
           let aabbCollider = boxCollider.GetAABB(x, y);
           let result: managers.AABB;
@@ -88,22 +94,28 @@ module objects {
               for (let i = 0; i < this.gameSceneryDynamicObjects.length; i++) {
                   var object = this.gameSceneryDynamicObjects[i];
                   if (object.name !== gameObject.name) {
+
                       result = managers.Collision.CheckAABBCollision(aabbCollider, object.boxCollider.aabb);
+
                       if (result.CheckCollided()) {
                           collided = true;
                           result.objectCollided = object;
                           if (gameObject instanceof objects.Player) {
                               object.player = <objects.Player>gameObject;//informing which player did the action
+
                               object.aabbResultPlayer = result;
-                              gameObject.actionObject = object;
-                              if (!object.alreadyHandled) {
+                              
+                              gameObject.actionObjects.push(object);
+                              if (!object.alreadyHandled && !gameObject.hasPassed && !gameObject.isDead) {
                                   //show Dialog
                                   if (gameObject.dialog != null) {
                                       gameObject.dialog.showDialog();
                                   }
                               }
-                          }       
-                          if (object instanceof InformativePoint) {
+                              if (g && (object instanceof PushableObject || object instanceof OpenableObject || object instanceof HatchPlatform)) {
+                                break;
+                              }
+                          } else if (object instanceof InformativePoint) {
 
                           } else {
                             break;
@@ -114,10 +126,10 @@ module objects {
           }
 
           if (!collided && gameObject instanceof objects.Player) {
-              if (gameObject.dialog != null) {
+              if (gameObject.dialog != null || gameObject.hasPassed || gameObject.isDead) {
                   gameObject.dialog.disposeDialog();
               }
-              gameObject.actionObject = null;
+              gameObject.actionObjects.pop();
           }
           return result;
       };
@@ -127,28 +139,19 @@ module objects {
   {
       console.log("called");     
             
-      objects.Game.keyboard.pause = !objects.Game.keyboard.pause;    
-      
-      if(objects.Game.controlsImage.visible)
-      {
-          objects.Game.controlsImage.visible = false;
+      objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
+      if (objects.Game.keyboard.pause) {
+        objects.Game.controlsImage.visible = true;            
+      } else {
+        objects.Game.controlsImage.visible = false;
       }
-      
   }
 
-  protected fn_controlsButtonClick():void
+  protected fn_menuButtonClick():void
   {
-      console.log('show controls');
-      objects.Game.controlsImage.visible = true;
-
-      if(objects.Game.controlsImage.visible)
-      {
-          
-      }
-      else
-      {
-          objects.Game.controlsImage.visible = false;
-      }
+            
+      objects.Game.keyboard.pause = false;
+      objects.Game.currentScene = config.Scene.START;
   }
 
   protected GetPositionE1():math.Vec2 {
@@ -180,22 +183,19 @@ module objects {
     }
 
     public Start(): void {
+      //objects.Game.isDebug = true;
+      objects.Game.playerDead = false;
       objects.Game.keyboard = new managers.Keyboard();
       objects.Player.onePlayerGone = false;
       this.isPaused = false;
+      this.gameBoundaries = new Array<objects.EmptyGameObject>();
       this.gameSceneryStaticObjects = new Array<objects.EmptyGameObject>();
       this.gameSceneryDynamicObjects = new Array<objects.DynamicObject>();
 
-      var ee1 = this.GetPositionE1();
-      var ee2 = this.GetPositionE2();
+      this.enemies = new Array<objects.Enemy>();
 
-      this.ghost = new objects.Enemy(this.assetManager, "ghost", ee1.x, ee1.y);
-      this.ghost.alpha = 0.9;
-       this.ghost.y = this.ghost.y - this.ghost.height;
-  
-       this.ghost2 = new objects.Enemy(this.assetManager, "ghost2", ee2.x, ee2.y);
-      this.ghost2.alpha = 0.9;
-       this.ghost2.y = this.ghost2.y - this.ghost2.height;
+      this.CreateEnemies();
+      
       
       console.log("GAME SCENE(S)...");
 
@@ -204,13 +204,7 @@ module objects {
       this.background_main = new objects.Background(this.assetManager, this.GetBackgroundAsset());
       this.background_shadow = new objects.Background(this.assetManager, this.GetBackgroundShadowAsset());
 
-      //pause button: controls button
-      this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff",  70,  510);
-      this.menuButton = new objects.Button(this.assetManager, "startButton", this.menuTxtButton.x - 10, this.menuTxtButton.y, this.menuTxtButton);
-      this.menuButton.visible = false;
-      this.menuTxtButton.visible = false;
-
-      objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
+      objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5, 600 * 0.5);
       objects.Game.controlsImage.visible = false ;
 
 
@@ -221,6 +215,20 @@ module objects {
       this.pauseButton.scaleX = 0.75;
       this.gamePausedText = new objects.Label("Game Paused", "bold 48px", "Cambay", "#ffffff", 1066 / 2, 600 / 4, true);
       this.gamePausedText.visible = false;
+
+
+      
+      this.menuTxtButton = new objects.Label("Start Menu", "20px", "Cambay", "#ffffff", 0, 0, true);
+      this.menuButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.088, 600 * 0.95, this.menuTxtButton, true);
+      this.menuButton.on("click",this.fn_menuButtonClick)
+      this.menuButton.scaleX = 0.75;
+      this.menuButton.x = 1066 * 0.5;
+      this.menuButton.y = 600 * 0.85;
+      this.menuButton.text.x = 1066 * 0.5;
+      this.menuButton.text.y = 600 * 0.85;
+      this.menuButton.visible = false;
+      this.menuButton.text.visible = false;
+
       //#endregion
 
       this.title = new objects.Label(this.GetLevelName(), "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
@@ -266,10 +274,11 @@ module objects {
       //#endregion
 
       this.overTitle = new objects.Label("Player dead...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 *0.35, true);
-
+      this.timesUp = new objects.Label("Time is up...", "bold 50px", "Cambay", "#960000", (1066 / 2), 600 *0.35, true);
     }
 
     public Update(): void {
+      this.CheckBoundaries();
       this.CheckPaused();
       this.pauseBackground.visible = this.isPaused;
       this.gamePausedText.visible = this.isPaused;
@@ -281,8 +290,9 @@ module objects {
           this.pauseButton.y = 600 * 0.75;
           this.pauseButton.text.x = 1066 / 2;
           this.pauseButton.text.y = 600 * 0.75;
+
           this.menuButton.visible = true;
-          this.menuTxtButton.visible = true;
+          this.menuButton.text.visible = true;
 
           return;
       }
@@ -294,21 +304,23 @@ module objects {
           this.pauseButton.y = 600 * 0.95;
           this.pauseButton.text.x = 1066 * 0.088;
           this.pauseButton.text.y = 600 * 0.95;
+
           this.menuButton.visible = false;
+          this.menuButton.text.visible = false;
 
       }
 
-      this.menuButton.visible = false;
       this.timerCounter++;
       //double the speed of the timer in the case the first player reach the end without the second player
       let speedTimer = Player.onePlayerGone?1/2:1;
-      if (this.timerCounter == objects.Game.frameRate*speedTimer) {
-          this.timer--;
-          this.timerCounter = 0;
-      }
-
+      if (this.timerCounter >= objects.Game.frameRate*speedTimer) {
+        this.timer--;
+        this.timerCounter = 0;
+      }      
+      
       if (this.timer <= 0) {
-          objects.Game.currentScene = config.Scene.FINISH;
+          this.timer = 0;
+          this.GoDie();
       }
 
       this.timeRemaining.text = this.timeRemaining.fn_ChangeLabel(this.timer);
@@ -319,16 +331,17 @@ module objects {
       this.player1.UpdateIfPossible(CheckMovementP1);
       this.player2.UpdateIfPossible(CheckMovementP2);
 
-      this.ghost.Update();
-      this.ghost2.Update2();
+      this.enemies.forEach(enemy => {
+        enemy.Update();
 
-          this.player1.isDead = managers.Collision.CheckDistance(this.player1, this.ghost);
-          this.player2.isDead = managers.Collision.CheckDistance(this.player2, this.ghost2);
-          if(this.player1.isDead || this.player2.isDead){             
-             this.GoDie();      
-             this.removeChild(this.player1);
-             this.removeChild(this.player2);    
-          }
+        this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
+        this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
+        if(this.player1.isDead || this.player2.isDead){ 
+                    
+           this.GoDie();      
+           this.removeChild(enemy);    
+        }
+      });
       
       for (let i = 0; i < this.gameSceneryStaticObjects.length; i++) {
           var platform = this.gameSceneryStaticObjects[i];
@@ -346,21 +359,62 @@ module objects {
       objects.Game.currentScene = config.Scene.REWARD;
     }
 
-    protected RemovePlayer (player:Player): void {      
-      player.isGravityAffected = false;
-      player.isDead = false;
-      player.x = 1500;
-    }
-
     protected GoDie():void {
-      var overNote = (): void => {
+      this.player1.isDead = true;
+      this.player2.isDead = true;
+
+      if (!this.dead_sound) {
+        if (objects.Game.isPlayingMusic == true) {
+          if (this.backgroundMusic) {
+            this.backgroundMusic.stop();
+            objects.Game.isPlayingMusic=false;
+          }
+        }
+        this.dead_sound = createjs.Sound.play("dying");  
+        this.dead_sound.volume = 0.3
+      }
+      this.player1.visible = false;
+      this.player2.visible = false;
+      this.player1.spriteRenderer.visible = false;
+      this.player2.spriteRenderer.visible = false;
+      this.player2.dialog.showDialog = () =>{};
+      this.player1.dialog.showDialog = () =>{};
+      
+      var overNote = (): void => {        
+        objects.Game.playerDead = true;
         objects.Game.currentScene = config.Scene.FINISH;
       }
 
       this.StartCount(2, overNote);
-      this.overTitle.visible = true;            
+      if (this.timer<= 0) {
+
+      } else {
+        this.overTitle.visible = true;
+      }
     }
     
+    protected CreateBoundaries () :void {
+      var boundary_1 = new objects.EmptyGameObject(this.assetManager, "wall_l", 1066, 1);
+      boundary_1.x = 0;
+      boundary_1.y = 0;
+      this.addChild(boundary_1);
+
+      var boundary_2 = new objects.EmptyGameObject(this.assetManager, "wall_r", 1, 650);
+      boundary_2.x = 1050;
+      boundary_2.y = 0;
+      this.addChild(boundary_2);
+
+      var boundary_3 = new objects.EmptyGameObject(this.assetManager, "wall_l", 210, 1);
+      boundary_3.x = 840;
+      boundary_3.y = 510;
+      this.addChild(boundary_3);
+
+      this.gameBoundaries.push(boundary_1);
+      this.gameBoundaries.push(boundary_2);
+      this.gameBoundaries.push(boundary_3);
+
+    };
+
     protected CreateScenery: () => void;
     protected CreateEnemies: () => void;
     protected CreateBackgroundEffects ():void { };
@@ -384,15 +438,15 @@ module objects {
       this.addChild(this.player2.inventory);
       this.addChild(this.player2.picture);
 
-      this.addChild(this.ghost);
-      this.addChild(this.ghost2);
-
       this.CreateScenery();
+      this.CreateBoundaries();
 
       this.addChild(this.player1.spriteRenderer);
       this.addChild(this.player2.spriteRenderer);
 
-     
+      this.enemies.forEach(ghost => {
+        this.addChild(ghost);
+      });     
 
       this.CreateBackgroundEffects();            
       this.addChild(this.background_shadow);
@@ -410,6 +464,10 @@ module objects {
       
       this.addChild(this.overTitle);
       this.overTitle.visible = false;
+
+      this.addChild(this.timesUp);
+      this.timesUp.visible = false;
+
       this.addChild(this.pauseBackground);
 
       this.addChild(this.pauseButton);
@@ -423,12 +481,12 @@ module objects {
       this.addChild(this.pauseTxtButton);
 
       this.addChild(this.menuButton);
-      this.addChild(this.menuTxtButton);
+      this.addChild(this.menuButton.text);
       this.addChild(objects.Game.controlsImage);
       
       //this.backButton.on("click", this.fn_ButtonClick);
       
-      this.menuButton.on("click", this.fn_controlsButtonClick);
+      //this.menuButton.on("click", this.fn_controlsButtonClick);
     }
 
     public CheckPaused(): void {      
@@ -466,5 +524,21 @@ module objects {
       }, 1000);
     };
 
+    public CheckBoundaries(): void {
+
+        this.gameBoundaries.forEach(deadEnd => {
+          deadEnd.Update();
+
+          let result_1 = managers.Collision.CheckAABBCollision(this.player1.boxCollider.aabb, deadEnd.boxCollider.aabb);
+          let result_2 = managers.Collision.CheckAABBCollision(this.player2.boxCollider.aabb, deadEnd.boxCollider.aabb);
+
+          this.player1.isDead = result_1.CheckCollided();
+          this.player2.isDead = result_2.CheckCollided();
+         
+          if(this.player1.isDead || this.player2.isDead){             
+             this.GoDie();
+          }          
+        });    
+    }
   }
 }

@@ -48,7 +48,8 @@ var scenes;
             this.Main();
         };
         Prologue.prototype.fn_ButtonClick = function () {
-            objects.Game.currentScene = config.Scene.INGAME;
+            objects.Game.skip = true;
+            objects.Game.currentScene = config.Scene.TUTORIAL;
         };
         Prologue.prototype.Update = function () {
             if (this.storyLabel1.y > 150) {

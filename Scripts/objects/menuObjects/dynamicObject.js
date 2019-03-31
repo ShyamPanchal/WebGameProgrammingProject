@@ -50,12 +50,24 @@ var objects;
                 }
             }
         };
+        DynamicObject.prototype.Move_Horizontally = function (right, speed) {
+            if (right) {
+                if (this.CheckMovement(this.CheckCollision, false, speed)) {
+                    this.x += speed;
+                }
+            }
+            else {
+                if (this.CheckMovement(this.CheckCollision, true, speed)) {
+                    this.x -= speed;
+                }
+            }
+        };
         DynamicObject.prototype.CheckMovement = function (Check, isLeftMovement, speed) {
-            var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y);
+            var md = Check(this.x + (isLeftMovement ? 0 - speed : speed), this.y, true);
             return !md.isCollided;
         };
         DynamicObject.prototype.CheckVerticalMovement = function (Check, isUp, speed) {
-            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed));
+            var md = Check(this.x, this.y + (isUp ? speed : 0 - speed), true);
             if (md.isCollided && md.objectCollided instanceof objects.InformativePoint) {
                 return true;
             }

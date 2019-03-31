@@ -129,7 +129,11 @@ var objects;
             return null;
         };
         Scene.prototype.Start = function () {
+<<<<<<< Updated upstream
             //objects.Game.isDebug = true;
+=======
+            objects.Game.isDebug = false;
+>>>>>>> Stashed changes
             objects.Game.playerDead = false;
             objects.Game.keyboard = new managers.Keyboard();
             objects.Player.onePlayerGone = false;

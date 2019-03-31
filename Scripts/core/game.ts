@@ -252,10 +252,22 @@ console.log('code ran');
         { id: "TaDa", src:"./Assets/Sound/TaDa.mp3" },
         { id: "wrench_drop", src:"./Assets/Sound/Wrench_Drop.mp3" },
         { id: "zombie", src:"./Assets/Sound/zombie.mp3" },
+        { id: "devIcon", src: "../Assets/Images/rocket.png" },
+        { id: "tutorial", src: "../Assets/Background/tutorial.png" },
+        { id: "speechBubble", src: "../Assets/Images/speechBubble.png" },
+        { id: "bb_1", src: "../Assets/Images/Bubbles/bb_1.gif" },
+        { id: "bb_2", src: "../Assets/Images/Bubbles/bb_2.gif" },
+        { id: "bb_3", src: "../Assets/Images/Bubbles/bb_3.gif" },
+        { id: "bb_4", src: "../Assets/Images/Bubbles/bb_4.gif" },
+        { id: "bb_5", src: "../Assets/Images/Bubbles/bb_5.gif" },
+        { id: "bb_6", src: "../Assets/Images/Bubbles/bb_6.gif" },
+        { id: "bb_7", src: "../Assets/Images/Bubbles/bb_7.png" },
+        { id: "bb_8", src: "../Assets/Images/Bubbles/bb_8.png" },
+        { id: "nextBtn", src: "../Assets/Images/Bubbles/next.png" },
+        { id: "playBtn", src: "../Assets/Images/Bubbles/play.png" }
         { id: "controls", src: "../Assets/Images/Controls-preFinal_rev.png" },
         { id: "uncheck", src: "../Assets/Sprites/uncheck.png" },
         { id: "check", src: "../Assets/Sprites/check.png" },
-        { id: "devIcon", src: "../Assets/Images/rocket.png" }
     ];
     
     function Init():void {
@@ -315,6 +327,12 @@ console.log('code ran');
             case config.Scene.START:
             stage.removeAllChildren();            
             currentScene = new scenes.StartScene(assetManager);
+            stage.addChild(currentScene);
+            break;
+
+            case config.Scene.TUTORIAL:
+            stage.removeAllChildren();            
+            currentScene = new scenes.Tutorial(assetManager);
             stage.addChild(currentScene);
             break;
 

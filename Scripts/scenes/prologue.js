@@ -48,8 +48,12 @@ var scenes;
             this.Main();
         };
         Prologue.prototype.fn_ButtonClick = function () {
+<<<<<<< Updated upstream
             objects.Game.skip = true;
             objects.Game.currentScene = config.Scene.INGAME;
+=======
+            objects.Game.currentScene = config.Scene.TUTORIAL;
+>>>>>>> Stashed changes
         };
         Prologue.prototype.Update = function () {
             if (this.storyLabel1.y > 150) {

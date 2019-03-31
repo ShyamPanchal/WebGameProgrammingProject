@@ -242,7 +242,8 @@
         { id: "TaDa", src: "./Assets/Sound/TaDa.mp3" },
         { id: "wrench_drop", src: "./Assets/Sound/Wrench_Drop.mp3" },
         { id: "zombie", src: "./Assets/Sound/zombie.mp3" },
-        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" }
+        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" },
+        { id: "devIcon", src: "../Assets/Images/rocket.png" }
     ];
     function Init() {
         console.log("Initialization start");
@@ -264,8 +265,8 @@
         createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.INGAME;
-        currentState = config.Scene.INGAME;
+        objects.Game.currentScene = config.Scene.SPLASH;
+        currentState = config.Scene.SPLASH;
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;
         console.log(objects.Game.currentScene);
@@ -273,15 +274,18 @@
     }
     function Update() {
         if (currentState != objects.Game.currentScene) {
-            //console.log(objects.Game.currentScene);
             Main();
         }
         currentScene.Update();
-        //console.log(objects.Game.currentScene);
         stage.update();
     }
     function Main() {
         switch (objects.Game.currentScene) {
+            case config.Scene.SPLASH:
+                stage.removeAllChildren();
+                currentScene = new scenes.SplashScreen(assetManager);
+                stage.addChild(currentScene);
+                break;
             case config.Scene.START:
                 stage.removeAllChildren();
                 currentScene = new scenes.StartScene(assetManager);

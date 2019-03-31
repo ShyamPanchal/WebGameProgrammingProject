@@ -180,8 +180,6 @@ console.log('code ran');
         },
     };
 
-
-
     assetManifest = [
         { id: "player1TextureAtlas", src:"./Assets/Sprites/player1Sprites.png" },
         { id: "player2TextureAtlas", src:"./Assets/Sprites/player2Sprites.png" },
@@ -254,8 +252,10 @@ console.log('code ran');
         { id: "TaDa", src:"./Assets/Sound/TaDa.mp3" },
         { id: "wrench_drop", src:"./Assets/Sound/Wrench_Drop.mp3" },
         { id: "zombie", src:"./Assets/Sound/zombie.mp3" },
-        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" }
+        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" },
+        { id: "devIcon", src: "../Assets/Images/rocket.png" }
     ];
+    
     function Init():void {
         console.log("Initialization start");
 
@@ -283,8 +283,8 @@ console.log('code ran');
         createjs.Ticker.on("tick", Update);
 
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.INGAME;
-        currentState = config.Scene.INGAME;
+        objects.Game.currentScene = config.Scene.SPLASH;
+        currentState = config.Scene.SPLASH;
 
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;
@@ -295,17 +295,21 @@ console.log('code ran');
 
     function Update():void {
         if(currentState != objects.Game.currentScene) {
-            //console.log(objects.Game.currentScene);
             Main();
         }
         currentScene.Update();
-        //console.log(objects.Game.currentScene);
         stage.update();
     }
 
     function Main():void {
         switch(objects.Game.currentScene)
         {
+            case config.Scene.SPLASH:
+            stage.removeAllChildren();
+            currentScene = new scenes.SplashScreen(assetManager);
+            stage.addChild(currentScene);
+            break;
+
             case config.Scene.START:
             stage.removeAllChildren();            
             currentScene = new scenes.StartScene(assetManager);
@@ -354,7 +358,6 @@ console.log('code ran');
         currentState = objects.Game.currentScene;
         stage.addChild(currentScene);
     }
-
 
     window.onload = Init;
 })();

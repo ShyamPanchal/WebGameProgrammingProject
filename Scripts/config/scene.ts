@@ -2,6 +2,7 @@ module config
 {
     export enum Scene
     {
+        SPLASH,
         PROLOGUE,
         START,
         INGAME,

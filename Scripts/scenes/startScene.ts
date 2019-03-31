@@ -15,6 +15,11 @@ module scenes
 
         private controlsButton: objects.Button;
         private txtControlsButton: objects.Label;
+        
+        private easyButton: objects.Button;
+        private txtEasyButton: objects.Label;
+
+        
         //private controlsImage: objects.UIHelper;
         private clicked: boolean = false;
 
@@ -55,14 +60,14 @@ module scenes
         {
             console.log("Main Menu/Start Menu...");      
             
-            
-        
             this.background = new objects.Background(this.assetManager, "background");
             
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff",0,0, true); 
+            
             this.controlsButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.5, 600 * 0.85, this.txtStartButton, true);
             this.txtControlsButton = new objects.Label("CONTROLS", "20px", "Cambay", "#f7fffd", this.controlsButton.x, this.controlsButton.y, true);
-            objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
+
+            objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5, 600 * 0.5);
             objects.Game.controlsImage.visible = false;
             
             this.txtStartButton = new objects.Label("PLAY", "20px", "Cambay", "#ffffff",0,0, true);     
@@ -80,6 +85,22 @@ module scenes
 
             this.hDivider2 = new objects.Image(this.assetManager,"hdivider" ,1066 * 0.5, 600 * 0.175, true);
             this.hDivider2.scaleX = 2;
+
+
+            this.txtEasyButton = new objects.Label("Easy", "20px", "Cambay", "#f7fffd",  1066 * 0.5, 600 * 0.95, true);
+            this.easyButton = new objects.Button(this.assetManager, objects.Game.easyMode?"check":"uncheck", 1066 * 0.5, 600 * 0.95, this.txtEasyButton, true);
+            this.easyButton.scaleX = 0.5;
+            this.easyButton.scaleY = 0.5;
+            this.easyButton.x = this.txtEasyButton.x + 50;
+            this.easyButton.on("click", ()=> {
+                objects.Game.easyMode = !objects.Game.easyMode;
+                if (objects.Game.easyMode) {
+                    this.easyButton.image = this.assetManager.getResult("check");
+                } else {
+                    this.easyButton.image = this.assetManager.getResult("uncheck");
+                }
+            });
+
             this.Main();
         }
         
@@ -120,6 +141,9 @@ module scenes
             
             this.addChild(this.hDivider);
             this.addChild(this.hDivider2);
+
+            this.addChild(this.easyButton);
+            this.addChild(this.easyButton.text);
             this.startButton.on("click", this.fn_ButtonClick);
             this.controlsButton.on("click", this.fn_ControlsButton);
 

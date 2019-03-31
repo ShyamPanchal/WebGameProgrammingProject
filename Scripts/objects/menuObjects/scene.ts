@@ -18,9 +18,10 @@ module objects {
     // each level must be responsibe to create its own ghosts
     protected enemies: objects.Enemy[];
 
+    
     protected menuButton: objects.Button;
     protected menuTxtButton: objects.Label;
-
+    
     //private ghost: objects.Enemy;
 
 
@@ -105,7 +106,7 @@ module objects {
                               object.aabbResultPlayer = result;
                               
                               gameObject.actionObjects.push(object);
-                              if (!object.alreadyHandled && !gameObject.hasPassed) {
+                              if (!object.alreadyHandled && !gameObject.hasPassed && !gameObject.isDead) {
                                   //show Dialog
                                   if (gameObject.dialog != null) {
                                       gameObject.dialog.showDialog();
@@ -125,7 +126,7 @@ module objects {
           }
 
           if (!collided && gameObject instanceof objects.Player) {
-              if (gameObject.dialog != null || gameObject.hasPassed) {
+              if (gameObject.dialog != null || gameObject.hasPassed || gameObject.isDead) {
                   gameObject.dialog.disposeDialog();
               }
               gameObject.actionObjects.pop();
@@ -138,28 +139,19 @@ module objects {
   {
       console.log("called");     
             
-      objects.Game.keyboard.pause = !objects.Game.keyboard.pause;    
-      
-      if(objects.Game.controlsImage.visible)
-      {
-          objects.Game.controlsImage.visible = false;
+      objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
+      if (objects.Game.keyboard.pause) {
+        objects.Game.controlsImage.visible = true;            
+      } else {
+        objects.Game.controlsImage.visible = false;
       }
-      
   }
 
-  protected fn_controlsButtonClick():void
+  protected fn_menuButtonClick():void
   {
-      console.log('show controls');
-      objects.Game.controlsImage.visible = true;
-
-      if(objects.Game.controlsImage.visible)
-      {
-          
-      }
-      else
-      {
-          objects.Game.controlsImage.visible = false;
-      }
+            
+      objects.Game.keyboard.pause = false;
+      objects.Game.currentScene = config.Scene.START;
   }
 
   protected GetPositionE1():math.Vec2 {
@@ -191,7 +183,7 @@ module objects {
     }
 
     public Start(): void {
-      objects.Game.isDebug = true;
+      //objects.Game.isDebug = true;
       objects.Game.playerDead = false;
       objects.Game.keyboard = new managers.Keyboard();
       objects.Player.onePlayerGone = false;
@@ -212,13 +204,7 @@ module objects {
       this.background_main = new objects.Background(this.assetManager, this.GetBackgroundAsset());
       this.background_shadow = new objects.Background(this.assetManager, this.GetBackgroundShadowAsset());
 
-      //pause button: controls button
-      this.menuTxtButton = new objects.Label("Controls", "20px", "Cambay", "#ffffff",  70,  510);
-      this.menuButton = new objects.Button(this.assetManager, "startButton", this.menuTxtButton.x - 10, this.menuTxtButton.y, this.menuTxtButton);
-      this.menuButton.visible = false;
-      this.menuTxtButton.visible = false;
-
-      objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5 / 2, 600 * 0.5 / 2);
+      objects.Game.controlsImage = new objects.UIHelper(this.assetManager, "controls", 1066 * 0.5, 600 * 0.5);
       objects.Game.controlsImage.visible = false ;
 
 
@@ -229,6 +215,20 @@ module objects {
       this.pauseButton.scaleX = 0.75;
       this.gamePausedText = new objects.Label("Game Paused", "bold 48px", "Cambay", "#ffffff", 1066 / 2, 600 / 4, true);
       this.gamePausedText.visible = false;
+
+
+      
+      this.menuTxtButton = new objects.Label("Start Menu", "20px", "Cambay", "#ffffff", 0, 0, true);
+      this.menuButton = new objects.Button(this.assetManager, "startButton", 1066 * 0.088, 600 * 0.95, this.menuTxtButton, true);
+      this.menuButton.on("click",this.fn_menuButtonClick)
+      this.menuButton.scaleX = 0.75;
+      this.menuButton.x = 1066 * 0.5;
+      this.menuButton.y = 600 * 0.85;
+      this.menuButton.text.x = 1066 * 0.5;
+      this.menuButton.text.y = 600 * 0.85;
+      this.menuButton.visible = false;
+      this.menuButton.text.visible = false;
+
       //#endregion
 
       this.title = new objects.Label(this.GetLevelName(), "bold 48px", "Cambay", "#960000", (1066 / 2), 600 / 8, true);
@@ -290,8 +290,9 @@ module objects {
           this.pauseButton.y = 600 * 0.75;
           this.pauseButton.text.x = 1066 / 2;
           this.pauseButton.text.y = 600 * 0.75;
+
           this.menuButton.visible = true;
-          this.menuTxtButton.visible = true;
+          this.menuButton.text.visible = true;
 
           return;
       }
@@ -303,11 +304,12 @@ module objects {
           this.pauseButton.y = 600 * 0.95;
           this.pauseButton.text.x = 1066 * 0.088;
           this.pauseButton.text.y = 600 * 0.95;
+
           this.menuButton.visible = false;
+          this.menuButton.text.visible = false;
 
       }
 
-      this.menuButton.visible = false;
       this.timerCounter++;
       //double the speed of the timer in the case the first player reach the end without the second player
       let speedTimer = Player.onePlayerGone?1/2:1;
@@ -358,6 +360,9 @@ module objects {
     }
 
     protected GoDie():void {
+      this.player1.isDead = true;
+      this.player2.isDead = true;
+
       if (!this.dead_sound) {
         if (objects.Game.isPlayingMusic == true) {
           if (this.backgroundMusic) {
@@ -372,6 +377,8 @@ module objects {
       this.player2.visible = false;
       this.player1.spriteRenderer.visible = false;
       this.player2.spriteRenderer.visible = false;
+      this.player2.dialog.showDialog = () =>{};
+      this.player1.dialog.showDialog = () =>{};
       
       var overNote = (): void => {        
         objects.Game.playerDead = true;
@@ -474,12 +481,12 @@ module objects {
       this.addChild(this.pauseTxtButton);
 
       this.addChild(this.menuButton);
-      this.addChild(this.menuTxtButton);
+      this.addChild(this.menuButton.text);
       this.addChild(objects.Game.controlsImage);
       
       //this.backButton.on("click", this.fn_ButtonClick);
       
-      this.menuButton.on("click", this.fn_controlsButtonClick);
+      //this.menuButton.on("click", this.fn_controlsButtonClick);
     }
 
     public CheckPaused(): void {      

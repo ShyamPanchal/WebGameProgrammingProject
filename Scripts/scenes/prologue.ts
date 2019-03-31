@@ -53,6 +53,7 @@ module scenes {
 
         private fn_ButtonClick():void
         {
+            objects.Game.skip = true;
             objects.Game.currentScene = config.Scene.INGAME;
         }
 

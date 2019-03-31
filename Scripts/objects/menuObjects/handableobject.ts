@@ -25,11 +25,14 @@ module objects{
         //addforce
         public UpdateIfPossible(Check: (x:number, y:number, g:boolean) => managers.AABB): void {
             this.CheckCollision = Check;
-            //this.AddForce();
+            this.AddForceHorizontally();
+            this.AddForceHorizontally();
             this.Update();
         }
-
-        public AddForce(){
+        public AddForceVertically():void {
+        }
+        public AddForceHorizontally():void {
+            /*
             this.Move_Vertically(false, 1);
             this.Move_Horizontally(false, 1);
 
@@ -38,6 +41,7 @@ module objects{
                 return;
               }        
               this.deltaTime=0;
+              */
         }
 
         private Drop():void {

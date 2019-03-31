@@ -206,7 +206,9 @@ module objects{
           let objectAction = this.getCloserObject();
 
           if (objectAction instanceof InformativePoint) {
+
             objectAction.Action();
+
             if (!this.inventory.DropItem()) {
               objectAction.alreadyHandled = false;
             }
@@ -215,8 +217,10 @@ module objects{
           } else if (objectAction == null || objectAction == undefined || !managers.Collision.CheckDistanceDoubled(this, objectAction)) {
             
             if (this.inventory.DropItem()) {
+
               createjs.Sound.play("wrench_drop").volume = 0.3;
             }
+            
             this.deltaTime+=1/60;
           } else {
             objectAction.Action();

@@ -18,29 +18,30 @@ var scenes;
         function StageTwo(assetManager) {
             var _this = _super.call(this, assetManager) || this;
             _this.CreateEnemies = function () {
-                return;
-                var ghost = new objects.Enemy(_this.assetManager, "ghost", 550, 245);
+                var ghost = new objects.Enemy(_this.assetManager, "ghost", 550, 75);
                 ghost.alpha = 0.8;
                 ghost.y = ghost.y - ghost.height;
                 ghost.scaleX = 0.7;
                 ghost.scaleY = 0.7;
                 _this.enemies.push(ghost);
-                var ghost2 = new objects.Enemy(_this.assetManager, "ghost2", 550, 480);
+                var ghost2 = new objects.Enemy(_this.assetManager, "ghost2", 450, 180);
                 ghost2.alpha = 0.8;
                 ghost2.y = ghost2.y - ghost2.height;
                 ghost2.scaleX = 0.7;
                 ghost2.scaleY = 0.7;
                 _this.enemies.push(ghost2);
-                //Ghost
-                /*
-                    GetPositionE1 = ():math.Vec2 => {
-                        return new math.Vec2(0, 0);//Put (800,250) if yellow ghost needed
-                    }
-                
-                    GetPositionE2 = ():math.Vec2 => {
-                        return new math.Vec2(0, 0);//Put (800,485) if red ghost needed
-                    }
-                */
+                var ghost4 = new objects.Enemy(_this.assetManager, "ghost2", 350, 420);
+                ghost4.alpha = 0.8;
+                ghost4.y = ghost4.y - ghost4.height;
+                ghost4.scaleX = 0.7;
+                ghost4.scaleY = 0.7;
+                _this.enemies.push(ghost4);
+                var ghost5 = new objects.Enemy(_this.assetManager, "ghost", 250, 530);
+                ghost5.alpha = 0.8;
+                ghost5.y = ghost5.y - ghost5.height;
+                ghost5.scaleX = 0.7;
+                ghost5.scaleY = 0.7;
+                _this.enemies.push(ghost5);
             };
             //Player
             _this.GetPositionP1 = function () {
@@ -337,9 +338,9 @@ var scenes;
             };
         };
         StageTwo.prototype.CreateObjects = function () {
+            this.CreateObjectsFloorTwo();
             this.CreateObjectsBasement();
             this.CreateObjectsFloorOne();
-            this.CreateObjectsFloorTwo();
             this.CreateObjectsFloorThree();
             this.CreateObjectsFloorFour();
         };

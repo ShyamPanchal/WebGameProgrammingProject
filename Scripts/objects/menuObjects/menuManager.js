@@ -6,9 +6,10 @@ var objects;
         Game.stageTimer = 180; // in seconds || 3 minutes
         Game.scoreP1 = 0;
         Game.scoreP2 = 0;
-        Game.skip = true;
+        Game.skip = false;
         Game.isPlayingMusic = false;
         Game.playerDead = true;
+        Game.easyMode = false;
         return Game;
     }());
     objects.Game = Game;

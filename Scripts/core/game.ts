@@ -252,7 +252,9 @@ console.log('code ran');
         { id: "TaDa", src:"./Assets/Sound/TaDa.mp3" },
         { id: "wrench_drop", src:"./Assets/Sound/Wrench_Drop.mp3" },
         { id: "zombie", src:"./Assets/Sound/zombie.mp3" },
-        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" },
+        { id: "controls", src: "../Assets/Images/Controls-preFinal_rev.png" },
+        { id: "uncheck", src: "../Assets/Sprites/uncheck.png" },
+        { id: "check", src: "../Assets/Sprites/check.png" },
         { id: "devIcon", src: "../Assets/Images/rocket.png" }
     ];
     

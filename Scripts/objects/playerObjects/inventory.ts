@@ -38,9 +38,39 @@ module objects{
         }
 
         private Drop(item:HandableObject):void {
-            item.x = this.player.x + (this.player.isLeft?-30:30);
+            let force = 1;
+            item.x = this.player.boxCollider.x; // + (this.player.isLeft?-30:30)
+            item.y = this.player.boxCollider.y + (this.player.halfH/2)*this.player.GetGravityFactor(); // - (this.player.halfH)*this.player.GetGravityFactor()
+            let x0 = item.x;
+            let y0 = item.y;
+            let d = 30;
+            let left = this.player.isLeft;
             //place it above the player
-            item.y = this.player.y - (this.player.halfH)*this.player.GetGravityFactor();
+            item.AddForceHorizontally = () => {
+                if (left) {
+                    if (item.x >= x0 - d) {
+                        item.Move_Horizontally(false, force);
+                        //item.x-=force;
+                    } else {
+                        item.AddForceHorizontally = () => {};
+                    }
+                } else {
+                    if (item.x <= x0 + d) {
+                        item.Move_Horizontally(true, force);
+                        //item.x+=force;
+                    } else {
+                        item.AddForceHorizontally = () => {};
+                    }
+                }
+            };
+            item.AddForceVertically = () => {
+                if (item.y >= y0 - d) {
+                    item.Move_Vertically(true, force);
+                    //item.y-=force*item.GetGravityFactor();
+                } else {
+                    item.AddForceVertically = () => {};
+                }
+            };
             //make sure that the x is next to the player;
             this.player.actionObjects.push(item);
             item.isGravityAffected = true;

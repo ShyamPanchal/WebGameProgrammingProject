@@ -21,28 +21,18 @@ var scenes;
         function StageOne(assetManager) {
             var _this = _super.call(this, assetManager) || this;
             _this.CreateEnemies = function () {
-                return;
-                var ghost = new objects.Enemy(_this.assetManager, "ghost", 550, 245);
+                var ghost = new objects.Enemy(_this.assetManager, "ghost", 550, 180);
                 ghost.alpha = 0.8;
                 ghost.y = ghost.y - ghost.height;
                 ghost.scaleX = 0.7;
                 ghost.scaleY = 0.7;
                 _this.enemies.push(ghost);
-                var ghost2 = new objects.Enemy(_this.assetManager, "ghost2", 550, 480);
+                var ghost2 = new objects.Enemy(_this.assetManager, "ghost2", 250, 415);
                 ghost2.alpha = 0.8;
                 ghost2.y = ghost2.y - ghost2.height;
                 ghost2.scaleX = 0.7;
                 ghost2.scaleY = 0.7;
                 _this.enemies.push(ghost2);
-                //Ghost
-                /*
-                GetPositionE1 = ():math.Vec2 => {
-                    return new math.Vec2(800, 250);
-                }
-            
-                GetPositionE2 = ():math.Vec2 => {
-                    return new math.Vec2(800, 485);
-                }*/
             };
             //Player
             _this.GetPositionP1 = function () {
@@ -191,11 +181,11 @@ var scenes;
             this.gameSceneryDynamicObjects.push(floor_4_Door);
         };
         StageOne.prototype.CreateObjects = function () {
+            this.CreateObjectsFloorFour();
+            this.CreateObjectsFloorTwo();
             this.CreateObjectsBasement();
             this.CreateObjectsFloorOne();
-            this.CreateObjectsFloorTwo();
             this.CreateObjectsFloorThree();
-            this.CreateObjectsFloorFour();
         };
         StageOne.prototype.CreatePlatformsStairs = function () {
             var floor_3_stairs = new objects.EmptyGameObject(this.assetManager, "floor_3_stairs", 30, 1);

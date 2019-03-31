@@ -36,17 +36,23 @@ var objects;
         //addforce
         HandableObject.prototype.UpdateIfPossible = function (Check) {
             this.CheckCollision = Check;
-            //this.AddForce();
+            this.AddForceHorizontally();
+            this.AddForceHorizontally();
             this.Update();
         };
-        HandableObject.prototype.AddForce = function () {
+        HandableObject.prototype.AddForceVertically = function () {
+        };
+        HandableObject.prototype.AddForceHorizontally = function () {
+            /*
             this.Move_Vertically(false, 1);
             this.Move_Horizontally(false, 1);
+
             if (this.deltaTime != 0 && (this.timeToAction > this.deltaTime)) {
-                this.deltaTime += 1 / 60;
+                this.deltaTime+=1/60;
                 return;
-            }
-            this.deltaTime = 0;
+              }
+              this.deltaTime=0;
+              */
         };
         HandableObject.prototype.Drop = function () {
             this.player.inventory.DropItem();

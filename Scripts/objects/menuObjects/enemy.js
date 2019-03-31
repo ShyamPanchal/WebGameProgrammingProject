@@ -24,6 +24,8 @@ var objects;
             _this.leftSide = true;
             _this.x = x;
             _this.y = y;
+            _this.upperPosition = _this.y - 20;
+            _this.lowerPosition = _this.y + 10;
             _this.Start();
             return _this;
         }
@@ -38,12 +40,17 @@ var objects;
         };
         Enemy.prototype.Reset = function () { };
         Enemy.prototype.Move = function () {
-            this.x -= 1.5;
+            if (objects.Game.easyMode) {
+                this.x -= 0.5;
+            }
+            else {
+                this.x -= 1.5;
+            }
             if ((this.x > 200 && this.x < 350) || (this.x > 500 && this.x < 650)) {
-                this.y = 145;
+                this.y = this.upperPosition;
             }
             else if ((this.x > 350 && this.x < 500) || (this.x > 650)) {
-                this.y = 200;
+                this.y = this.lowerPosition;
             }
             else if (this.x < 200)
                 this.x = 800;

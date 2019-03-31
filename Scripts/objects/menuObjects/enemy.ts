@@ -2,7 +2,8 @@ module objects {
     export class Enemy extends objects.GameObject {
         // Variables
         leftSide:Boolean = true;
-        
+        upperPosition:number;
+        lowerPosition:number;
         // Constructor
        
         constructor(assetManager: createjs.LoadQueue, imageString:string, x:number = 0, y:number = 0,)
@@ -11,6 +12,9 @@ module objects {
             this.x = x;
             this.y = y;   
             
+            this.upperPosition = this.y - 20;
+            this.lowerPosition = this.y + 10;
+
             this.Start();          
         }
         
@@ -27,16 +31,21 @@ module objects {
         }        
         
         public Reset():void {}
+
         public Move():void {
-            this.x -= 1.5;        
+            if (Game.easyMode) {
+                this.x -= 0.5;
+            } else {
+                this.x -= 1.5;
+            }
             
             if((this.x>200 && this.x<350) || (this.x>500 && this.x<650))
             {
-                this.y = 145;
+                this.y = this.upperPosition;
             }
             else if((this.x>350 && this.x<500) || (this.x > 650))
             {
-                this.y = 200;
+                this.y = this.lowerPosition;
             }
 
             else if(this.x < 200)

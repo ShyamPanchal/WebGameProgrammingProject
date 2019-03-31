@@ -242,13 +242,6 @@
         { id: "TaDa", src: "./Assets/Sound/TaDa.mp3" },
         { id: "wrench_drop", src: "./Assets/Sound/Wrench_Drop.mp3" },
         { id: "zombie", src: "./Assets/Sound/zombie.mp3" },
-<<<<<<< Updated upstream
-        { id: "controls", src: "../Assets/Images/Controls-preFinal_rev.png" },
-        { id: "uncheck", src: "../Assets/Sprites/uncheck.png" },
-        { id: "check", src: "../Assets/Sprites/check.png" },
-        { id: "devIcon", src: "../Assets/Images/rocket.png" }
-=======
-        { id: "controls", src: "../Assets/Images/Controls-preFinal.png" },
         { id: "devIcon", src: "../Assets/Images/rocket.png" },
         { id: "tutorial", src: "../Assets/Background/tutorial.png" },
         { id: "speechBubble", src: "../Assets/Images/speechBubble.png" },
@@ -261,8 +254,10 @@
         { id: "bb_7", src: "../Assets/Images/Bubbles/bb_7.png" },
         { id: "bb_8", src: "../Assets/Images/Bubbles/bb_8.png" },
         { id: "nextBtn", src: "../Assets/Images/Bubbles/next.png" },
-        { id: "playBtn", src: "../Assets/Images/Bubbles/play.png" }
->>>>>>> Stashed changes
+        { id: "playBtn", src: "../Assets/Images/Bubbles/play.png" },
+        { id: "controls", src: "../Assets/Images/Controls-preFinal_rev.png" },
+        { id: "uncheck", src: "../Assets/Sprites/uncheck.png" },
+        { id: "check", src: "../Assets/Sprites/check.png" },
     ];
     function Init() {
         console.log("Initialization start");
@@ -284,8 +279,8 @@
         createjs.Ticker.framerate = objects.Game.frameRate; // 60 FPS
         createjs.Ticker.on("tick", Update);
         objects.Game.stage = stage;
-        objects.Game.currentScene = config.Scene.INGAME_3;
-        currentState = config.Scene.INGAME_3;
+        objects.Game.currentScene = config.Scene.SPLASH;
+        currentState = config.Scene.SPLASH;
         objects.Game.player1TextureAtlas = player1TextureAtlas;
         objects.Game.player2TextureAtlas = player2TextureAtlas;
         console.log(objects.Game.currentScene);

@@ -139,12 +139,7 @@ module objects {
   {
       console.log("called");     
             
-      objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
-      if (objects.Game.keyboard.pause) {
-        objects.Game.controlsImage.visible = true;            
-      } else {
-        objects.Game.controlsImage.visible = false;
-      }
+      objects.Game.keyboard.pause = !objects.Game.keyboard.pause;      
   }
 
   protected fn_menuButtonClick():void
@@ -489,8 +484,19 @@ module objects {
       //this.menuButton.on("click", this.fn_controlsButtonClick);
     }
 
-    public CheckPaused(): void {      
-      this.isPaused = objects.Game.keyboard.pause;
+    public CheckPaused(): void {   
+      if (this instanceof scenes.StageOne
+        || this instanceof scenes.StageTwo
+        || this instanceof scenes.StageThree) {
+
+        this.isPaused = objects.Game.keyboard.pause;
+      }   
+
+      if (this.isPaused) {
+        objects.Game.controlsImage.visible = true;            
+      } else {
+        objects.Game.controlsImage.visible = false;
+      }
     }
 
     public StartCountdown(seconds, callback: () => any): void {

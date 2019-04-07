@@ -96,12 +96,6 @@ var objects;
         Scene.prototype.fn_pauseButtonClick = function () {
             console.log("called");
             objects.Game.keyboard.pause = !objects.Game.keyboard.pause;
-            if (objects.Game.keyboard.pause) {
-                objects.Game.controlsImage.visible = true;
-            }
-            else {
-                objects.Game.controlsImage.visible = false;
-            }
         };
         Scene.prototype.fn_menuButtonClick = function () {
             objects.Game.keyboard.pause = false;
@@ -365,7 +359,17 @@ var objects;
             //this.menuButton.on("click", this.fn_controlsButtonClick);
         };
         Scene.prototype.CheckPaused = function () {
-            this.isPaused = objects.Game.keyboard.pause;
+            if (this instanceof scenes.StageOne
+                || this instanceof scenes.StageTwo
+                || this instanceof scenes.StageThree) {
+                this.isPaused = objects.Game.keyboard.pause;
+            }
+            if (this.isPaused) {
+                objects.Game.controlsImage.visible = true;
+            }
+            else {
+                objects.Game.controlsImage.visible = false;
+            }
         };
         Scene.prototype.StartCountdown = function (seconds, callback) {
             var counter = seconds;

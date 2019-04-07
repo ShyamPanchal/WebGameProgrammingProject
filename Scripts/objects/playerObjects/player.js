@@ -187,6 +187,7 @@ var objects;
                     objectAction.Action();
                     this.deltaTime += 1 / 60;
                 }
+                this.CheckCollision(this.x, this.y, true);
             }
         };
         Player.prototype.getCloserObject = function () {
@@ -194,6 +195,15 @@ var objects;
             var closest = 100;
             var closest_item = item;
             while (item) {
+                if (item instanceof objects.PushableObject) {
+                    //forcing being the first to have an action
+                    closest_item = item;
+                    closest = -1;
+                }
+                else if (closest > -1 && item instanceof objects.Door) {
+                    closest_item = item;
+                    closest = -1;
+                }
                 var d = managers.Collision.GetDistance(this, item);
                 if (d < closest) {
                     closest = d;

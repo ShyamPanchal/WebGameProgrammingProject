@@ -226,6 +226,7 @@ module objects{
             objectAction.Action();
             this.deltaTime+=1/60;
           }
+          this.CheckCollision(this.x, this.y, true);
         }            
       }
 
@@ -235,13 +236,22 @@ module objects{
         let closest = 100;
         let closest_item = item;
         while(item) {
+          if(item instanceof PushableObject) {
+            //forcing being the first to have an action
+            closest_item = item;
+            closest = -1;
+          } else if (closest > -1 && item instanceof Door) {
+            closest_item = item;
+            closest = -1;            
+          }
+
           let d = managers.Collision.GetDistance(this, item);
-          if(d < closest) {
+          if( d < closest) {
               closest = d;
               closest_item = item
           }
           item = this.actionObjects.pop();
-        }                  
+        }        
         return closest_item;
       }
   

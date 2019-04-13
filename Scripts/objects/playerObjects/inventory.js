@@ -102,14 +102,15 @@ var objects;
             });
             return hasKey;
         };
-        Inventory.prototype.UseKeyTemporary = function () {
+        Inventory.prototype.UseKeyTemporary = function (keyCode) {
+            if (keyCode === void 0) { keyCode = 0; }
             //TODO the key must be the last item to be catched (making the use hard to the player)
             var hasKey = false;
             var p = -1;
             var position = -1;
             this.objects.forEach(function (item) {
                 p++;
-                if (item instanceof objects.Key) {
+                if (item instanceof objects.Key && item.keyCode == keyCode) {
                     position = p;
                     hasKey = true;
                     return;

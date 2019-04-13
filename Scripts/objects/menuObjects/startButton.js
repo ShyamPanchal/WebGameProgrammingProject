@@ -62,7 +62,21 @@ var objects;
             this.dialogObj.on("mouseout", function () { });
             this.dialogObj.scaleX = 0.75;
             this.isShown = false;
+            this.obregY = this.dialogObj.regY;
+            this.otregY = this.txtLabel.regY;
         }
+        Dialog.prototype.flip = function (inverted, height) {
+            this.txtLabel.scaleY = this.txtLabel.scaleY * -1;
+            this.dialogObj.scaleY = this.dialogObj.scaleY * -1;
+            if (inverted) {
+                this.txtLabel.regY = height;
+                this.dialogObj.regY = height;
+            }
+            else {
+                this.txtLabel.regY = this.otregY;
+                this.dialogObj.regY = this.obregY;
+            }
+        };
         Dialog.prototype.Update = function (x, y) {
             this.dialogObj.x = x;
             this.dialogObj.y = y;

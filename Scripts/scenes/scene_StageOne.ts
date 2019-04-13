@@ -11,11 +11,7 @@ module scenes {
             super(assetManager);
             //this.currentLevel = config.Scene.INGAME;
             this.Start();
-        }
-
-        private fn_ButtonClick(): void {
-            objects.Game.currentScene = config.Scene.FINISH;
-        }       
+        }    
 
         CreateEnemies = () => {
 

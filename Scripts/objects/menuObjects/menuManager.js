@@ -8,7 +8,7 @@ var objects;
         Game.scoreP2 = 0;
         Game.skip = false;
         Game.isPlayingMusic = false;
-        Game.playerDead = true;
+        Game.playerDead = false;
         Game.easyMode = false;
         return Game;
     }());

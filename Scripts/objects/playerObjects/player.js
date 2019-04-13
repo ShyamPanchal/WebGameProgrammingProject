@@ -195,8 +195,12 @@ var objects;
             var closest = 100;
             var closest_item = item;
             while (item) {
-                if (item instanceof objects.PushableObject) {
+                if (item instanceof objects.Key) {
                     //forcing being the first to have an action
+                    closest_item = item;
+                    closest = -1;
+                }
+                else if (item instanceof objects.PushableObject) {
                     closest_item = item;
                     closest = -1;
                 }

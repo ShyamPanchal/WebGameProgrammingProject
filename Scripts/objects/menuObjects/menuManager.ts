@@ -21,7 +21,7 @@ module objects
         public static skip:boolean = false;
 
         public static isPlayingMusic: boolean = false;
-        public static playerDead:boolean = true;
+        public static playerDead:boolean = false;
 
         public static scoreManagerP1: managers.Score;
         public static scoreManagerP2: managers.Score;

@@ -34,7 +34,7 @@ var scenes;
                     break;
                 case config.Scene.INGAME_3:
                     console.log("NEXT... Finish");
-                    objects.Game.currentScene = config.Scene.FINISH;
+                    objects.Game.currentScene = config.Scene.ENDING;
                     break;
             }
         };

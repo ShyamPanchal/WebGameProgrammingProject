@@ -10,6 +10,7 @@ module config
         INGAME_2,
         INGAME_3,
         REWARD,
+        ENDING,
         FINISH
     }
 }

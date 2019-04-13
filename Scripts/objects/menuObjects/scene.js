@@ -243,8 +243,12 @@ var objects;
             this.player2.UpdateIfPossible(CheckMovementP2);
             this.enemies.forEach(function (enemy) {
                 enemy.Update();
-                _this.player1.isDead = managers.Collision.CheckDistance(_this.player1, enemy);
-                _this.player2.isDead = managers.Collision.CheckDistance(_this.player2, enemy);
+                if (!_this.player1.hasPassed) {
+                    _this.player1.isDead = managers.Collision.CheckDistance(_this.player1, enemy);
+                }
+                if (!_this.player2.hasPassed) {
+                    _this.player2.isDead = managers.Collision.CheckDistance(_this.player2, enemy);
+                }
                 if (_this.player1.isDead || _this.player2.isDead) {
                     _this.GoDie();
                     _this.removeChild(enemy);

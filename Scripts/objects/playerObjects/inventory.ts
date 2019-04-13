@@ -94,14 +94,14 @@ module objects{
             return hasKey;
         }
 
-        public UseKeyTemporary():HandableObject {
+        public UseKeyTemporary(keyCode:number = 0):HandableObject {
             //TODO the key must be the last item to be catched (making the use hard to the player)
             let hasKey = false;
             let p = -1;
             let position = -1;
             this.objects.forEach(item => {
                 p++;
-                if(item instanceof Key) {
+                if(item instanceof Key && item.keyCode == keyCode) {
                     position = p;
                     hasKey = true;
                     return;

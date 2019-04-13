@@ -10,7 +10,8 @@ var config;
         Scene[Scene["INGAME_2"] = 5] = "INGAME_2";
         Scene[Scene["INGAME_3"] = 6] = "INGAME_3";
         Scene[Scene["REWARD"] = 7] = "REWARD";
-        Scene[Scene["FINISH"] = 8] = "FINISH";
+        Scene[Scene["ENDING"] = 8] = "ENDING";
+        Scene[Scene["FINISH"] = 9] = "FINISH";
     })(Scene = config.Scene || (config.Scene = {}));
 })(config || (config = {}));
 //# sourceMappingURL=scene.js.map

@@ -48,6 +48,8 @@ module objects {
         txtLabel: objects.Label;
         dialogObj: objects.Button;
         isShown: boolean;
+        obregY:number;
+        otregY:number;
 
         constructor(assetManager: createjs.LoadQueue, text: string) {
             this.txtLabel = new objects.Label(text, "20px bold", "Cambay", "#ffffff", 0, 0, true);
@@ -56,6 +58,21 @@ module objects {
             this.dialogObj.on("mouseout", () => { });
             this.dialogObj.scaleX = 0.75;
             this.isShown = false;
+            this.obregY = this.dialogObj.regY;
+            this.otregY = this.txtLabel.regY;
+        }
+
+        public flip (inverted: boolean, height:number): void {
+            this.txtLabel.scaleY = this.txtLabel.scaleY*-1;
+            this.dialogObj.scaleY = this.dialogObj.scaleY*-1;
+
+            if (inverted) {
+                this.txtLabel.regY = height;
+                this.dialogObj.regY = height;
+            } else {
+                this.txtLabel.regY = this.otregY;
+                this.dialogObj.regY = this.obregY         
+            }
         }
 
         public Update(x: number, y: number): void {

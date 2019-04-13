@@ -146,10 +146,12 @@ module objects{
       this.isInverted = !this.isInverted;
       if (this instanceof objects.Player) { 
         this.spriteRenderer.scaleY = this.spriteRenderer.scaleY*-1;
+        this.dialog.dialog.flip(this.isInverted, this.height*1.7);
         if (this.isInverted) {
           this.regY = this.height;
           this.flipOffsetY = this.height;//this.fixed_flipOffsetY;
         } else {
+          this.dialog.dialog.regY = 0;
           this.regY = 0;
           this.flipOffsetY = 0;
         }

@@ -50,7 +50,7 @@ module scenes
 
             this.keepButton.scaleX = 0.75;
             
-            this.label = new objects.Label("Game End!", "bold 80px", "Cambay", "#ffffff", 1066 * 0.5, 600 * 0.25, true);
+            this.label = new objects.Label("Game Over!", "bold 80px", "Cambay", "#ffffff", 1066 * 0.5, 600 * 0.25, true);
             this.label1 = new objects.Label("Thank you for Helping Us Escape!", "bold 50px", "Cambay", "#ffffff", 1066 * 0.5, this.label.y + 100, true);
 
             this.Main();
@@ -65,7 +65,7 @@ module scenes
         {
             this.addChild(this.background);
             this.addChild(this.label);
-            this.addChild(this.label1);
+            //this.addChild(this.label1);
 
             this.addChild(this.backButton);
             this.addChild(this.txtButton);

@@ -69,9 +69,6 @@ var scenes;
             _this.Start();
             return _this;
         }
-        StageOne.prototype.fn_ButtonClick = function () {
-            objects.Game.currentScene = config.Scene.FINISH;
-        };
         StageOne.prototype.Start = function () {
             _super.prototype.Start.call(this);
             if (objects.Game.isPlayingMusic == false) {

@@ -84,7 +84,7 @@ var objects;
                     this.enabled = !this.enabled;
                     return;
                 }
-                var k = this.player.inventory.UseKeyTemporary();
+                var k = this.player.inventory.UseKeyTemporary(this.keyCode);
                 if (k != null && k instanceof objects.Key && this.keyCode == k.keyCode) {
                     k.isGravityAffected = false;
                     this.key.push(k);

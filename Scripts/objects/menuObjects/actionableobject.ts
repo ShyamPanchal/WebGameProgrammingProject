@@ -74,14 +74,14 @@ module objects{
 
         }
 
-        public Action(): void {
+        public Action(): void {            
             this.enabled = !this.enabled;
             if (this.enabled) {
                 if (!this.player.inventory.CheckKey(this.keyCode)) {
                     this.enabled = !this.enabled;
                     return;
                 }
-                let k = this.player.inventory.UseKeyTemporary();
+                let k = this.player.inventory.UseKeyTemporary(this.keyCode);
                 if (k != null && k instanceof Key && this.keyCode == k.keyCode) {
                     k.isGravityAffected = false;
                     this.key.push(k);

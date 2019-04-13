@@ -236,8 +236,11 @@ module objects{
         let closest = 100;
         let closest_item = item;
         while(item) {
-          if(item instanceof PushableObject) {
+          if (item instanceof Key) {
             //forcing being the first to have an action
+            closest_item = item;
+            closest = -1;
+          } else if(item instanceof PushableObject) {
             closest_item = item;
             closest = -1;
           } else if (closest > -1 && item instanceof Door) {

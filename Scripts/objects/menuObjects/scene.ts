@@ -329,8 +329,14 @@ module objects {
       this.enemies.forEach(enemy => {
         enemy.Update();
 
-        this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
-        this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
+        if (!this.player1.hasPassed) {
+          this.player1.isDead = managers.Collision.CheckDistance(this.player1, enemy);
+        }
+
+        if (!this.player2.hasPassed) {
+          this.player2.isDead = managers.Collision.CheckDistance(this.player2, enemy);
+        }
+
         if(this.player1.isDead || this.player2.isDead){ 
                     
            this.GoDie();      

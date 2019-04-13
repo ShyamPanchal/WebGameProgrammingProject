@@ -198,8 +198,10 @@ console.log('code ran');
         { id: "level_02_efects", src: "../Assets/Background/level_02_efects.png" },
         { id: "level_03_house", src: "../Assets/Background/level_03_house.png" },
         { id: "level_03_shadow", src: "../Assets/Background/level_03_shadow.png" },
+        { id: "level_04_house", src: "../Assets/Background/level_04_house.png" },
         { id: "empty", src: "../Assets/Background/empty.png" },
         { id: "player", src: "../Assets/Sprites/Player1/Idle.png" },
+        { id: "player2", src: "../Assets/Sprites/Player2/Idle.png" },
         { id: "crate", src: "../Assets/Sprites/Objects/crate.png" },
         { id: "opened_desk", src: "../Assets/Sprites/Objects/open_desk.png" },
         { id: "closed_desk", src: "../Assets/Sprites/Objects/closed_desk.png" },
@@ -366,6 +368,12 @@ console.log('code ran');
             case config.Scene.REWARD:
             stage.removeAllChildren();
             currentScene = new scenes.SceneReward(assetManager);
+            stage.addChild(currentScene);
+            break;
+
+            case config.Scene.ENDING:
+            stage.removeAllChildren();
+            currentScene = new scenes.EndingScene(assetManager);
             stage.addChild(currentScene);
             break;
 

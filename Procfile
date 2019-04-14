@@ -1,3 +1,3 @@
 // Procfile
 
-web: lite-server
+web: node server.js

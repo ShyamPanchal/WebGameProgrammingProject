@@ -62,7 +62,17 @@ module scenes {
             this.bbs[7] = new objects.Image(this.assetManager, "bb_8", 950, 570, true);
             this.bbs[7].alpha = 0;
 
-            this.layers = [[0, 1, 2, 3], [4], [5], [6], [7]];
+            this.bbs[8] = new objects.Image(this.assetManager, "bb_9", 720, 60, true);
+            this.bbs[8].alpha = 0;
+
+            this.bbs[9] = new objects.Image(this.assetManager, "bb_10", 330, 290, true);
+            this.bbs[9].alpha = 0;
+
+            this.bbs[10] = new objects.Image(this.assetManager, "bb_11", 350, 250, true);
+            this.bbs[10].alpha = 0;
+
+            this.layers = [[0, 1, 2, 3], [4], [5], [10], [6], [7]];
+            //this.layers = [[0, 1, 2, 3], [4], [5], [8,9], [6], [7]];
 
             this.nextBtn = new objects.Button(this.assetManager,"nextBtn",980,550,null,false);
             this.nextBtn.alpha = 0;
